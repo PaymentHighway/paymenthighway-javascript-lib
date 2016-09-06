@@ -1,0 +1,45 @@
+{
+  "name": "paymenthighway-javascript-lib",
+  "version": "0.0.1",
+  "description": "Paymenthighway SDK",
+  "main": "js/paymentAPI.js",
+  "typings": "js/paymentAPI.d.ts",
+  "scripts": {
+    "postinstall": "typings install",
+    "preversion": "npm run compile && npm test",
+    "precompile": "npm run clean",
+    "compile": "tsc",
+    "test": "env NODE_ENV=test mocha js/tests",
+    "clean": "del-cli js/",
+    "lint": "tslint 'ts/**/*.ts?(x)' || exit 1"
+  },
+  "author": {
+    "name": "Pauli Kostamo",
+    "email": "pauli.kostamo@solinor.com",
+    "url": "http://solinor.com/"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "core-js": "^0.6.0",
+    "node-uuid": "^1.4.7"
+  },
+  "engines": {
+    "node": ">=4.5.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-string": "^1.2.0",
+    "del-cli": "^0.2.0",
+    "ghooks": "^1.2.4",
+    "mocha": "^2.5.3",
+    "tslint": "^3.12.1",
+    "tslint-microsoft-contrib": "^2.0.8",
+    "typescript": "^1.8.10",
+    "typings": "^1.3.1"
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "npm run lint"
+    }
+  }
+}

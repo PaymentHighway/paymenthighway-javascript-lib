@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "outDir": "./js/",
+    "sourceMap": true,
+    "declaration": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "removeComments": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "files": [
+    "typings/globals/node/index.d.ts"
+  ],
+  "exclude": [
+    "js",
+    "node_modules"
+  ]
+}
