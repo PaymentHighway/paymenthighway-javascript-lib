@@ -2,15 +2,16 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    "outDir": "../es6/",
+    "outDir": "es6",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
     "noEmitHelpers": true,
     "moduleResolution": "node"
   },
-  "exclude": [
-    "js",
-    "."
+  "files": [
+    "src/PaymentAPI.ts",
+    "typings/globals/node/index.d.ts",
+    "typings/modules/node-uuid/index.d.ts"
   ]
 }

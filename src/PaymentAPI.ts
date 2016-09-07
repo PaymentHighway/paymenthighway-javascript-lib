@@ -1,6 +1,7 @@
 import * as Http from 'http';
 import {PaymentHighwayUtility} from "./PaymentHighwayUtility";
 import {SecureSigner} from "./security/SecureSigner";
+import {Pair} from "./util/Pair";
 
 type Method = 'POST' | 'GET';
 

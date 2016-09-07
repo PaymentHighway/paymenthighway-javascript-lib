@@ -4,14 +4,20 @@
   "description": "Paymenthighway SDK",
   "main": "js/paymentAPI.js",
   "typings": "js/paymentAPI.d.ts",
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
   "scripts": {
     "postinstall": "typings install",
     "preversion": "npm run compile && npm test",
     "precompile": "npm run clean",
     "compile": "tsc",
-    "test": "env NODE_ENV=test mocha js/tests",
-    "clean": "del-cli js/",
-    "lint": "tslint 'ts/**/*.ts?(x)' || exit 1"
+    "babel": "babel es6 --out-dir es5",
+    "test": "mocha test",
+    "clean": "del-cli es6/",
+    "lint":"dir"
   },
   "author": {
     "name": "Pauli Kostamo",
@@ -27,6 +33,8 @@
     "node": ">=4.5.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-preset-es2015": "^6.14.0",
     "chai": "^3.5.0",
     "chai-string": "^1.2.0",
     "del-cli": "^0.2.0",

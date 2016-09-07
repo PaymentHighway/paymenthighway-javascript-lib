@@ -1,4 +1,5 @@
 import * as Crypto from 'crypto';
+import {Pair} from "../util/Pair";
 
 /**
  * Creates a signature for PaymentHighway messages
