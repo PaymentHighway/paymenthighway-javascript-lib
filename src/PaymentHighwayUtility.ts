@@ -1,6 +1,6 @@
 import * as Uuid from 'node-uuid';
 
-class PaymentHighwayUtility {
+export class PaymentHighwayUtility {
 
     /**
      * Cryptographically strong pseudo random number generator.

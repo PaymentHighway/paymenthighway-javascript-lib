@@ -3,7 +3,7 @@ import * as Crypto from 'crypto';
 /**
  * Creates a signature for PaymentHighway messages
  */
-class SecureSigner {
+export class SecureSigner {
 
     private signatureScheme: string = 'SPH1';
     private algorithm: string = 'HmacSHA256';
@@ -76,7 +76,7 @@ class SecureSigner {
 
         const receivedSignature = keyValues.find((x) => {
             return x.first.toLowerCase() === 'signature';
-        });
+        }).second;
 
         if (typeof receivedSignature === 'undefined') {
             return false;
@@ -92,7 +92,7 @@ class SecureSigner {
      * @return boolean
      */
     public validateFormRedirect(keyValues: Pair<string, string>[]): boolean {
-        return validateSignature('GET', '', keyValues, '');
+        return this.validateSignature('GET', '', keyValues, '');
     }
 
 }

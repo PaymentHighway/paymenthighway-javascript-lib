@@ -1,4 +1,6 @@
 import * as Http from 'http';
+import {PaymentHighwayUtility} from "./PaymentHighwayUtility";
+import {SecureSigner} from "./security/SecureSigner";
 
 type Method = 'POST' | 'GET';
 
@@ -38,7 +40,7 @@ class PaymentApi {
 
     public initTransaction(): void {
         const paymentUri: string = '/transaction';
-        response = executeRequest('GET', paymentUri, this.createNameValuePairs());
+        let response = this.executeRequest('POST', null, paymentUri, this.createNameValuePairs());
 
 
     }
@@ -70,7 +72,7 @@ class PaymentApi {
      */
     private createNameValuePairs(): Pair<string, string>[] {
         return [
-            new Pair('sph-api-version', SPH_API_VERSION),
+            new Pair('sph-api-version', PaymentApi.SPH_API_VERSION),
             new Pair('sph-account', this.account),
             new Pair('sph-merchant', this.merchant),
             new Pair('sph-timestamp', PaymentHighwayUtility.getUtcTimestamp()),
@@ -78,36 +80,41 @@ class PaymentApi {
         ];
     }
 
-    private executeRequest(method: Method, path: string, nameValuePairs: Pair<string, string>[], requestBody: any): any {
+    private executeRequest(method: Method, callback: any, path: string, nameValuePairs: Pair<string, string>[], requestBody?: any): any {
+        const ss = new SecureSigner(this.signatureKeyId, this.signatureSecret);
+        let bodyString = "";
+        if(requestBody){
+            bodyString = JSON.stringify(requestBody);
+        }
+        const signature = this.createSignature(ss, method, path, nameValuePairs, bodyString);
+        nameValuePairs.push(new Pair('signature', signature));
+
+        let headers = {
+            'Content-Type': 'application/json; charset=utf-8',
+            'User-Agent': PaymentApi.USER_AGENT
+        };
+        nameValuePairs.forEach((pair) => {
+           headers[pair.first] = pair.second;
+        });
+        if(requestBody){
+            headers['Content-Length'] = Buffer.byteLength(bodyString);
+        }
         const options = {
             protocol: 'https:',
             hostname: this.serviceUrl,
             path: path,
             method: method,
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': Buffer.byteLength(postData)
-            }
+            headers: headers
         };
 
-        const ss = new SecureSigner(this.signatureKeyId, this.signatureSecret);
-        const signature = this.createSignature(ss, method, path, nameValuePairs, requestBody);
-
-
-        let req = http.request(options, (res) => {
+        let req = Http.request(options, (res) => {
             res.setEncoding('utf8');
             let body = '';
-            response.on('data', (x) => {
+            res.on('data', (x) => {
                 body += x;
             });
-            response.on('end', () => {
-
-                // Data reception is done, do whatever with it!
-                var parsed = JSON.parse(body);
-                callback({
-                    email: parsed.email,
-                    password: parsed.pass
-                });
+            res.on('end', () => {
+                callback(JSON.parse(body));
             });
         });
 
@@ -115,38 +122,13 @@ class PaymentApi {
             console.log(`problem with request: ${e.message}`);
         });
 
-
-        nameValuePairs.add(new BasicNameValuePair("signature", signature));
-
-        this.addHeaders(httpRequest, nameValuePairs);
-
-        if (requestBody != null) {
-            this.addBody(httpRequest, requestBody);
-        }
-
-        ResponseHandler<String> responseHandler = new PaymentHighwayResponseHandler(ss, METHOD_POST, requestUri);
-
-        return httpclient.execute(httpRequest, responseHandler);
+        req.write(bodyString);
+        req.end();
     }
 
-    private createSignature(ss: SecureSigner, method: Method, uri: string, nameValuePairs: Pair<string, string>[], request: any): string {
+    private createSignature(ss: SecureSigner, method: Method, uri: string, nameValuePairs: Pair<string, string>[], requestBody: string): string {
 
-        String json = "";
-        if (request != null) {
-            JsonGenerator jsonGenerator = new JsonGenerator();
-            json = jsonGenerator.createTransactionJson(request);
-        }
-        return ss.createSignature(method, uri, nameValuePairs, json);
-    }
-
-    protected addHeaders(HttpRequestBase httpPost, List<NameValuePair> nameValuePairs) {
-
-        httpPost.addHeader(HTTP.USER_AGENT, USER_AGENT);
-        httpPost.addHeader(HTTP.CONTENT_TYPE, "application/json; charset=utf-8");
-
-        for (NameValuePair param : nameValuePairs) {
-            httpPost.addHeader(param.getName(), param.getValue());
-        }
+        return ss.createSignature(method, uri, nameValuePairs, requestBody);
     }
 
 

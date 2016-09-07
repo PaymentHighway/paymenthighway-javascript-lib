@@ -4,5 +4,8 @@
     "chai-string": "registry:dt/chai-string#1.1.4+20160317120654",
     "mocha": "registry:dt/mocha#2.2.5+20160619032855",
     "node": "registry:dt/node#6.0.0+20160621231320"
+  },
+  "dependencies": {
+    "node-uuid": "registry:npm/node-uuid#1.4.7+20160723033700"
   }
 }
