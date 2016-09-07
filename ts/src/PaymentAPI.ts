@@ -1,11 +1,11 @@
-import * as Http from 'http';
-import {PaymentHighwayUtility} from "./PaymentHighwayUtility";
-import {SecureSigner} from "./security/SecureSigner";
-import {Pair} from "./util/Pair";
+import * as request from 'request';
+import {PaymentHighwayUtility} from './PaymentHighwayUtility';
+import {SecureSigner} from './security/SecureSigner';
+import {Pair} from './util/Pair';
 
 type Method = 'POST' | 'GET';
 
-class PaymentApi {
+export class PaymentAPI {
 
     /* Payment API headers */
     public static USER_AGENT: string = 'PaymentHighway Javascript Library';
@@ -15,34 +15,17 @@ class PaymentApi {
     public static CT_HEADER_INFO: string = 'application/json; charset=utf-8';
     public static API_VERSION_INFO: string = '';
 
-    /* Custom SPH Headers */
-    public static SPH_ACCOUNT: string = 'sph-account';
-    public static SPH_MERCHANT: string = 'sph-merchant';
-    public static SPH_AMOUNT: string = 'sph-amount';
-    public static SPH_CURRENCY: string = 'sph-currency';
-    public static SPH_ORDER: string = 'sph-order';
-    public static SPH_SUCCESS_URL: string = 'sph-success-url';
-    public static SPH_FAILURE_URL: string = 'sph-failure-url';
-    public static SPH_CANCEL_URL: string = 'sph-cancel-url';
-    public static SPH_REQUEST_ID: string = 'sph-request-id';
-    public static SPH_TIMESTAMP: string = 'sph-timestamp';
-    public static SPH_API_VERSION: string = 'sph-api-version';
-    public static LANGUAGE: string = 'language';
-    public static DESCRIPTION: string = 'description';
-    public static SIGNATURE: string = 'signature';
-
     constructor(public serviceUrl: string,
                 public signatureKeyId: string,
                 public signatureSecret: string,
                 public account: string,
                 public merchant: string,
-                public apiversion: string = '20150605') {
+                public apiVersion: string = '20150605') {
     }
 
-    public initTransaction(): void {
+    public initTransaction(callback: any): void {
         const paymentUri: string = '/transaction';
-        let response = this.executeRequest('POST', null, paymentUri, this.createNameValuePairs());
-
+        this.executeRequest('POST', callback, paymentUri, this.createNameValuePairs());
 
     }
 
@@ -73,7 +56,7 @@ class PaymentApi {
      */
     private createNameValuePairs(): Pair<string, string>[] {
         return [
-            new Pair('sph-api-version', PaymentApi.SPH_API_VERSION),
+            new Pair('sph-api-version', this.apiVersion),
             new Pair('sph-account', this.account),
             new Pair('sph-merchant', this.merchant),
             new Pair('sph-timestamp', PaymentHighwayUtility.getUtcTimestamp()),
@@ -81,56 +64,49 @@ class PaymentApi {
         ];
     }
 
-    private executeRequest(method: Method, callback: any, path: string, nameValuePairs: Pair<string, string>[], requestBody?: any): any {
+    private executeRequest(method: Method, callback: any,
+                           path: string, nameValuePairs: Pair<string, string>[], requestBody?: Object): void {
         const ss = new SecureSigner(this.signatureKeyId, this.signatureSecret);
-        let bodyString = "";
-        if(requestBody){
+        let bodyString = '';
+        if (requestBody) {
             bodyString = JSON.stringify(requestBody);
         }
         const signature = this.createSignature(ss, method, path, nameValuePairs, bodyString);
         nameValuePairs.push(new Pair('signature', signature));
-
-        let headers = {
+        let headers: Header = {
             'Content-Type': 'application/json; charset=utf-8',
-            'User-Agent': PaymentApi.USER_AGENT
+            'User-Agent': PaymentAPI.USER_AGENT
         };
         nameValuePairs.forEach((pair) => {
-           headers[pair.first] = pair.second;
+            headers[pair.first] = pair.second;
         });
-        if(requestBody){
-            headers['Content-Length'] = Buffer.byteLength(bodyString);
-        }
-        const options = {
-            protocol: 'https:',
-            hostname: this.serviceUrl,
-            path: path,
+        let options = {
+            baseUrl: this.serviceUrl,
+            uri: path,
             method: method,
             headers: headers
         };
 
-        let req = Http.request(options, (res) => {
-            res.setEncoding('utf8');
-            let body = '';
-            res.on('data', (x) => {
-                body += x;
+        if (requestBody) {
+            headers['Content-Length'] = Buffer.byteLength(bodyString);
+            options = Object.assign(options, {
+                json: true,
+                body: bodyString
             });
-            res.on('end', () => {
-                callback(JSON.parse(body));
-            });
+        }
+        request(options, (error: any, response: any, body: any) => {
+            if (error) {
+                console.log(error);
+            }
+            callback(JSON.parse(body));
         });
 
-        req.on('error', (e) => {
-            console.log(`problem with request: ${e.message}`);
-        });
-
-        req.write(bodyString);
-        req.end();
     }
 
-    private createSignature(ss: SecureSigner, method: Method, uri: string, nameValuePairs: Pair<string, string>[], requestBody: string): string {
+    private createSignature(ss: SecureSigner, method: Method, uri: string,
+                            nameValuePairs: Pair<string, string>[], requestBody: string): string {
 
         return ss.createSignature(method, uri, nameValuePairs, requestBody);
     }
-
 
 }

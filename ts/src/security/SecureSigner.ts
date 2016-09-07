@@ -7,7 +7,7 @@ import {Pair} from "../util/Pair";
 export class SecureSigner {
 
     private signatureScheme: string = 'SPH1';
-    private algorithm: string = 'HmacSHA256';
+    private algorithm: string = 'sha256';
 
     constructor(private secretKeyId: string, private secretKey: string) {
     }
