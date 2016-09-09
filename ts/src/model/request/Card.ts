@@ -1,8 +1,8 @@
-class Card {
+export class Card {
     constructor(public pan: string,
-                public expiryYear: string,
-                public expiryMonth: string,
-                public cvc: string,
-                public verification: string) {
+                public expiry_year: string,
+                public expiry_month: string,
+                public cvc?: string,
+                public verification?: string) {
     }
 }

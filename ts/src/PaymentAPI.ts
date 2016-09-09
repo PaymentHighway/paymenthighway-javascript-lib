@@ -1,7 +1,9 @@
-import * as request from 'request';
+import * as requestPromise from 'request-promise';
 import {PaymentHighwayUtility} from './PaymentHighwayUtility';
 import {SecureSigner} from './security/SecureSigner';
 import {Pair} from './util/Pair';
+import {RequestPromise} from 'request-promise';
+import {TransactionResponse} from './model/response/TransactionResponse';
 
 type Method = 'POST' | 'GET';
 
@@ -9,11 +11,6 @@ export class PaymentAPI {
 
     /* Payment API headers */
     public static USER_AGENT: string = 'PaymentHighway Javascript Library';
-    public static METHOD_POST: string = 'POST';
-    public static METHOD_GET: string = 'GET';
-    public static CT_HEADER: string = 'Content-type';
-    public static CT_HEADER_INFO: string = 'application/json; charset=utf-8';
-    public static API_VERSION_INFO: string = '';
 
     constructor(public serviceUrl: string,
                 public signatureKeyId: string,
@@ -23,14 +20,53 @@ export class PaymentAPI {
                 public apiVersion: string = '20150605') {
     }
 
-    public initTransaction(callback: any): void {
-        const paymentUri: string = '/transaction';
-        this.executeRequest('POST', callback, paymentUri, this.createNameValuePairs());
+    public initTransaction(): Promise<TransactionResponse> {
+        const paymentUri = '/transaction';
+        return this.makeRequest('POST',  paymentUri);
+    }
+
+    public debitTransaction(transactionId: string, request: Object): Promise<TransactionResponse> {
+        const debitUri = '/transaction/' + transactionId + '/debit';
+        return this.makeRequest('POST',  debitUri, request);
+    }
+
+    public revertTransaction(transactionId: string, request: any): void {
+        const revertUri = '/transaction/' + transactionId + '/revert';
+        this.executeRequest('POST',  revertUri, this.createNameValuePairs(), request);
+    }
+
+    public commitTransaction(transactionId: string, request: any): void {
+        const commitUri = '/transaction/' + transactionId + '/commit';
+        this.executeRequest('POST',  commitUri, this.createNameValuePairs(), request);
+    }
+
+    public transactionResult(transactionId: string): void {
+        const transactionResultUrl = '/transaction/' + transactionId + '/result';
+        this.executeRequest('GET',  transactionResultUrl, this.createNameValuePairs());
+    }
+
+    public transactionStatus(transactionId: string): void {
+        const statusUri = '/transaction/' + transactionId;
+        this.executeRequest('GET',  statusUri, this.createNameValuePairs());
+    }
+
+    public searchOrders(order: string): void {
+        const searchUri = '/transactions/?order=' + order;
+        this.executeRequest('GET',  searchUri, this.createNameValuePairs());
 
     }
 
+    public tokenization(tokenizationId: string): void {
+        const tokenUri = '/tokenization/' + tokenizationId;
+        this.executeRequest('GET',  tokenUri, this.createNameValuePairs());
+    }
+
+    public fetchReport(date: string): void {
+        const fetchUri = '/report/batch/' + date;
+        this.executeRequest('GET', fetchUri, this.createNameValuePairs());
+    }
+
     /*
-     public debitTransaction(transactionId, request){}
 
      public revertTransaction(UUID transactionId) throws IOException {}
 
@@ -49,6 +85,10 @@ export class PaymentAPI {
      public fetchReconciliationReport(String date) throws IOException {}
      */
 
+    private handleError(err: any): any {
+        return err;
+    }
+
     /**
      * Create name value pairs
      *
@@ -64,14 +104,23 @@ export class PaymentAPI {
         ];
     }
 
-    private executeRequest(method: Method, callback: any,
-                           path: string, nameValuePairs: Pair<string, string>[], requestBody?: Object): void {
+    private makeRequest(method: Method, paymentUri: string, requestBody?: Object): Promise<TransactionResponse> {
+        return this.executeRequest('POST',  paymentUri, this.createNameValuePairs(), requestBody)
+            .then((body: TransactionResponse) => {
+                return body;
+            })
+            .catch((err: any) => {
+                return this.handleError(err);
+            });
+    }
+
+    private executeRequest(method: Method, path: string, nameValuePairs: Pair<string, string>[], requestBody?: Object): RequestPromise {
         const ss = new SecureSigner(this.signatureKeyId, this.signatureSecret);
         let bodyString = '';
         if (requestBody) {
             bodyString = JSON.stringify(requestBody);
         }
-        const signature = this.createSignature(ss, method, path, nameValuePairs, bodyString);
+        const signature = ss.createSignature(method, path, nameValuePairs, bodyString);
         nameValuePairs.push(new Pair('signature', signature));
         let headers: Header = {
             'Content-Type': 'application/json; charset=utf-8',
@@ -84,29 +133,18 @@ export class PaymentAPI {
             baseUrl: this.serviceUrl,
             uri: path,
             method: method,
-            headers: headers
+            headers: headers,
+            json: true
         };
 
         if (requestBody) {
-            headers['Content-Length'] = Buffer.byteLength(bodyString);
+            headers['Content-Length'] = Buffer.byteLength(bodyString, 'utf-8');
             options = Object.assign(options, {
-                json: true,
-                body: bodyString
+                body: requestBody
             });
         }
-        request(options, (error: any, response: any, body: any) => {
-            if (error) {
-                console.log(error);
-            }
-            callback(JSON.parse(body));
-        });
+        return requestPromise(options);
 
-    }
-
-    private createSignature(ss: SecureSigner, method: Method, uri: string,
-                            nameValuePairs: Pair<string, string>[], requestBody: string): string {
-
-        return ss.createSignature(method, uri, nameValuePairs, requestBody);
     }
 
 }

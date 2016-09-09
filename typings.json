@@ -2,8 +2,9 @@
   "globalDependencies": {
     "chai": "registry:dt/chai#3.4.0+20160601211834",
     "chai-string": "registry:dt/chai-string#1.1.4+20160317120654",
-    "mocha": "registry:dt/mocha#2.2.5+20160619032855",
-    "node": "registry:dt/node#6.0.0+20160621231320"
+    "mocha": "registry:dt/mocha#2.2.5+20160720003353",
+    "node": "registry:env/node#4.0.0+20160902022231",
+    "request-promise": "registry:dt/request-promise#3.0.0+20160906190103"
   },
   "dependencies": {
     "node-uuid": "registry:npm/node-uuid#1.4.7+20160723033700",
