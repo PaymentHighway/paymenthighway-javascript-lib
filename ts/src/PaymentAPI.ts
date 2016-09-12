@@ -4,6 +4,9 @@ import {SecureSigner} from './security/SecureSigner';
 import {Pair} from './util/Pair';
 import {RequestPromise} from 'request-promise';
 import {TransactionResponse} from './model/response/TransactionResponse';
+import {TransactionStatusResponse} from './model/response/TransactionStatusResponse';
+import {OrderSearchResponse} from './model/response/OrderSearchResponse';
+import {ReportResponse} from './model/response/ReportResponse';
 
 type Method = 'POST' | 'GET';
 
@@ -30,50 +33,48 @@ export class PaymentAPI {
         return this.makeRequest('POST',  debitUri, request);
     }
 
-    public revertTransaction(transactionId: string, request: any): void {
+    public revertTransaction(transactionId: string, request: Object): Promise<TransactionResponse> {
         const revertUri = '/transaction/' + transactionId + '/revert';
-        this.executeRequest('POST',  revertUri, this.createNameValuePairs(), request);
+        return this.makeRequest('POST',  revertUri, request);
     }
 
-    public commitTransaction(transactionId: string, request: any): void {
+    public commitTransaction(transactionId: string, request: any): Promise<TransactionResponse> {
         const commitUri = '/transaction/' + transactionId + '/commit';
-        this.executeRequest('POST',  commitUri, this.createNameValuePairs(), request);
+        return this.makeRequest('POST',  commitUri,  request);
     }
 
-    public transactionResult(transactionId: string): void {
+    public transactionResult(transactionId: string): Promise<TransactionResponse> {
         const transactionResultUrl = '/transaction/' + transactionId + '/result';
-        this.executeRequest('GET',  transactionResultUrl, this.createNameValuePairs());
+        return this.makeRequest('GET',  transactionResultUrl);
     }
 
-    public transactionStatus(transactionId: string): void {
+    public transactionStatus(transactionId: string): Promise<TransactionStatusResponse> {
         const statusUri = '/transaction/' + transactionId;
-        this.executeRequest('GET',  statusUri, this.createNameValuePairs());
+        return this.makeRequest('GET',  statusUri);
     }
 
-    public searchOrders(order: string): void {
+    public searchOrders(order: string): Promise<OrderSearchResponse> {
         const searchUri = '/transactions/?order=' + order;
-        this.executeRequest('GET',  searchUri, this.createNameValuePairs());
+        return this.makeRequest('GET',  searchUri);
 
     }
 
-    public tokenization(tokenizationId: string): void {
+    public tokenization(tokenizationId: string): Promise<TransactionResponse> {
         const tokenUri = '/tokenization/' + tokenizationId;
-        this.executeRequest('GET',  tokenUri, this.createNameValuePairs());
+        return this.makeRequest('GET',  tokenUri);
     }
 
-    public fetchReport(date: string): void {
+    public fetchReport(date: string): Promise<TransactionResponse> {
         const fetchUri = '/report/batch/' + date;
-        this.executeRequest('GET', fetchUri, this.createNameValuePairs());
+        return this.makeRequest('GET', fetchUri);
+    }
+
+    public fetchDailyReport(date: string): Promise<ReportResponse> {
+        const reportUri = '/report/batch/' + date;
+        return this.makeRequest('GET', reportUri);
     }
 
     /*
-
-     public revertTransaction(UUID transactionId) throws IOException {}
-
-     public transactionStatus(UUID transactionId) throws IOException {}
-
-     public searchOrders(String order) throws IOException {}
-
      public commitTransaction(UUID transactionId, String amount, String currency) throws IOException {}
 
      public transactionResult(UUID transactionId) throws IOException {}
@@ -104,8 +105,8 @@ export class PaymentAPI {
         ];
     }
 
-    private makeRequest(method: Method, paymentUri: string, requestBody?: Object): Promise<TransactionResponse> {
-        return this.executeRequest('POST',  paymentUri, this.createNameValuePairs(), requestBody)
+    private makeRequest(method: Method, paymentUri: string, requestBody?: Object): Promise<any> {
+        return this.executeRequest(method,  paymentUri, this.createNameValuePairs(), requestBody)
             .then((body: TransactionResponse) => {
                 return body;
             })

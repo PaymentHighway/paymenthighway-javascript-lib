@@ -67,7 +67,6 @@
     "interface-name": [true, "never-prefix"],
     "jsdoc-format": true,
     "max-func-body-length": [true, 100, {"ignore-parameters-to-function-regex": "describe"}],
-    "max-line-length": [true, 140],
     "member-access": true,
     "member-ordering": true,
     "new-parens": true,
@@ -90,7 +89,6 @@
     "prefer-array-literal": true,
     "prefer-const": true,
     "typedef": [true, "call-signature", "parameter", "property-declaration", "member-variable-declaration"],
-    "variable-name": true,
 
     "align": [true, "parameters", "statements"],
     "curly": true,

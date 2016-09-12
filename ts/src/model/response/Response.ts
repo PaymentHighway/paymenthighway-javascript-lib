@@ -1,8 +1,8 @@
-import {Card} from '../request/Card';
 import {Token} from '../Token';
+import {CardResponse} from './CardResponse';
 
 export interface Response {
     result: Result;
-    card?: Card;
+    card?: CardResponse;
     token?: Token;
 }
