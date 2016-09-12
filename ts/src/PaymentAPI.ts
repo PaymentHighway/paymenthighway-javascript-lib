@@ -8,20 +8,19 @@ import {TransactionStatusResponse} from './model/response/TransactionStatusRespo
 import {OrderSearchResponse} from './model/response/OrderSearchResponse';
 import {ReportResponse} from './model/response/ReportResponse';
 import {ReconciliationReportResponse} from './model/response/ReconciliationReportResponse';
-
-type Method = 'POST' | 'GET';
+import {Method} from './util/Method';
 
 export class PaymentAPI {
 
     /* Payment API headers */
     public static USER_AGENT: string = 'PaymentHighway Javascript Library';
 
-    constructor(public serviceUrl: string,
-                public signatureKeyId: string,
-                public signatureSecret: string,
-                public account: string,
-                public merchant: string,
-                public apiVersion: string = '20150605') {
+    constructor(private serviceUrl: string,
+                private signatureKeyId: string,
+                private signatureSecret: string,
+                private account: string,
+                private merchant: string,
+                private apiVersion: string = '20150605') {
     }
 
     public initTransaction(): Promise<TransactionResponse> {
@@ -52,7 +51,6 @@ export class PaymentAPI {
     public searchOrders(order: string): Promise<OrderSearchResponse> {
         const searchUri = '/transactions/?order=' + order;
         return this.makeRequest('GET', searchUri);
-
     }
 
     public tokenization(tokenizationId: string): Promise<TransactionResponse> {

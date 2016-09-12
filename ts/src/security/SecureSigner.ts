@@ -1,5 +1,6 @@
 import * as Crypto from 'crypto';
 import {Pair} from '../util/Pair';
+import {Method} from '../util/Method';
 
 /**
  * Creates a signature for PaymentHighway messages
@@ -22,7 +23,7 @@ export class SecureSigner {
      * @return String eg:
      * "SPH1 testKey 51dcbaf5a9323daed24c0cdc5bb5d344f321aa84435b64e5da3d8f6c49370532"
      */
-    public createSignature(method: string, uri: string, keyValues: Pair<string, string>[], body: string): string {
+    public createSignature(method: Method, uri: string, keyValues: Pair<string, string>[], body: string): string {
         return this.signatureScheme + ' ' + this.secretKeyId + ' ' + this.sign(method, uri, keyValues, body);
     }
 
@@ -73,7 +74,7 @@ export class SecureSigner {
      * @param content The body content
      * @return boolean true if signature is found and matches the calculated one
      */
-    public validateSignature(method: string, uri: string, keyValues: Pair<string, string>[], content: string): boolean {
+    public validateSignature(method: Method, uri: string, keyValues: Pair<string, string>[], content: string): boolean {
 
         const receivedSignature = keyValues.find((x) => {
             return x.first.toLowerCase() === 'signature';

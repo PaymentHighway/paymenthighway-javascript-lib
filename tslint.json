@@ -43,7 +43,6 @@
     "no-missing-visibility-modifiers": true,
     "no-regex-spaces": true,
     "no-sparse-arrays": true,
-    "no-stateless-class": true,
     "no-string-literal": true,
     "no-unnecessary-bind": true,
     "no-unnecessary-override": true,
@@ -87,7 +86,6 @@
     "object-literal-sort-keys": false,
     "one-variable-per-declaration": true,
     "prefer-array-literal": true,
-    "prefer-const": true,
     "typedef": [true, "call-signature", "parameter", "property-declaration", "member-variable-declaration"],
 
     "align": [true, "parameters", "statements"],
