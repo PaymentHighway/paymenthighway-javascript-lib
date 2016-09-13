@@ -64,14 +64,14 @@ export class FormBuilder {
     }
 
     public generatePaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
-                                     amount: string, currency: string, orderId: string, description: string,
+                                     amount: number, currency: string, orderId: string, description: string,
                                      skipFormNotifications?: boolean, exitIframeOnResult?: boolean,
                                      exitIframeOn3ds?: boolean, use3ds?: boolean): FormContainer {
 
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
 
-        nameValuePairs.push(new Pair(FormBuilder.SPH_AMOUNT, amount));
+        nameValuePairs.push(new Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
         nameValuePairs.push(new Pair(FormBuilder.SPH_CURRENCY, currency));
         nameValuePairs.push(new Pair(FormBuilder.SPH_ORDER, orderId));
         nameValuePairs.push(new Pair(FormBuilder.DESCRIPTION, description));
@@ -98,7 +98,7 @@ export class FormBuilder {
     }
 
     public generatePayWithTokenAndCvcParameters(token: string, successUrl: string, failureUrl: string,
-                                                cancelUrl: string, language: string, amount: string, currency: string,
+                                                cancelUrl: string, language: string, amount: number, currency: string,
                                                 orderId: string, description: string, skipFormNotifications?: boolean,
                                                 exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean,
                                                 use3ds?: boolean): FormContainer {
@@ -106,10 +106,10 @@ export class FormBuilder {
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
 
-        nameValuePairs.push(new Pair(FormBuilder.SPH_AMOUNT, amount));
+        nameValuePairs.push(new Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
         nameValuePairs.push(new Pair(FormBuilder.SPH_CURRENCY, currency));
         nameValuePairs.push(new Pair(FormBuilder.SPH_ORDER, orderId));
-        nameValuePairs.push(new Pair(FormBuilder.SPH_TOKEN, token.toString()));
+        nameValuePairs.push(new Pair(FormBuilder.SPH_TOKEN, token));
         nameValuePairs.push(new Pair(FormBuilder.DESCRIPTION, description));
         if (skipFormNotifications) {
             nameValuePairs.push(new Pair(FormBuilder.SPH_SKIP_FORM_NOTIFICATIONS, skipFormNotifications.toString()));

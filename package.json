@@ -15,9 +15,10 @@
     "precompile": "npm run clean",
     "compile": "tsc",
     "babel": "babel es6 --out-dir es5",
-    "test": "env NODE_ENV=test mocha -R spec js/tests",
+    "test": "set NODE_ENV=test && mocha -t 4000 -R spec js/tests",
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -t 4000 -R spec js/tests",
     "clean": "del-cli js/",
-    "lint": "tslint 'ts/**/*.ts?(x)' || exit 1"
+    "lint": "tslint ts/**/*.ts"
   },
   "author": {
     "name": "Pauli Kostamo",
@@ -42,6 +43,7 @@
     "chai-string": "^1.2.0",
     "del-cli": "^0.2.0",
     "ghooks": "^1.2.4",
+    "istanbul": "^0.4.5",
     "mocha": "^2.5.3",
     "tslint": "^3.12.1",
     "tslint-microsoft-contrib": "^2.0.8",

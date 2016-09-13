@@ -112,7 +112,7 @@ describe('PaymentAPI', () => {
             });
     });
 
-    it('Test transactionStatus', (done) => {
+    it('Test transaction status', (done) => {
         let transactionId: string;
         createDebitTransaction()
             .then((initResponse) => {

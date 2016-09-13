@@ -8,4 +8,8 @@ export class FormContainer {
                 public nameValuePairs: Pair<string, string>[],
                 public requestId: string) {
     }
+
+    public getAction(): string {
+        return this.baseUrl + this.actionUrl;
+    }
 }

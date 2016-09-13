@@ -2,6 +2,7 @@ import {assert} from 'chai';
 import {SecureSigner} from '../src/security/SecureSigner';
 import {Pair} from '../src/util/Pair';
 import {PaymentHighwayUtility} from '../src/PaymentHighwayUtility';
+import {Method} from '../src/util/Method';
 
 describe('Secure signer', () => {
     it('Test create signature', () => {
@@ -23,7 +24,7 @@ describe('Secure signer', () => {
             new Pair('language', 'EN'),
             new Pair('description', 'this is a description')
         ];
-        const formPaymentMethod = 'POST';
+        const formPaymentMethod: Method = 'POST';
         const formPaymentUri = '/form/view/payment';
         const formPaymentBody = '';
         const sig = ss.createSignature(formPaymentMethod, formPaymentUri, nameValuePairs, formPaymentBody);
