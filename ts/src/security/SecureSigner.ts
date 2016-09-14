@@ -1,6 +1,8 @@
 import * as Crypto from 'crypto';
 import {Pair} from '../util/Pair';
 import {Method} from '../util/Method';
+import * as _ from 'lodash';
+import {Dictionary} from 'lodash';
 
 /**
  * Creates a signature for PaymentHighway messages
@@ -74,9 +76,9 @@ export class SecureSigner {
      * @param content The body content
      * @return boolean true if signature is found and matches the calculated one
      */
-    public validateSignature(method: Method, uri: string, keyValues: Pair<string, string>[], content: string): boolean {
-
-        const receivedSignature = keyValues.find((x) => {
+    public validateSignature(method: Method, uri: string, keyValues: Dictionary<string>, content: string): boolean {
+        const keyValArray = this.parseKeyValues(keyValues);
+        const receivedSignature = keyValArray.find((x) => {
             return x.first.toLowerCase() === 'signature';
         }).second;
 
@@ -84,7 +86,7 @@ export class SecureSigner {
             return false;
         }
 
-        const createdSignature = this.createSignature(method, uri, keyValues, content);
+        const createdSignature = this.createSignature(method, uri, keyValArray, content);
         return receivedSignature === createdSignature;
     }
 
@@ -93,8 +95,15 @@ export class SecureSigner {
      * @param keyValues The request parameters from the redirection
      * @return boolean
      */
-    public validateFormRedirect(keyValues: Pair<string, string>[]): boolean {
+    public validateFormRedirect(keyValues: Dictionary<string>): boolean {
         return this.validateSignature('GET', '', keyValues, '');
+    }
+
+    private parseKeyValues(keyValues: Dictionary<string>): Pair<string, string>[] {
+        return _.transform(keyValues, (result: Pair<string, string>[], value: string, key: string) => {
+            result.push(new Pair<string, string>(key, value));
+            return result;
+        }, []);
     }
 
 }

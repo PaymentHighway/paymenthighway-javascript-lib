@@ -4,6 +4,12 @@ import {FormBuilder} from '../src/FormBuilder';
 import {Method} from '../src/util/Method';
 import {Pair} from '../src/util/Pair';
 import {FormConnection} from './helpers/FormConnection';
+import {PaymentAPI} from '../src/PaymentAPI';
+import * as URI from 'urijs';
+import {SecureSigner} from '../src/security/SecureSigner';
+import {Dictionary} from 'lodash';
+
+const Browser = require('zombie');
 
 use(chaiString);
 
@@ -21,9 +27,12 @@ const amount = 9999;
 const currency = 'EUR';
 const orderId = '1000123A';
 const description = 'order description';
-const token = '71435029-fbb6-4506-aa86-8529efb640b0';
+const sphAccount = 'test';
+const sphMerchant = 'test_merchantId';
 
 let formBuilder: FormBuilder;
+const ss = new SecureSigner(signatureKeyId, signatureSecret)
+let cardToken: string;
 
 beforeEach(() => {
     formBuilder = new FormBuilder(method, signatureKeyId, signatureSecret, account, merchant, baseUrl);
@@ -50,12 +59,48 @@ describe('Form builder', () => {
             ' got ' + formContainer.getAction());
     });
 
-    it('Test with acceptCvcRequired set to false.', () => {
+    it('Test tokenize', (done) => {
+        const formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language);
+        const paymentAPI = new PaymentAPI(baseUrl, signatureKeyId, signatureSecret, sphAccount, sphMerchant);
+        FormConnection.postForm(formContainer)
+            .then((response) => {
+                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+                const browser = new Browser();
+                browser.visit(baseUrl + response.headers.location, () => {
+                    browser.fill('input[name=card_number_formatted]', '4153 0139 9970 0024')
+                        .fill('input[name=expiration_month]', '11')
+                        .fill('input[name=expiration_year]', '2017')
+                        .fill('input[name=expiry]', '11 / 17')
+                        .fill('input[name=cvv]', '024')
+                        .pressButton('OK', () => {
+                            const uri = URI.parse(browser.resources[0].response.url);
+                            const parameters = <Dictionary<string>> URI.parseQuery(uri.query);
+                            assert.isTrue(ss.validateFormRedirect(parameters), 'Validate redirect should return true');
+                            paymentAPI.tokenization(parameters['sph-tokenization-id'])
+                                .then((tokenResponse) => {
+                                    assert(tokenResponse.card.expire_year === '2017', 'Expire year should be 2017');
+                                    assert(tokenResponse.card.expire_month === '11', 'Expire month should be 11');
+                                    assert(tokenResponse.card.type === 'Visa', 'Card type should be Visa');
+                                    assert(tokenResponse.card.cvc_required === 'no', 'Should not require CVC');
+                                    cardToken = tokenResponse.card_token;
+                                    done();
+                                });
+                        });
+                });
+            });
+    });
+
+    it('Test with acceptCvcRequired set to false.', (done) => {
         const acceptCvcRequired = false;
         const formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language, acceptCvcRequired);
         const signature: Pair<string, string> = formContainer.nameValuePairs.find((x) => x.first === 'signature');
         assert.isNotNull(signature, 'Form signature should not be null');
         assert.startsWith(signature.second, 'SPH1', 'Signature should start with "SPH1"');
+        FormConnection.postForm(formContainer)
+            .then((response) => {
+                testRedirectResponse(response, '/tokenize');
+                done();
+            });
     });
 
     it('Test with acceptCvcRequired set to true.', (done) => {
@@ -137,7 +182,7 @@ describe('Form builder', () => {
 
     it('Test mandatory PayWithTokenAndCvc parameters', (done) => {
         const formContainer = formBuilder.generatePayWithTokenAndCvcParameters(
-            token, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
+            cardToken, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
         testNameValuePairs(formContainer.nameValuePairs, 15);
         FormConnection.postForm(formContainer)
             .then((response) => {
@@ -152,7 +197,7 @@ describe('Form builder', () => {
         const exitIframeOn3ds = true;
         const use3ds = true;
         const formContainer = formBuilder.generatePayWithTokenAndCvcParameters(
-            token, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            cardToken, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
             skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
         testNameValuePairs(formContainer.nameValuePairs, 19);
         FormConnection.postForm(formContainer)
@@ -168,7 +213,7 @@ describe('Form builder', () => {
         const exitIframeOn3ds = false;
         const use3ds = true;
         const formContainer = formBuilder.generatePayWithTokenAndCvcParameters(
-            token, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            cardToken, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
             skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
         testNameValuePairs(formContainer.nameValuePairs, 18);
         FormConnection.postForm(formContainer)

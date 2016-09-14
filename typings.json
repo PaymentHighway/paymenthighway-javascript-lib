@@ -4,9 +4,11 @@
     "chai-string": "registry:dt/chai-string#1.1.4+20160317120654",
     "mocha": "registry:dt/mocha#2.2.5+20160720003353",
     "node": "registry:env/node#4.0.0+20160902022231",
-    "request-promise": "registry:dt/request-promise#3.0.0+20160906190103"
+    "request-promise": "registry:dt/request-promise#3.0.0+20160906190103",
+    "urijs": "registry:dt/urijs#1.15.1+20160526132152"
   },
   "dependencies": {
+    "lodash": "registry:npm/lodash#4.0.0+20160723033700",
     "node-uuid": "registry:npm/node-uuid#1.4.7+20160723033700",
     "request": "registry:npm/request#2.69.0+20160428223725"
   }

@@ -156,4 +156,10 @@ describe('PaymentAPI', () => {
             });
     });
 
+    it('Test rejected debit response', (done) => {
+        /* TODO implement this */
+        done();
+    });
+
 });
+

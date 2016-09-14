@@ -9,6 +9,7 @@ import {OrderSearchResponse} from './model/response/OrderSearchResponse';
 import {ReportResponse} from './model/response/ReportResponse';
 import {ReconciliationReportResponse} from './model/response/ReconciliationReportResponse';
 import {Method} from './util/Method';
+import {TokenizationResponse} from './model/response/TokenizationResponse';
 
 export class PaymentAPI {
 
@@ -20,7 +21,7 @@ export class PaymentAPI {
                 private signatureSecret: string,
                 private account: string,
                 private merchant: string,
-                private apiVersion: string = '20150605') {
+                private apiVersion: string = '20160630') {
     }
 
     public initTransaction(): Promise<TransactionResponse> {
@@ -53,7 +54,7 @@ export class PaymentAPI {
         return this.makeRequest('GET', searchUri);
     }
 
-    public tokenization(tokenizationId: string): Promise<TransactionResponse> {
+    public tokenization(tokenizationId: string): Promise<TokenizationResponse> {
         const tokenUri = '/tokenization/' + tokenizationId;
         return this.makeRequest('GET', tokenUri);
     }
@@ -72,14 +73,6 @@ export class PaymentAPI {
         const reportUri = '/report/reconciliation/' + date + '?use-date-processed=' + useDateProcessed;
         return this.makeRequest('GET', reportUri);
     }
-
-    /*
-     public commitTransaction(UUID transactionId, String amount, String currency) throws IOException {}
-
-     public transactionResult(UUID transactionId) throws IOException {}
-
-     public tokenize(UUID tokenizationId) throws IOException {}
-     */
 
     private handleError(err: any): any {
         return err;
