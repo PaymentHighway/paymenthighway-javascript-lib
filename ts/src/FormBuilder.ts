@@ -41,19 +41,19 @@ export class FormBuilder {
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
 
-        if (acceptCvcRequired) {
+        if (typeof acceptCvcRequired !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_ACCEPT_CVC_REQUIRED, acceptCvcRequired.toString()));
         }
-        if (skipFormNotifications) {
+        if (typeof skipFormNotifications !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_SKIP_FORM_NOTIFICATIONS, skipFormNotifications.toString()));
         }
-        if (exitIframeOnResult) {
+        if (typeof exitIframeOnResult !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
         }
-        if (exitIframeOn3ds) {
+        if (typeof exitIframeOn3ds !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_THREE_D_SECURE, exitIframeOn3ds.toString()));
         }
-        if (use3ds) {
+        if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
 
@@ -77,16 +77,16 @@ export class FormBuilder {
         nameValuePairs.push(new Pair(FormBuilder.SPH_ORDER, orderId));
         nameValuePairs.push(new Pair(FormBuilder.DESCRIPTION, description));
 
-        if (skipFormNotifications) {
+        if (typeof skipFormNotifications !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_SKIP_FORM_NOTIFICATIONS, skipFormNotifications.toString()));
         }
-        if (exitIframeOnResult) {
+        if (typeof exitIframeOnResult !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
         }
-        if (exitIframeOn3ds) {
+        if (typeof exitIframeOn3ds !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_THREE_D_SECURE, exitIframeOn3ds.toString()));
         }
-        if (use3ds) {
+        if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
 
@@ -111,16 +111,16 @@ export class FormBuilder {
         nameValuePairs.push(new Pair(FormBuilder.SPH_ORDER, orderId));
         nameValuePairs.push(new Pair(FormBuilder.SPH_TOKEN, token));
         nameValuePairs.push(new Pair(FormBuilder.DESCRIPTION, description));
-        if (skipFormNotifications) {
+        if (typeof skipFormNotifications !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_SKIP_FORM_NOTIFICATIONS, skipFormNotifications.toString()));
         }
-        if (exitIframeOnResult) {
+        if (typeof exitIframeOnResult !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
         }
-        if (exitIframeOn3ds) {
+        if (typeof exitIframeOn3ds !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_THREE_D_SECURE, exitIframeOn3ds.toString()));
         }
-        if (use3ds) {
+        if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
 

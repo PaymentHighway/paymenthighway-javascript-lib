@@ -6,6 +6,7 @@ import {Pair} from '../src/util/Pair';
 import {FormConnection} from './helpers/FormConnection';
 
 use(chaiString);
+
 const method: Method = 'POST';
 const signatureKeyId = 'testKey';
 const signatureSecret = 'testSecret';
@@ -16,6 +17,12 @@ const successUrl = 'https://example.com/success';
 const failureUrl = 'https://example.com/failure';
 const cancelUrl = 'https://example.com/cancel';
 const language = 'EN';
+const amount = 9999;
+const currency = 'EUR';
+const orderId = '1000123A';
+const description = 'order description';
+const token = '71435029-fbb6-4506-aa86-8529efb640b0';
+
 let formBuilder: FormBuilder;
 
 beforeEach(() => {
@@ -27,6 +34,10 @@ function testRedirectResponse(response: any, locationEndsWith: string): void {
     assert.endsWith(response.headers.location, locationEndsWith, 'Response should return location to form.');
 }
 
+function testNameValuePairs(nameValuePairs: Pair<string, string>[], rightAmount: number): void {
+    assert(nameValuePairs.length === rightAmount, 'Should have ' + rightAmount + ' name value pairs. Got ' + nameValuePairs.length);
+}
+
 describe('Form builder', () => {
     it('Should have instance of FormBuilder', () => {
         assert.instanceOf(formBuilder, FormBuilder, 'Was not instance of FormBuilder');
@@ -34,7 +45,7 @@ describe('Form builder', () => {
 
     it('Should have right parameters', () => {
         const formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language);
-        assert(formContainer.nameValuePairs.length === 10, 'Should have 10 name value pairs. Got ' + formContainer.nameValuePairs.length);
+        testNameValuePairs(formContainer.nameValuePairs, 10);
         assert(formContainer.getAction() === baseUrl + '/form/view/add_card', 'Action url should be ' + baseUrl + '/form/view/add_card' +
             ' got ' + formContainer.getAction());
     });
@@ -68,7 +79,7 @@ describe('Form builder', () => {
         const use3ds = true;
         const formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language,
             acceptCvcRequired, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
-        assert(formContainer.nameValuePairs.length === 15, 'Should have 15 name value pairs. Got ' + formContainer.nameValuePairs.length);
+        testNameValuePairs(formContainer.nameValuePairs, 15);
         FormConnection.postForm(formContainer)
             .then((response) => {
                 testRedirectResponse(response, '/tokenize');
@@ -84,7 +95,7 @@ describe('Form builder', () => {
         const use3ds = true;
         const formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language,
             acceptCvcRequired, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
-        assert(formContainer.nameValuePairs.length === 11, 'Should have 11 name value pairs. Got ' + formContainer.nameValuePairs.length);
+        testNameValuePairs(formContainer.nameValuePairs, 11);
         assert(formContainer.nameValuePairs.find((x) => x.first === 'sph-use-three-d-secure').second === 'true', 'sph-use-three-d-secure should be true');
         FormConnection.postForm(formContainer)
             .then((response) => {
@@ -94,15 +105,10 @@ describe('Form builder', () => {
     });
 
     it('Test mandatory payment parameters ', (done) => {
-        const amount = 9999;
-        const currency = 'EUR';
-        const orderId = '1000123A';
-        const description = 'order description';
-
         const formContainer = formBuilder.generatePaymentParameters(
             successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
 
-        assert(formContainer.nameValuePairs.length === 14, 'Should have 14 name value pairs. Got ' + formContainer.nameValuePairs.length);
+        testNameValuePairs(formContainer.nameValuePairs, 14);
         assert(formContainer.nameValuePairs.find((x) => x.first === 'description').second === description, 'Description should be same than given description');
         FormConnection.postForm(formContainer)
             .then((response) => {
@@ -112,23 +118,64 @@ describe('Form builder', () => {
     });
 
     it('Test optional payment parameters', (done) => {
-        const amount = 9999;
-        const currency = 'EUR';
-        const orderId = '1000123A';
-        const description = 'order description';
         const skipFormNotifications = true;
         const exitIframeOnResult = true;
         const exitIframeOn3ds = true;
+        const use3ds = true;
 
         const formContainer = formBuilder.generatePaymentParameters(
             successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
-            skipFormNotifications, exitIframeOnResult, exitIframeOn3ds);
+            skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
 
-        assert(formContainer.nameValuePairs.length === 17, 'Should have 17 name value pairs. Got ' + formContainer.nameValuePairs.length);
+        testNameValuePairs(formContainer.nameValuePairs, 18);
         FormConnection.postForm(formContainer)
             .then((response) => {
                 testRedirectResponse(response, '/payment');
                 done();
             });
     });
+
+    it('Test mandatory PayWithTokenAndCvc parameters', (done) => {
+        const formContainer = formBuilder.generatePayWithTokenAndCvcParameters(
+            token, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
+        testNameValuePairs(formContainer.nameValuePairs, 15);
+        FormConnection.postForm(formContainer)
+            .then((response) => {
+                testRedirectResponse(response, '/payment_with_token_and_cvc');
+                done();
+            });
+    });
+
+    it('Test optional PayWithTokenAndCvc parameters', (done) => {
+        const skipFormNotifications = true;
+        const exitIframeOnResult = true;
+        const exitIframeOn3ds = true;
+        const use3ds = true;
+        const formContainer = formBuilder.generatePayWithTokenAndCvcParameters(
+            token, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
+        testNameValuePairs(formContainer.nameValuePairs, 19);
+        FormConnection.postForm(formContainer)
+            .then((response) => {
+                testRedirectResponse(response, '/payment_with_token_and_cvc');
+                done();
+            });
+    });
+
+    it('Test 3ds PayWithTokenAndCvc parameters', (done) => {
+        const skipFormNotifications = false;
+        const exitIframeOnResult: boolean = undefined;
+        const exitIframeOn3ds = false;
+        const use3ds = true;
+        const formContainer = formBuilder.generatePayWithTokenAndCvcParameters(
+            token, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
+        testNameValuePairs(formContainer.nameValuePairs, 18);
+        FormConnection.postForm(formContainer)
+            .then((response) => {
+                testRedirectResponse(response, '/payment_with_token_and_cvc');
+                done();
+            });
+    });
+
 });
