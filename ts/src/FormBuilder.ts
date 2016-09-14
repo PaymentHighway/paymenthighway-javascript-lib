@@ -40,8 +40,6 @@ export class FormBuilder {
                                      exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean): FormContainer {
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
-        const addCardUri = '/form/view/add_card';
-        const signature = this.createSignature(addCardUri, nameValuePairs);
 
         if (acceptCvcRequired) {
             nameValuePairs.push(new Pair(FormBuilder.SPH_ACCEPT_CVC_REQUIRED, acceptCvcRequired.toString()));
@@ -58,6 +56,9 @@ export class FormBuilder {
         if (use3ds) {
             nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
+
+        const addCardUri = '/form/view/add_card';
+        const signature = this.createSignature(addCardUri, nameValuePairs);
         nameValuePairs.push(new Pair(FormBuilder.SIGNATURE, signature));
 
         return new FormContainer(this.method, this.baseUrl, addCardUri, nameValuePairs, requestId);
@@ -91,7 +92,6 @@ export class FormBuilder {
 
         const payWithCardUri = '/form/view/pay_with_card';
         const signature = this.createSignature(payWithCardUri, nameValuePairs);
-
         nameValuePairs.push(new Pair(FormBuilder.SIGNATURE, signature));
 
         return new FormContainer(this.method, this.baseUrl, payWithCardUri, nameValuePairs, requestId);
@@ -126,7 +126,6 @@ export class FormBuilder {
 
         const payWithTokenAndCvcUri = '/form/view/pay_with_token_and_cvc';
         const signature = this.createSignature(payWithTokenAndCvcUri, nameValuePairs);
-
         nameValuePairs.push(new Pair(FormBuilder.SIGNATURE, signature));
 
         return new FormContainer(this.method, this.baseUrl, payWithTokenAndCvcUri, nameValuePairs, requestId);

@@ -22,9 +22,9 @@ beforeEach(() => {
     formBuilder = new FormBuilder(method, signatureKeyId, signatureSecret, account, merchant, baseUrl);
 });
 
-function testRedirectResponse(response: any, locationEndsWith: string){
-    assert(response.statusCode === 303, "Response status code should be 303, got "+ response.statusCode);
-    assert.endsWith(response.headers.location, locationEndsWith, "Response should return location to form.");
+function testRedirectResponse(response: any, locationEndsWith: string): void {
+    assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+    assert.endsWith(response.headers.location, locationEndsWith, 'Response should return location to form.');
 }
 
 describe('Form builder', () => {
@@ -88,17 +88,16 @@ describe('Form builder', () => {
         assert(formContainer.nameValuePairs.find((x) => x.first === 'sph-use-three-d-secure').second === 'true', 'sph-use-three-d-secure should be true');
         FormConnection.postForm(formContainer)
             .then((response) => {
-                console.log(response);
                 testRedirectResponse(response, '/tokenize');
                 done();
             });
     });
 
-    it('Test mandatory payment parameters ',(done) => {
+    it('Test mandatory payment parameters ', (done) => {
         const amount = 9999;
         const currency = 'EUR';
-        const orderId = "1000123A";
-        const description = "order description";
+        const orderId = '1000123A';
+        const description = 'order description';
 
         const formContainer = formBuilder.generatePaymentParameters(
             successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
@@ -115,8 +114,8 @@ describe('Form builder', () => {
     it('Test optional payment parameters', (done) => {
         const amount = 9999;
         const currency = 'EUR';
-        const orderId = "1000123A";
-        const description = "order description";
+        const orderId = '1000123A';
+        const description = 'order description';
         const skipFormNotifications = true;
         const exitIframeOnResult = true;
         const exitIframeOn3ds = true;
@@ -131,5 +130,5 @@ describe('Form builder', () => {
                 testRedirectResponse(response, '/payment');
                 done();
             });
-    })
+    });
 });
