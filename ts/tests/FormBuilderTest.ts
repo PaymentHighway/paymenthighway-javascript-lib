@@ -210,6 +210,32 @@ describe('Form builder', () => {
             });
     });
 
+    it('Test add card and payment parameters with mandatory parameters', (done) => {
+        const formContainer = formBuilder.generateAddCardAndPaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
+        testNameValuePairs(formContainer.nameValuePairs, 14);
+        FormConnection.postForm(formContainer)
+            .then((response) => {
+                testRedirectResponse(response, '/payment');
+                done();
+            });
+    });
+
+    it('Test add card and payment parameters with optional parameters', (done) => {
+        const skipFormNotifications = true;
+        const exitIframeOnResult = true;
+        const exitIframeOn3ds = true;
+        const use3ds = true;
+
+        const formContainer = formBuilder.generateAddCardAndPaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+        skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
+        testNameValuePairs(formContainer.nameValuePairs, 18);
+        FormConnection.postForm(formContainer)
+            .then((response) => {
+                testRedirectResponse(response, '/payment');
+                done();
+            });
+    });
+
     it('Test 3ds PayWithTokenAndCvc parameters', (done) => {
         const skipFormNotifications = false;
         const exitIframeOnResult: boolean = undefined;

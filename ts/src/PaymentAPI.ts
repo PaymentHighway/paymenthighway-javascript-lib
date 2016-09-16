@@ -11,7 +11,13 @@ import {ReconciliationReportResponse} from './model/response/ReconciliationRepor
 import {Method} from './util/Method';
 import {TokenizationResponse} from './model/response/TokenizationResponse';
 import {TransactionResultResponse} from './model/response/TransactionResultResponse';
+import {TransactionRequest} from "./model/request/TransactionRequest";
+import {RevertTransactionRequest} from "./model/request/RevertTransactionRequest";
+import {CommitTransactionRequest} from "./model/request/CommitTransactionRequest";
 
+/**
+ * Payment Highway Payment API Service.
+ */
 export class PaymentAPI {
 
     /* Payment API headers */
@@ -25,51 +31,117 @@ export class PaymentAPI {
                 private apiVersion: string = '20160630') {
     }
 
+    /**
+     * Payment Highway Init Transaction
+     *
+     * @returns {Promise<TransactionResponse>}
+     */
     public initTransaction(): Promise<TransactionResponse> {
         const paymentUri = '/transaction';
         return this.makeRequest('POST', paymentUri);
     }
 
-    public debitTransaction(transactionId: string, request: Object): Promise<TransactionResponse> {
+    /**
+     * Payment Highway Debit Transaction
+     *
+     * @param transactionId
+     * @param request
+     * @returns {Promise<TransactionResponse>}
+     */
+    public debitTransaction(transactionId: string, request: TransactionRequest): Promise<TransactionResponse> {
         const debitUri = '/transaction/' + transactionId + '/debit';
         return this.makeRequest('POST', debitUri, request);
     }
 
-    public revertTransaction(transactionId: string, request: Object): Promise<TransactionResponse> {
+    /**
+     * Payment Highway Revert Transaction with amount
+     *
+     * @param transactionId
+     * @param request
+     * @returns {Promise<TransactionResponse>}
+     */
+    public revertTransaction(transactionId: string, request: RevertTransactionRequest): Promise<TransactionResponse> {
         const revertUri = '/transaction/' + transactionId + '/revert';
         return this.makeRequest('POST', revertUri, request);
     }
 
-    public commitTransaction(transactionId: string, request: any): Promise<TransactionResponse> {
+    /**
+     * Payment Highway Transaction Commit Request
+     * Used to commit (capture) the transaction.
+     * In order to find out the result of the transaction without committing it, use Transaction Result request instead.
+     *
+     * @param transactionId
+     * @param request
+     * @returns {Promise<TransactionResponse>}
+     */
+    public commitTransaction(transactionId: string, request: CommitTransactionRequest): Promise<TransactionResponse> {
         const commitUri = '/transaction/' + transactionId + '/commit';
         return this.makeRequest('POST', commitUri, request);
     }
 
+    /**
+     * Payment Highway Transaction Status Request
+     *
+     * @param transactionId
+     * @returns {Promise<TransactionStatusResponse>}
+     */
     public transactionStatus(transactionId: string): Promise<TransactionStatusResponse> {
         const statusUri = '/transaction/' + transactionId;
         return this.makeRequest('GET', statusUri);
     }
 
-    public searchOrders(order: string): Promise<OrderSearchResponse> {
-        const searchUri = '/transactions/?order=' + order;
+    /**
+     * Payment Highway Order Status Request
+     *
+     * @param orderId   The ID of the order whose transactions should be searched for
+     * @returns {Promise<OrderSearchResponse>}
+     */
+    public searchOrders(orderId: string): Promise<OrderSearchResponse> {
+        const searchUri = '/transactions/?order=' + orderId;
         return this.makeRequest('GET', searchUri);
     }
 
+    /**
+     * Payment Highway Tokenize Request
+     *
+     * @param tokenizationId
+     * @returns {Promise<TokenizationResponse>}
+     */
     public tokenization(tokenizationId: string): Promise<TokenizationResponse> {
         const tokenUri = '/tokenization/' + tokenizationId;
         return this.makeRequest('GET', tokenUri);
     }
 
+    /**
+     * Payment Highway Transaction Result Request
+     * Used to find out whether or not an uncommitted transaction succeeded, without actually committing (capturing) it.
+     *
+     * @param transactionId
+     * @returns {Promise<TransactionResultResponse>}
+     */
     public transactionResult(transactionId: string): Promise<TransactionResultResponse> {
         const transactionResultUrl = '/transaction/' + transactionId + '/result';
         return this.makeRequest('GET', transactionResultUrl);
     }
 
+    /**
+     * Payment Highway Daily Report Request
+     *
+     * @param date
+     * @returns {Promise<ReportResponse>}
+     */
     public fetchDailyReport(date: string): Promise<ReportResponse> {
         const reportUri = '/report/batch/' + date;
         return this.makeRequest('GET', reportUri);
     }
 
+    /**
+     * Payment Highway Reconciliation Report Request
+     *
+     * @param date      The date to fetch the reconciliation report for. Must be today - 1 day or earlier.
+     * @param useDateProcessed
+     * @returns {Promise<ReconciliationReportResponse>}
+     */
     public fetchReconciliationReport(date: string, useDateProcessed: boolean = false): Promise<ReconciliationReportResponse> {
         const reportUri = '/report/reconciliation/' + date + '?use-date-processed=' + useDateProcessed;
         return this.makeRequest('GET', reportUri);
@@ -90,6 +162,13 @@ export class PaymentAPI {
         ];
     }
 
+    /**
+     *
+     * @param method
+     * @param paymentUri
+     * @param requestBody
+     * @returns {Promise<TransactionResponse>}
+     */
     private makeRequest(method: Method, paymentUri: string, requestBody?: Object): Promise<any> {
         return this.executeRequest(method, paymentUri, this.createNameValuePairs(), requestBody)
             .then((body: TransactionResponse) => {
@@ -97,6 +176,14 @@ export class PaymentAPI {
             });
     }
 
+    /**
+     *
+     * @param method
+     * @param path
+     * @param nameValuePairs
+     * @param requestBody
+     * @returns {requestPromise.RequestPromise}
+     */
     private executeRequest(method: Method, path: string, nameValuePairs: Pair<string, string>[], requestBody?: Object): RequestPromise {
         const ss = new SecureSigner(this.signatureKeyId, this.signatureSecret);
         let bodyString = '';
