@@ -8,6 +8,9 @@ import {PaymentAPI} from '../src/PaymentAPI';
 import * as URI from 'urijs';
 import {SecureSigner} from '../src/security/SecureSigner';
 import {Dictionary} from 'lodash';
+import {TransactionRequest} from '../src/model/request/TransactionRequest';
+import {Token} from '../src/model/Token';
+import {TransactionResponse} from '../src/model/response/TransactionResponse';
 
 const Browser = require('zombie');
 
@@ -31,7 +34,7 @@ const sphAccount = 'test';
 const sphMerchant = 'test_merchantId';
 
 let formBuilder: FormBuilder;
-const ss = new SecureSigner(signatureKeyId, signatureSecret)
+const ss = new SecureSigner(signatureKeyId, signatureSecret);
 let cardToken: string;
 
 beforeEach(() => {
@@ -221,6 +224,21 @@ describe('Form builder', () => {
                 testRedirectResponse(response, '/payment_with_token_and_cvc');
                 done();
             });
+    });
+
+    it('Test token debit', (done) => {
+        const paymentAPI = new PaymentAPI(baseUrl, signatureKeyId, signatureSecret, sphAccount, sphMerchant);
+        let initResponse: TransactionResponse;
+        const testCardToken = new Token(cardToken);
+        paymentAPI.initTransaction().then((response) => {
+            initResponse = response;
+            const transactionRequest = new TransactionRequest(testCardToken, 9999, 'EUR', orderId);
+            return paymentAPI.debitTransaction(initResponse.id, transactionRequest);
+        }).then((debitResponse) => {
+            assert(debitResponse.result.code === 100, 'Request should succeed with code 100, complete response was: ' + JSON.stringify(debitResponse));
+            assert(debitResponse.result.message === 'OK', 'Request should succeed with message "OK", complete response was: ' + JSON.stringify(debitResponse));
+            done();
+        });
     });
 
 });

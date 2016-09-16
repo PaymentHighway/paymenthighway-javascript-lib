@@ -10,6 +10,7 @@ import {ReportResponse} from './model/response/ReportResponse';
 import {ReconciliationReportResponse} from './model/response/ReconciliationReportResponse';
 import {Method} from './util/Method';
 import {TokenizationResponse} from './model/response/TokenizationResponse';
+import {TransactionResultResponse} from './model/response/TransactionResultResponse';
 
 export class PaymentAPI {
 
@@ -59,7 +60,7 @@ export class PaymentAPI {
         return this.makeRequest('GET', tokenUri);
     }
 
-    public transactionResult(transactionId: string): Promise<TransactionResponse> {
+    public transactionResult(transactionId: string): Promise<TransactionResultResponse> {
         const transactionResultUrl = '/transaction/' + transactionId + '/result';
         return this.makeRequest('GET', transactionResultUrl);
     }
@@ -72,10 +73,6 @@ export class PaymentAPI {
     public fetchReconciliationReport(date: string, useDateProcessed: boolean = false): Promise<ReconciliationReportResponse> {
         const reportUri = '/report/reconciliation/' + date + '?use-date-processed=' + useDateProcessed;
         return this.makeRequest('GET', reportUri);
-    }
-
-    private handleError(err: any): any {
-        return err;
     }
 
     /**
@@ -97,9 +94,6 @@ export class PaymentAPI {
         return this.executeRequest(method, paymentUri, this.createNameValuePairs(), requestBody)
             .then((body: TransactionResponse) => {
                 return body;
-            })
-            .catch((err: any) => {
-                return this.handleError(err);
             });
     }
 

@@ -64,7 +64,7 @@ describe('PaymentAPI', () => {
 
     it('Test debit transaction', (done) => {
         createDebitTransaction().then(() => {
-           done();
+            done();
         });
     });
 
@@ -75,11 +75,11 @@ describe('PaymentAPI', () => {
                 return api.commitTransaction(initResponse.id, commitRequest);
             })
             .then((commitResponse) => {
-            checkResult(commitResponse);
-            assert(commitResponse.card.type === 'Visa', 'Card type should be "Visa"' + printResult(commitResponse));
-            assert(commitResponse.card.cvc_required === 'not_tested', 'Test card should return cvc_required = not_tested' + printResult(commitResponse));
-            done();
-        });
+                checkResult(commitResponse);
+                assert(commitResponse.card.type === 'Visa', 'Card type should be "Visa"' + printResult(commitResponse));
+                assert(commitResponse.card.cvc_required === 'not_tested', 'Test card should return cvc_required = not_tested' + printResult(commitResponse));
+                done();
+            });
     });
 
     it('Test revert transaction', (done) => {
@@ -157,9 +157,23 @@ describe('PaymentAPI', () => {
     });
 
     it('Test rejected debit response', (done) => {
-        /* TODO implement this */
-        done();
+        const testCardTokenizeOkPaymentFails = new Card('4153013999700156', '2017', '11', '156');
+        const orderId = PaymentHighwayUtility.createRequestId();
+        let transactionResponse: TransactionResponse;
+        api.initTransaction()
+            .then((response) => {
+                transactionResponse = response;
+                const transactionRequest = new TransactionRequest(testCardTokenizeOkPaymentFails, 9999, 'EUR', orderId);
+                return api.debitTransaction(transactionResponse.id, transactionRequest);
+            })
+            .then((debitResponse) => {
+                assert(debitResponse.result.code === 200, 'Authorization should fail (code 200), got ' + debitResponse.result.code);
+                assert(debitResponse.result.message === 'Authorization failed', 'Authorization should fail');
+                return api.transactionResult(transactionResponse.id);
+            })
+            .then((resultResponse) => {
+                assert(resultResponse.result.code === 200, 'Authorization should fail (code 200), got ' + resultResponse.result.code);
+                done();
+            });
     });
-
 });
-
