@@ -5,9 +5,9 @@ import { ReportResponse } from './model/response/ReportResponse';
 import { ReconciliationReportResponse } from './model/response/ReconciliationReportResponse';
 import { TokenizationResponse } from './model/response/TokenizationResponse';
 import { TransactionResultResponse } from './model/response/TransactionResultResponse';
-import { TransactionRequest } from "./model/request/TransactionRequest";
-import { RevertTransactionRequest } from "./model/request/RevertTransactionRequest";
-import { CommitTransactionRequest } from "./model/request/CommitTransactionRequest";
+import { TransactionRequest } from './model/request/TransactionRequest';
+import { RevertTransactionRequest } from './model/request/RevertTransactionRequest';
+import { CommitTransactionRequest } from './model/request/CommitTransactionRequest';
 /**
  * Payment Highway Payment API Service.
  */

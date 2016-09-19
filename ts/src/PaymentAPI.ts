@@ -11,9 +11,9 @@ import {ReconciliationReportResponse} from './model/response/ReconciliationRepor
 import {Method} from './util/Method';
 import {TokenizationResponse} from './model/response/TokenizationResponse';
 import {TransactionResultResponse} from './model/response/TransactionResultResponse';
-import {TransactionRequest} from "./model/request/TransactionRequest";
-import {RevertTransactionRequest} from "./model/request/RevertTransactionRequest";
-import {CommitTransactionRequest} from "./model/request/CommitTransactionRequest";
+import {TransactionRequest} from './model/request/TransactionRequest';
+import {RevertTransactionRequest} from './model/request/RevertTransactionRequest';
+import {CommitTransactionRequest} from './model/request/CommitTransactionRequest';
 
 /**
  * Payment Highway Payment API Service.

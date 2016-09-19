@@ -4,4 +4,5 @@ function __export(m) {
 }
 __export(require('./src/PaymentAPI'));
 __export(require('./src/FormBuilder'));
+__export(require('./src/security/SecureSigner'));
 //# sourceMappingURL=index.js.map
