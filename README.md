@@ -40,6 +40,25 @@ var failureUrl = "https://example.com/failure";
 var cancelUrl = "https://example.com/cancel";
 var language = "EN";
 ```
+All form methods returns a FormContainer [(TS)](/ts/src/FormContainer.ts)[(JS)](/js/src/FormContainer.ts).
+```javascript
+class FormContainer {
+    constructor(public method: Method,
+                public baseUrl: string,
+                public actionUrl: string,
+                public nameValuePairs: Pair<string, string>[],
+                public requestId: string) {
+    }
+
+    public getAction(): string {
+        return this.baseUrl + this.actionUrl;
+    }
+}
+```
+### GenerateAddCardParameters
+```javascript
+var formContainer = formBuilder.generateAddCardParameters(successUri, failureUri, cancelUri, language);
+```
 
 # Errors
 Payment Highway authenticates each request and if there is invalid parameters or a signature mismatch, it returns an error.
