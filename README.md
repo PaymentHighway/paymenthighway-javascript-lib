@@ -40,7 +40,7 @@ var failureUrl = "https://example.com/failure";
 var cancelUrl = "https://example.com/cancel";
 var language = "EN";
 ```
-All form methods returns a FormContainer [(TS)](/ts/src/FormContainer.ts)[(JS)](/js/src/FormContainer.ts).
+All form methods returns a FormContainer [(TS)](/ts/src/FormContainer.ts)/[(JS)](/js/src/FormContainer.ts).
 ```javascript
 class FormContainer {
     constructor(public method: Method,
