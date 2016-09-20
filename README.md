@@ -10,6 +10,37 @@ For full documentation on the PaymentHighway API visit our developer website: ht
 ## Requirements
 * Node.js >= 4.5.0
 
+# Overview
+Start with building the HTTP form parameters by using the FormParameterBuilder.
+
+* `FormBuilder`
+
+Create an instance of the builder, then use the generate methods to receive a list of parameters for each API call.
+
+Initializing the builder
+
+```javascript
+var paymentHighway = require('paymenthighway-javascript-lib');
+
+var method = 'POST';
+var testKey = 'testKey';
+var testSecret = 'testSecret';
+var account = 'test';
+var merchant = 'test_merchantId';
+var serviceUrl = 'https://v1-hub-staging.sph-test-solinor.com';
+
+var formBuilder = new paymentHighway.FormBuilder(method, testKey, testSecret, account, merchant, serviceUrl);
+```
+
+Example common parameters for the following form generation functions
+
+```javascript
+var successUrl = "https://example.com/success";
+var failureUrl = "https://example.com/failure";
+var cancelUrl = "https://example.com/cancel";
+var language = "EN";
+```
+
 # Errors
 Payment Highway authenticates each request and if there is invalid parameters or a signature mismatch, it returns an error.
 PaymentHighwayAPI returns Promise from each requests.
