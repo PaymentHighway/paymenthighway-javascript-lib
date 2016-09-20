@@ -35,12 +35,14 @@ var formBuilder = new paymentHighway.FormBuilder(method, testKey, testSecret, ac
 Example common parameters for the following form generation functions
 
 ```javascript
-var successUrl = "https://example.com/success";
-var failureUrl = "https://example.com/failure";
-var cancelUrl = "https://example.com/cancel";
-var language = "EN";
+var successUrl = 'https://example.com/success';
+var failureUrl = 'https://example.com/failure';
+var cancelUrl = 'https://example.com/cancel';
+var language = 'EN';
 ```
-All form methods returns a FormContainer [(TS)](/ts/src/FormContainer.ts)/[(JS)](/js/src/FormContainer.ts).
+Each method returns a FormContainer [(TS)](/ts/src/FormContainer.ts)/[(JS)](/js/src/FormContainer.ts) object, which provides required hidden fields for the HTML form to make a successful transaction to Form API. The builder will generate a request id, timestamp, and secure signature for the transactions, which are included in the FormContainer fields.
+
+In order to charge a card given in the Form API, the corresponding transaction id must be committed by using Payment API.
 ```javascript
 class FormContainer {
     constructor(public method: Method,
@@ -58,8 +60,35 @@ class FormContainer {
 ### GenerateAddCardParameters
 ```javascript
 var formContainer = formBuilder.generateAddCardParameters(successUri, failureUri, cancelUri, language);
+// form parameters
+var action = formContainer.getAction();
+var method = formContainer.method;          // 'GET'|'POST'
+var fields = formContainer.nameValuePairs;  // Pair<string, string> []
+
+fields.each((pair) => {
+    pair.first;
+    pair.second;
+});
 ```
 
+### GeneratePaymentParameters
+```javascript 
+var amount = 1950;
+var currency = 'EUR';
+var orderId = '1000123A';
+var description = '10 balloons 19,50€';
+
+var formContainer = formBuilder.generatePaymentParameters(successUri, failureUri, cancelUri, language, amount, currency, orderId, description);
+```
+### enerateGetAddCardAndPaymentParameters
+```javascript
+var amount = 1990;
+var currency = 'EUR';
+var orderId = '1000123A';
+var description = 'A Box of Dreams. 19,90€';
+
+var formContainer = formBuilder.generateAddCardAndPaymentParameters(successUri, failureUri, cancelUri, language, amount, currency, orderId, description);
+```
 # Errors
 Payment Highway authenticates each request and if there is invalid parameters or a signature mismatch, it returns an error.
 PaymentHighwayAPI returns Promise from each requests.
@@ -75,6 +104,21 @@ PaymentHighwayAPI.initTransaction()
     ...
   });  
 ```
+
+In addition, after the user is redirected to one of your provided success, failure or cancel URLs, you should validate the request parameters and the signature.
+
+### Example validateFormRedirect
+```javascript
+// Initialize secure signer
+var secureSigner = new paymentHighway.SecureSigner(testKey, testSecret);
+
+// success route
+app.get('/success', function (req, res) {
+    var validRedirect = secureSigner.validateFormRedirect(req.query);
+});    
+
+```
+
 # Help us make it better
 
 Please tell us how we can make the API better. If you have a specific feature request or if you found a bug, please use GitHub issues. 
