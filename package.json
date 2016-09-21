@@ -1,7 +1,8 @@
 {
-  "name": "paymenthighway-javascript-lib",
-  "version": "0.0.1",
+  "name": "paymenthighway",
+  "version": "1.0.0",
   "description": "Paymenthighway SDK",
+  "homepage": "https://www.paymenthighway.fi/dev/",
   "main": "js/index.js",
   "typings": "js/index.d.ts",
   "babel": {
@@ -23,7 +24,11 @@
   "author": {
     "name": "Pauli Kostamo",
     "email": "pauli.kostamo@solinor.com",
-    "url": "http://solinor.com/"
+    "url": "http://paymenthighway.fi/"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/solinor/paymenthighway-javascript-lib"
   },
   "license": "MIT",
   "dependencies": {
