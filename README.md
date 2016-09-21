@@ -13,7 +13,7 @@ For full documentation on the PaymentHighway API visit our developer website: ht
 # Overview
 Start with building the HTTP form parameters by using the FormParameterBuilder.
 
-* `FormBuilder`
+#### `FormBuilder`
 
 Create an instance of the builder, then use the generate methods to receive a list of parameters for each API call.
 
@@ -96,7 +96,7 @@ var formContainer = formBuilder.generatePaymentParameters(
         description
     );
 ```
-### enerateGetAddCardAndPaymentParameters
+### GenerateGetAddCardAndPaymentParameters
 ```javascript
 var amount = 1990;
 var currency = 'EUR';
@@ -114,6 +114,21 @@ var formContainer = formBuilder.generateAddCardAndPaymentParameters(
         description
     );
 ```
+
+In addition, after the user is redirected to one of your provided success, failure or cancel URLs, you should validate the request parameters and the signature.
+
+### Example validateFormRedirect
+```javascript
+// Initialize secure signer
+var secureSigner = new paymentHighway.SecureSigner(testKey, testSecret);
+
+// success route
+app.get('/success', function (req, res) {
+    var validRedirect = secureSigner.validateFormRedirect(req.query); // Boolean
+});    
+
+```
+
 # Errors
 Payment Highway authenticates each request and if there is invalid parameters or a signature mismatch, it returns an error.
 PaymentHighwayAPI returns Promise from each requests.
@@ -128,20 +143,6 @@ PaymentHighwayAPI.initTransaction()
     // handle errors
     ...
   });  
-```
-
-In addition, after the user is redirected to one of your provided success, failure or cancel URLs, you should validate the request parameters and the signature.
-
-### Example validateFormRedirect
-```javascript
-// Initialize secure signer
-var secureSigner = new paymentHighway.SecureSigner(testKey, testSecret);
-
-// success route
-app.get('/success', function (req, res) {
-    var validRedirect = secureSigner.validateFormRedirect(req.query);
-});    
-
 ```
 
 # Help us make it better
