@@ -153,21 +153,67 @@ var paymentAPI = new PaymentAPI(
         );
 ```
 
+#### Init transaction
+```javascript
+return paymentAPI.initTransaction();
+```
+* returns Promise<[TransactionResponse](/ts/src/model/response/TransactionResponse.ts)>
+
 #### Commit Form Transaction
 ```javascript
 var amount = 1990;
 var currency = 'EUR';
 var request = new paymentHighway.CommitTransactionRequest(amount, currency);
 
-paymentAPI.commitTransaction(transactionId, request); // Returns Promise
+return paymentAPI.commitTransaction(transactionId, request); // Returns Promise
 ```
 * takes CommitTransactionRequest[(TS)](/ts/src/model/request/CommitTransactionRequest.ts)/[(JS)](/js/src/model/request/CommitTransactionRequest.js)
 * returns Promise<[TransactionResponse](/ts/src/model/response/TransactionResponse.ts)>
 
-#### Init transaction
+#### Tokenize (get the actual card token by using token id)
 ```javascript
-paymentAPI.initTransaction();
+return paymentAPI.tokenization("tokenizationId");
 ```
+* return Promise<[TokenizationResponse](/ts/src/model/response/TokenizationResponse.ts)>
+
+#### Example Debit with Token
+```javascript
+var token = new paymentHighway.Token('tokenId');
+var amount = 1990;
+var currency = 'EUR';
+
+var request = new paymentHighway.TransactionRequest(token, amount, currency);
+return paymentAPI.initTransaction()
+        .then(function (init) {
+            return paymentAPI.debitTransaction(init.id, request);
+        });
+```
+* returns Promise<[TransactionResultResponse](/ts/src/model/response/TransactionResultResponse.ts)>
+
+#### Revert
+```javascript
+return paymentAPI.revertTransaction("transactionId", "amount");
+```
+* retruns Promise<[TransactionResponse](/ts/src/model/response/TransactionResponse.ts)>
+
+#### Transaction Status
+```javascript
+return paymentAPI.transactionStatus("transactionId");
+```
+* returns Promise<[TransactionStatusResponse](/ts/src/model/response/TransactionStatusResponse.ts)>
+
+#### Order status
+```javascript 
+return paymentAPI.searchOrders("order");
+```
+* returns Promise<[OrderSearchResponse](/ts/src/model/response/OrderSearchResponse.ts)>
+
+#### Daily batch report
+```javascript
+return paymentAPI.fetchDailyReport("yyyyMMdd");
+```
+* returns Promise<[ReportResponse](/ts/src/model/response/ReportResponse.ts)>
+
 
 # Errors
 Payment Highway authenticates each request and if there is invalid parameters or a signature mismatch, it returns an error.
