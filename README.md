@@ -29,7 +29,14 @@ var account = 'test';
 var merchant = 'test_merchantId';
 var serviceUrl = 'https://v1-hub-staging.sph-test-solinor.com';
 
-var formBuilder = new paymentHighway.FormBuilder(method, testKey, testSecret, account, merchant, serviceUrl);
+var formBuilder = new paymentHighway.FormBuilder(
+        method, 
+        testKey, 
+        testSecret, 
+        account, 
+        merchant, 
+        serviceUrl
+    );
 ```
 
 Example common parameters for the following form generation functions
@@ -78,7 +85,16 @@ var currency = 'EUR';
 var orderId = '1000123A';
 var description = '10 balloons 19,50€';
 
-var formContainer = formBuilder.generatePaymentParameters(successUri, failureUri, cancelUri, language, amount, currency, orderId, description);
+var formContainer = formBuilder.generatePaymentParameters(
+        successUri, 
+        failureUri, 
+        cancelUri, 
+        language, 
+        amount, 
+        currency, 
+        orderId, 
+        description
+    );
 ```
 ### enerateGetAddCardAndPaymentParameters
 ```javascript
@@ -87,7 +103,16 @@ var currency = 'EUR';
 var orderId = '1000123A';
 var description = 'A Box of Dreams. 19,90€';
 
-var formContainer = formBuilder.generateAddCardAndPaymentParameters(successUri, failureUri, cancelUri, language, amount, currency, orderId, description);
+var formContainer = formBuilder.generateAddCardAndPaymentParameters(
+        successUri, 
+        failureUri, 
+        cancelUri, 
+        language, 
+        amount, 
+        currency, 
+        orderId, 
+        description
+    );
 ```
 # Errors
 Payment Highway authenticates each request and if there is invalid parameters or a signature mismatch, it returns an error.
