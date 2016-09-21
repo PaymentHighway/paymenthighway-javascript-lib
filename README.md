@@ -47,7 +47,7 @@ var failureUrl = 'https://example.com/failure';
 var cancelUrl = 'https://example.com/cancel';
 var language = 'EN';
 ```
-Each method returns a FormContainer [(TS)](/ts/src/FormContainer.ts)/[(JS)](/js/src/FormContainer.ts) object, which provides required hidden fields for the HTML form to make a successful transaction to Form API. The builder will generate a request id, timestamp, and secure signature for the transactions, which are included in the FormContainer fields.
+Each method returns a FormContainer [(TS)](/ts/src/FormContainer.ts)/[(JS)](/js/src/FormContainer.js) object, which provides required hidden fields for the HTML form to make a successful transaction to Form API. The builder will generate a request id, timestamp, and secure signature for the transactions, which are included in the FormContainer fields.
 
 In order to charge a card given in the Form API, the corresponding transaction id must be committed by using Payment API.
 ```javascript
