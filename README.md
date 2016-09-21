@@ -13,7 +13,7 @@ For full documentation on the PaymentHighway API visit our developer website: ht
 # Overview
 Start with building the HTTP form parameters by using the FormParameterBuilder.
 
-#### `FormBuilder`
+### FormBuilder
 
 Create an instance of the builder, then use the generate methods to receive a list of parameters for each API call.
 
@@ -64,7 +64,7 @@ class FormContainer {
     }
 }
 ```
-### GenerateAddCardParameters
+#### GenerateAddCardParameters
 ```javascript
 var formContainer = formBuilder.generateAddCardParameters(successUri, failureUri, cancelUri, language);
 // form parameters
@@ -78,7 +78,7 @@ fields.each((pair) => {
 });
 ```
 
-### GeneratePaymentParameters
+#### GeneratePaymentParameters
 ```javascript 
 var amount = 1950;
 var currency = 'EUR';
@@ -96,7 +96,7 @@ var formContainer = formBuilder.generatePaymentParameters(
         description
     );
 ```
-### GenerateGetAddCardAndPaymentParameters
+#### GenerateGetAddCardAndPaymentParameters
 ```javascript
 var amount = 1990;
 var currency = 'EUR';
@@ -117,7 +117,7 @@ var formContainer = formBuilder.generateAddCardAndPaymentParameters(
 
 In addition, after the user is redirected to one of your provided success, failure or cancel URLs, you should validate the request parameters and the signature.
 
-### Example validateFormRedirect
+#### Example validateFormRedirect
 ```javascript
 // Initialize secure signer
 var secureSigner = new paymentHighway.SecureSigner(testKey, testSecret);
@@ -128,6 +128,14 @@ app.get('/success', function (req, res) {
 });    
 
 ```
+
+### PaymentApi
+
+In order to do safe transactions, an execution model is used where the first call to /transaction acquires a financial transaction handle, later referred as “ID”, which ensures the transaction is executed exactly once. Afterwards it is possible to execute a debit transaction by using the received id handle. If the execution fails, the command can be repeated in order to confirm the transaction with the particular id has been processed. After executing the command, the status of the transaction can be checked by executing the PaymentAPI.transactionStatus("id") request.
+
+In order to be sure that a tokenized card is valid and is able to process payment transactions the corresponding tokenization id must be used to get the actual card token.
+
+#### Initializing the Payment API
 
 # Errors
 Payment Highway authenticates each request and if there is invalid parameters or a signature mismatch, it returns an error.
