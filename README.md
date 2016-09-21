@@ -218,6 +218,7 @@ return paymentAPI.fetchDailyReport("yyyyMMdd");
 # Errors
 Payment Highway authenticates each request and if there is invalid parameters or a signature mismatch, it returns an error.
 PaymentHighwayAPI returns Promise from each requests.
+
 It is recommended to gracefully handle errors from the API.
 ```javascript
 PaymentHighwayAPI.initTransaction()
