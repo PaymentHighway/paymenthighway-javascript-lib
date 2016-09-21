@@ -138,7 +138,19 @@ In order to be sure that a tokenized card is valid and is able to process paymen
 #### Initializing the Payment API
 
 ```javascript
+var serviceUrl = "https://v1-hub-staging.sph-test-solinor.com";
+var testKey = 'testKey';
+var testSecret = 'testSecret';
+var account = 'test';
+var merchant = 'test_merchantId';
 
+var paymentAPI = new PaymentAPI(
+                servieUrl, 
+                testKey, 
+                testSecret, 
+                account, 
+                merchant
+        );
 ```
 
 # Errors
