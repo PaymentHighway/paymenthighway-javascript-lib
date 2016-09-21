@@ -17,7 +17,7 @@ Start with building the HTTP form parameters by using the FormParameterBuilder.
 
 Create an instance of the builder, then use the generate methods to receive a list of parameters for each API call.
 
-Initializing the builder
+#### Initializing the builder
 
 ```javascript
 var paymentHighway = require('paymenthighway-javascript-lib');
@@ -136,6 +136,10 @@ In order to do safe transactions, an execution model is used where the first cal
 In order to be sure that a tokenized card is valid and is able to process payment transactions the corresponding tokenization id must be used to get the actual card token.
 
 #### Initializing the Payment API
+
+```javascript
+
+```
 
 # Errors
 Payment Highway authenticates each request and if there is invalid parameters or a signature mismatch, it returns an error.
