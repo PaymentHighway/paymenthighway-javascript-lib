@@ -153,6 +153,22 @@ var paymentAPI = new PaymentAPI(
         );
 ```
 
+#### Commit Form Transaction
+```javascript
+var amount = 1990;
+var currency = 'EUR';
+var request = new paymentHighway.CommitTransactionRequest(amount, currency);
+
+paymentAPI.commitTransaction(transactionId, request); // Returns Promise
+```
+* takes CommitTransactionRequest[(TS)](/ts/src/model/request/CommitTransactionRequest.ts)/[(JS)](/js/src/model/request/CommitTransactionRequest.js)
+* returns Promise<[TransactionResponse](/ts/src/model/response/TransactionResponse.ts)>
+
+#### Init transaction
+```javascript
+paymentAPI.initTransaction();
+```
+
 # Errors
 Payment Highway authenticates each request and if there is invalid parameters or a signature mismatch, it returns an error.
 PaymentHighwayAPI returns Promise from each requests.
