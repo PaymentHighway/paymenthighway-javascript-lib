@@ -15,7 +15,7 @@
     "preversion": "npm run compile && npm test",
     "precompile": "npm run clean",
     "compile": "tsc",
-    "babel": "babel es6 --out-dir es5",
+    "babel": "babel js --out-dir es5",
     "test": "set NODE_ENV=test && mocha -t 4000 -R spec js/tests",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -t 6000 -R spec js/tests",
     "clean": "del-cli js/",

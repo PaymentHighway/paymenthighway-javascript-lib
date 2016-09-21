@@ -33,7 +33,7 @@ export class FormBuilder {
     private static DESCRIPTION: string = 'description';
     private static SIGNATURE: string = 'signature';
 
-    constructor(private method: Method = FormBuilder.METHOD_POST,
+    constructor(private method: Method,
                 private signatureKeyId: string,
                 private signatureSecret: string,
                 private account: string,

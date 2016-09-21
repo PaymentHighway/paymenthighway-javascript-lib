@@ -28,7 +28,10 @@ export class PaymentAPI {
                 private signatureSecret: string,
                 private account: string,
                 private merchant: string,
-                private apiVersion: string = '20160630') {
+                private apiVersion?: string) {
+        if (!apiVersion) {
+            this.apiVersion = '20160630';
+        }
     }
 
     /**
@@ -142,7 +145,10 @@ export class PaymentAPI {
      * @param useDateProcessed
      * @returns {Promise<ReconciliationReportResponse>}
      */
-    public fetchReconciliationReport(date: string, useDateProcessed: boolean = false): Promise<ReconciliationReportResponse> {
+    public fetchReconciliationReport(date: string, useDateProcessed?: boolean): Promise<ReconciliationReportResponse> {
+        if (!useDateProcessed) {
+            useDateProcessed = false;
+        }
         const reportUri = '/report/reconciliation/' + date + '?use-date-processed=' + useDateProcessed;
         return this.makeRequest('GET', reportUri);
     }

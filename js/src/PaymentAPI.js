@@ -7,13 +7,16 @@ const Pair_1 = require('./util/Pair');
  * Payment Highway Payment API Service.
  */
 class PaymentAPI {
-    constructor(serviceUrl, signatureKeyId, signatureSecret, account, merchant, apiVersion = '20160630') {
+    constructor(serviceUrl, signatureKeyId, signatureSecret, account, merchant, apiVersion) {
         this.serviceUrl = serviceUrl;
         this.signatureKeyId = signatureKeyId;
         this.signatureSecret = signatureSecret;
         this.account = account;
         this.merchant = merchant;
         this.apiVersion = apiVersion;
+        if (!apiVersion) {
+            this.apiVersion = '20160630';
+        }
     }
     /**
      * Payment Highway Init Transaction
@@ -117,7 +120,10 @@ class PaymentAPI {
      * @param useDateProcessed
      * @returns {Promise<ReconciliationReportResponse>}
      */
-    fetchReconciliationReport(date, useDateProcessed = false) {
+    fetchReconciliationReport(date, useDateProcessed) {
+        if (!useDateProcessed) {
+            useDateProcessed = false;
+        }
         const reportUri = '/report/reconciliation/' + date + '?use-date-processed=' + useDateProcessed;
         return this.makeRequest('GET', reportUri);
     }

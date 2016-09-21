@@ -10,7 +10,7 @@ const FormContainer_1 = require('./FormContainer');
  * Creates a request id, timestamp and signature based on request parameters.
  */
 class FormBuilder {
-    constructor(method = FormBuilder.METHOD_POST, signatureKeyId, signatureSecret, account, merchant, baseUrl) {
+    constructor(method, signatureKeyId, signatureSecret, account, merchant, baseUrl) {
         this.method = method;
         this.signatureKeyId = signatureKeyId;
         this.signatureSecret = signatureSecret;
