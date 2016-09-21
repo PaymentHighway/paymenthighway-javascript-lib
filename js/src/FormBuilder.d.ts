@@ -13,7 +13,6 @@ export declare class FormBuilder {
     private account;
     private merchant;
     private baseUrl;
-    private static METHOD_POST;
     private static SPH_API_VERSION;
     private static SPH_ACCEPT_CVC_REQUIRED;
     private static SPH_ACCOUNT;

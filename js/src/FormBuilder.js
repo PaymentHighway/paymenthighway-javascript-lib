@@ -230,7 +230,6 @@ class FormBuilder {
         return ss.createSignature(this.method, uri, nameValuePairs, '');
     }
 }
-FormBuilder.METHOD_POST = 'POST';
 FormBuilder.SPH_API_VERSION = 'sph-api-version';
 FormBuilder.SPH_ACCEPT_CVC_REQUIRED = 'sph-accept-cvc-required';
 FormBuilder.SPH_ACCOUNT = 'sph-account';
