@@ -266,7 +266,7 @@ export class FormBuilder {
     private createCommonNameValuePairs(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                        requestId: string): Pair<string, string>[] {
         return [
-            new Pair(FormBuilder.SPH_API_VERSION, PaymentAPI.apiVersion),
+            new Pair(FormBuilder.SPH_API_VERSION, PaymentAPI.API_VERSION),
             new Pair(FormBuilder.SPH_ACCOUNT, this.account),
             new Pair(FormBuilder.SPH_MERCHANT, this.merchant),
             new Pair(FormBuilder.SPH_TIMESTAMP, PaymentHighwayUtility.getUtcTimestamp()),

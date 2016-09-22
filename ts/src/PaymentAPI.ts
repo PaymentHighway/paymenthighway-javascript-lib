@@ -20,7 +20,7 @@ import {CommitTransactionRequest} from './model/request/CommitTransactionRequest
  */
 export class PaymentAPI {
 
-    public static apiVersion: string = '20160630';
+    public static API_VERSION: string = '20160630';
 
     /* Payment API headers */
     public static USER_AGENT: string = 'PaymentHighway Javascript Library';
@@ -158,7 +158,7 @@ export class PaymentAPI {
      */
     private createNameValuePairs(): Pair<string, string>[] {
         return [
-            new Pair('sph-api-version', PaymentAPI.apiVersion),
+            new Pair('sph-api-version', PaymentAPI.API_VERSION),
             new Pair('sph-account', this.account),
             new Pair('sph-merchant', this.merchant),
             new Pair('sph-timestamp', PaymentHighwayUtility.getUtcTimestamp()),
