@@ -33,12 +33,15 @@ export class FormBuilder {
     private static DESCRIPTION: string = 'description';
     private static SIGNATURE: string = 'signature';
 
+    private secureSigner: SecureSigner;
+
     constructor(private method: Method,
                 private signatureKeyId: string,
                 private signatureSecret: string,
                 private account: string,
                 private merchant: string,
                 private baseUrl: string) {
+        this.secureSigner = new SecureSigner(this.signatureKeyId, this.signatureSecret);
     }
 
     /**
@@ -285,7 +288,6 @@ export class FormBuilder {
      * @returns {string}
      */
     private createSignature(uri: string, nameValuePairs: Pair<string, string>[]): string {
-        const ss = new SecureSigner(this.signatureKeyId, this.signatureSecret);
-        return ss.createSignature(this.method, uri, nameValuePairs, '');
+        return this.secureSigner.createSignature(this.method, uri, nameValuePairs, '');
     }
 }

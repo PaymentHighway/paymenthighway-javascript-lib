@@ -25,11 +25,14 @@ export class PaymentAPI {
     /* Payment API headers */
     public static USER_AGENT: string = 'PaymentHighway Javascript Library';
 
+    private secureSigner: SecureSigner;
+
     constructor(private serviceUrl: string,
                 private signatureKeyId: string,
                 private signatureSecret: string,
                 private account: string,
                 private merchant: string) {
+        this.secureSigner = new SecureSigner(this.signatureKeyId, this.signatureSecret);
     }
 
     /**
@@ -189,12 +192,11 @@ export class PaymentAPI {
      * @returns {requestPromise.RequestPromise}
      */
     private executeRequest(method: Method, path: string, nameValuePairs: Pair<string, string>[], requestBody?: Object): RequestPromise {
-        const ss = new SecureSigner(this.signatureKeyId, this.signatureSecret);
         let bodyString = '';
         if (requestBody) {
             bodyString = JSON.stringify(requestBody);
         }
-        const signature = ss.createSignature(method, path, nameValuePairs, bodyString);
+        const signature = this.secureSigner.createSignature(method, path, nameValuePairs, bodyString);
         nameValuePairs.push(new Pair('signature', signature));
         let headers: Header = {
             'Content-Type': 'application/json; charset=utf-8',
