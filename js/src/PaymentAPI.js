@@ -13,6 +13,7 @@ class PaymentAPI {
         this.signatureSecret = signatureSecret;
         this.account = account;
         this.merchant = merchant;
+        this.secureSigner = new SecureSigner_1.SecureSigner(this.signatureKeyId, this.signatureSecret);
     }
     /**
      * Payment Highway Init Transaction
@@ -159,12 +160,11 @@ class PaymentAPI {
      * @returns {requestPromise.RequestPromise}
      */
     executeRequest(method, path, nameValuePairs, requestBody) {
-        const ss = new SecureSigner_1.SecureSigner(this.signatureKeyId, this.signatureSecret);
         let bodyString = '';
         if (requestBody) {
             bodyString = JSON.stringify(requestBody);
         }
-        const signature = ss.createSignature(method, path, nameValuePairs, bodyString);
+        const signature = this.secureSigner.createSignature(method, path, nameValuePairs, bodyString);
         nameValuePairs.push(new Pair_1.Pair('signature', signature));
         let headers = {
             'Content-Type': 'application/json; charset=utf-8',

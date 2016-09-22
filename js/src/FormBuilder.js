@@ -18,6 +18,7 @@ class FormBuilder {
         this.account = account;
         this.merchant = merchant;
         this.baseUrl = baseUrl;
+        this.secureSigner = new SecureSigner_1.SecureSigner(this.signatureKeyId, this.signatureSecret);
     }
     /**
      * Get parameters for Add Card request with the possibility to
@@ -227,8 +228,7 @@ class FormBuilder {
      * @returns {string}
      */
     createSignature(uri, nameValuePairs) {
-        const ss = new SecureSigner_1.SecureSigner(this.signatureKeyId, this.signatureSecret);
-        return ss.createSignature(this.method, uri, nameValuePairs, '');
+        return this.secureSigner.createSignature(this.method, uri, nameValuePairs, '');
     }
 }
 FormBuilder.SPH_API_VERSION = 'sph-api-version';

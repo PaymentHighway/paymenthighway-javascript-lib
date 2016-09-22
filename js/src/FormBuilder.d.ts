@@ -33,6 +33,7 @@ export declare class FormBuilder {
     private static LANGUAGE;
     private static DESCRIPTION;
     private static SIGNATURE;
+    private secureSigner;
     constructor(method: Method, signatureKeyId: string, signatureSecret: string, account: string, merchant: string, baseUrl: string);
     /**
      * Get parameters for Add Card request with the possibility to
