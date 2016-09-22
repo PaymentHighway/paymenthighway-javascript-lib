@@ -16,7 +16,7 @@
     "precompile": "npm run clean",
     "compile": "tsc",
     "babel": "babel js --out-dir es5",
-    "test": "set NODE_ENV=test && mocha -t 4000 -R spec js/tests",
+    "test": "set NODE_ENV=test && mocha -t 6000 -R spec js/tests",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- -t 6000 -R spec js/tests",
     "clean": "del-cli js/",
     "lint": "tslint ts/**/*.ts"
