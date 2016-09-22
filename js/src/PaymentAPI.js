@@ -7,16 +7,12 @@ const Pair_1 = require('./util/Pair');
  * Payment Highway Payment API Service.
  */
 class PaymentAPI {
-    constructor(serviceUrl, signatureKeyId, signatureSecret, account, merchant, apiVersion) {
+    constructor(serviceUrl, signatureKeyId, signatureSecret, account, merchant) {
         this.serviceUrl = serviceUrl;
         this.signatureKeyId = signatureKeyId;
         this.signatureSecret = signatureSecret;
         this.account = account;
         this.merchant = merchant;
-        this.apiVersion = apiVersion;
-        if (!apiVersion) {
-            this.apiVersion = '20160630';
-        }
     }
     /**
      * Payment Highway Init Transaction
@@ -134,7 +130,7 @@ class PaymentAPI {
      */
     createNameValuePairs() {
         return [
-            new Pair_1.Pair('sph-api-version', this.apiVersion),
+            new Pair_1.Pair('sph-api-version', PaymentAPI.apiVersion),
             new Pair_1.Pair('sph-account', this.account),
             new Pair_1.Pair('sph-merchant', this.merchant),
             new Pair_1.Pair('sph-timestamp', PaymentHighwayUtility_1.PaymentHighwayUtility.getUtcTimestamp()),
@@ -193,6 +189,7 @@ class PaymentAPI {
         return requestPromise(options);
     }
 }
+PaymentAPI.apiVersion = '20160630';
 /* Payment API headers */
 PaymentAPI.USER_AGENT = 'PaymentHighway Javascript Library';
 exports.PaymentAPI = PaymentAPI;

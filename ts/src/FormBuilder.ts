@@ -3,6 +3,7 @@ import {PaymentHighwayUtility} from './PaymentHighwayUtility';
 import {Pair} from './util/Pair';
 import {SecureSigner} from './security/SecureSigner';
 import {FormContainer} from './FormContainer';
+import {PaymentAPI} from './PaymentAPI';
 
 /**
  * Creates parameters that can used on the form that sends them to
@@ -265,7 +266,7 @@ export class FormBuilder {
     private createCommonNameValuePairs(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                        requestId: string): Pair<string, string>[] {
         return [
-            new Pair(FormBuilder.SPH_API_VERSION, '20151028'),
+            new Pair(FormBuilder.SPH_API_VERSION, PaymentAPI.apiVersion),
             new Pair(FormBuilder.SPH_ACCOUNT, this.account),
             new Pair(FormBuilder.SPH_MERCHANT, this.merchant),
             new Pair(FormBuilder.SPH_TIMESTAMP, PaymentHighwayUtility.getUtcTimestamp()),

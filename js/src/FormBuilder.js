@@ -3,6 +3,7 @@ const PaymentHighwayUtility_1 = require('./PaymentHighwayUtility');
 const Pair_1 = require('./util/Pair');
 const SecureSigner_1 = require('./security/SecureSigner');
 const FormContainer_1 = require('./FormContainer');
+const PaymentAPI_1 = require('./PaymentAPI');
 /**
  * Creates parameters that can used on the form that sends them to
  * Payment Highway.
@@ -208,7 +209,7 @@ class FormBuilder {
      */
     createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId) {
         return [
-            new Pair_1.Pair(FormBuilder.SPH_API_VERSION, '20151028'),
+            new Pair_1.Pair(FormBuilder.SPH_API_VERSION, PaymentAPI_1.PaymentAPI.apiVersion),
             new Pair_1.Pair(FormBuilder.SPH_ACCOUNT, this.account),
             new Pair_1.Pair(FormBuilder.SPH_MERCHANT, this.merchant),
             new Pair_1.Pair(FormBuilder.SPH_TIMESTAMP, PaymentHighwayUtility_1.PaymentHighwayUtility.getUtcTimestamp()),

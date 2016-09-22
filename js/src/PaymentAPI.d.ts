@@ -17,9 +17,9 @@ export declare class PaymentAPI {
     private signatureSecret;
     private account;
     private merchant;
-    private apiVersion;
+    static apiVersion: string;
     static USER_AGENT: string;
-    constructor(serviceUrl: string, signatureKeyId: string, signatureSecret: string, account: string, merchant: string, apiVersion?: string);
+    constructor(serviceUrl: string, signatureKeyId: string, signatureSecret: string, account: string, merchant: string);
     /**
      * Payment Highway Init Transaction
      *
