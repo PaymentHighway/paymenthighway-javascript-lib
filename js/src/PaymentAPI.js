@@ -130,7 +130,7 @@ class PaymentAPI {
      */
     createNameValuePairs() {
         return [
-            new Pair_1.Pair('sph-api-version', PaymentAPI.apiVersion),
+            new Pair_1.Pair('sph-api-version', PaymentAPI.API_VERSION),
             new Pair_1.Pair('sph-account', this.account),
             new Pair_1.Pair('sph-merchant', this.merchant),
             new Pair_1.Pair('sph-timestamp', PaymentHighwayUtility_1.PaymentHighwayUtility.getUtcTimestamp()),
@@ -189,7 +189,7 @@ class PaymentAPI {
         return requestPromise(options);
     }
 }
-PaymentAPI.apiVersion = '20160630';
+PaymentAPI.API_VERSION = '20160630';
 /* Payment API headers */
 PaymentAPI.USER_AGENT = 'PaymentHighway Javascript Library';
 exports.PaymentAPI = PaymentAPI;

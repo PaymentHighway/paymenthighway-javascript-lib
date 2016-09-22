@@ -17,7 +17,7 @@ export declare class PaymentAPI {
     private signatureSecret;
     private account;
     private merchant;
-    static apiVersion: string;
+    static API_VERSION: string;
     static USER_AGENT: string;
     constructor(serviceUrl: string, signatureKeyId: string, signatureSecret: string, account: string, merchant: string);
     /**

@@ -209,7 +209,7 @@ class FormBuilder {
      */
     createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId) {
         return [
-            new Pair_1.Pair(FormBuilder.SPH_API_VERSION, PaymentAPI_1.PaymentAPI.apiVersion),
+            new Pair_1.Pair(FormBuilder.SPH_API_VERSION, PaymentAPI_1.PaymentAPI.API_VERSION),
             new Pair_1.Pair(FormBuilder.SPH_ACCOUNT, this.account),
             new Pair_1.Pair(FormBuilder.SPH_MERCHANT, this.merchant),
             new Pair_1.Pair(FormBuilder.SPH_TIMESTAMP, PaymentHighwayUtility_1.PaymentHighwayUtility.getUtcTimestamp()),
