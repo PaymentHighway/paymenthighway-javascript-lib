@@ -10,6 +10,11 @@ For full documentation on the PaymentHighway API visit our developer website: ht
 ## Requirements
 * Node.js >= 4.5.0
 
+## Installation
+```
+npm install paymenthighway
+```
+
 # Overview
 Start with building the HTTP form parameters by using the FormParameterBuilder.
 
