@@ -199,6 +199,24 @@ describe('Form builder', () => {
             done();
         });
     });
+    it('Test mobilepay form with mandatory parameters', (done) => {
+        const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
+        testNameValuePairs(formContainer.nameValuePairs, 14);
+        FormConnection_1.FormConnection.postForm(formContainer)
+            .then((response) => {
+            chai_1.assert(response.statusCode === 200, 'Response status code should be 200, got ' + response.statusCode);
+            done();
+        });
+    });
+    it('Test mobilepay form with optional parameters', (done) => {
+        const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, true);
+        testNameValuePairs(formContainer.nameValuePairs, 15);
+        FormConnection_1.FormConnection.postForm(formContainer)
+            .then((response) => {
+            chai_1.assert(response.statusCode === 200, 'Response status code should be 200, got ' + response.statusCode);
+            done();
+        });
+    });
     it('Test 3ds PayWithTokenAndCvc parameters', (done) => {
         const skipFormNotifications = false;
         const exitIframeOnResult = undefined;
