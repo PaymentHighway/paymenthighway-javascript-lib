@@ -13,6 +13,7 @@ export declare class FormBuilder {
     private account;
     private merchant;
     private baseUrl;
+    private static FORM_API_VERSION;
     private static SPH_API_VERSION;
     private static SPH_ACCEPT_CVC_REQUIRED;
     private static SPH_ACCOUNT;
@@ -33,6 +34,7 @@ export declare class FormBuilder {
     private static LANGUAGE;
     private static DESCRIPTION;
     private static SIGNATURE;
+    private secureSigner;
     constructor(method: Method, signatureKeyId: string, signatureSecret: string, account: string, merchant: string, baseUrl: string);
     /**
      * Get parameters for Add Card request with the possibility to

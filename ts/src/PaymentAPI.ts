@@ -20,18 +20,19 @@ import {CommitTransactionRequest} from './model/request/CommitTransactionRequest
  */
 export class PaymentAPI {
 
+    private static API_VERSION: string = '20160630';
+
     /* Payment API headers */
     public static USER_AGENT: string = 'PaymentHighway Javascript Library';
+
+    private secureSigner: SecureSigner;
 
     constructor(private serviceUrl: string,
                 private signatureKeyId: string,
                 private signatureSecret: string,
                 private account: string,
-                private merchant: string,
-                private apiVersion?: string) {
-        if (!apiVersion) {
-            this.apiVersion = '20160630';
-        }
+                private merchant: string) {
+        this.secureSigner = new SecureSigner(this.signatureKeyId, this.signatureSecret);
     }
 
     /**
@@ -160,7 +161,7 @@ export class PaymentAPI {
      */
     private createNameValuePairs(): Pair<string, string>[] {
         return [
-            new Pair('sph-api-version', this.apiVersion),
+            new Pair('sph-api-version', PaymentAPI.API_VERSION),
             new Pair('sph-account', this.account),
             new Pair('sph-merchant', this.merchant),
             new Pair('sph-timestamp', PaymentHighwayUtility.getUtcTimestamp()),
@@ -191,12 +192,11 @@ export class PaymentAPI {
      * @returns {requestPromise.RequestPromise}
      */
     private executeRequest(method: Method, path: string, nameValuePairs: Pair<string, string>[], requestBody?: Object): RequestPromise {
-        const ss = new SecureSigner(this.signatureKeyId, this.signatureSecret);
         let bodyString = '';
         if (requestBody) {
             bodyString = JSON.stringify(requestBody);
         }
-        const signature = ss.createSignature(method, path, nameValuePairs, bodyString);
+        const signature = this.secureSigner.createSignature(method, path, nameValuePairs, bodyString);
         nameValuePairs.push(new Pair('signature', signature));
         let headers: Header = {
             'Content-Type': 'application/json; charset=utf-8',

@@ -17,6 +17,7 @@ class FormBuilder {
         this.account = account;
         this.merchant = merchant;
         this.baseUrl = baseUrl;
+        this.secureSigner = new SecureSigner_1.SecureSigner(this.signatureKeyId, this.signatureSecret);
     }
     /**
      * Get parameters for Add Card request with the possibility to
@@ -208,7 +209,7 @@ class FormBuilder {
      */
     createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId) {
         return [
-            new Pair_1.Pair(FormBuilder.SPH_API_VERSION, '20151028'),
+            new Pair_1.Pair(FormBuilder.SPH_API_VERSION, FormBuilder.FORM_API_VERSION),
             new Pair_1.Pair(FormBuilder.SPH_ACCOUNT, this.account),
             new Pair_1.Pair(FormBuilder.SPH_MERCHANT, this.merchant),
             new Pair_1.Pair(FormBuilder.SPH_TIMESTAMP, PaymentHighwayUtility_1.PaymentHighwayUtility.getUtcTimestamp()),
@@ -226,10 +227,10 @@ class FormBuilder {
      * @returns {string}
      */
     createSignature(uri, nameValuePairs) {
-        const ss = new SecureSigner_1.SecureSigner(this.signatureKeyId, this.signatureSecret);
-        return ss.createSignature(this.method, uri, nameValuePairs, '');
+        return this.secureSigner.createSignature(this.method, uri, nameValuePairs, '');
     }
 }
+FormBuilder.FORM_API_VERSION = '20160630';
 FormBuilder.SPH_API_VERSION = 'sph-api-version';
 FormBuilder.SPH_ACCEPT_CVC_REQUIRED = 'sph-accept-cvc-required';
 FormBuilder.SPH_ACCOUNT = 'sph-account';

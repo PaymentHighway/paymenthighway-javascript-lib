@@ -11,6 +11,8 @@ import {FormContainer} from './FormContainer';
  * Creates a request id, timestamp and signature based on request parameters.
  */
 export class FormBuilder {
+    private static FORM_API_VERSION: string = '20160630';
+
     private static SPH_API_VERSION: string = 'sph-api-version';
     private static SPH_ACCEPT_CVC_REQUIRED: string = 'sph-accept-cvc-required';
     private static SPH_ACCOUNT: string = 'sph-account';
@@ -32,12 +34,15 @@ export class FormBuilder {
     private static DESCRIPTION: string = 'description';
     private static SIGNATURE: string = 'signature';
 
+    private secureSigner: SecureSigner;
+
     constructor(private method: Method,
                 private signatureKeyId: string,
                 private signatureSecret: string,
                 private account: string,
                 private merchant: string,
                 private baseUrl: string) {
+        this.secureSigner = new SecureSigner(this.signatureKeyId, this.signatureSecret);
     }
 
     /**
@@ -265,7 +270,7 @@ export class FormBuilder {
     private createCommonNameValuePairs(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                        requestId: string): Pair<string, string>[] {
         return [
-            new Pair(FormBuilder.SPH_API_VERSION, '20151028'),
+            new Pair(FormBuilder.SPH_API_VERSION, FormBuilder.FORM_API_VERSION),
             new Pair(FormBuilder.SPH_ACCOUNT, this.account),
             new Pair(FormBuilder.SPH_MERCHANT, this.merchant),
             new Pair(FormBuilder.SPH_TIMESTAMP, PaymentHighwayUtility.getUtcTimestamp()),
@@ -284,7 +289,6 @@ export class FormBuilder {
      * @returns {string}
      */
     private createSignature(uri: string, nameValuePairs: Pair<string, string>[]): string {
-        const ss = new SecureSigner(this.signatureKeyId, this.signatureSecret);
-        return ss.createSignature(this.method, uri, nameValuePairs, '');
+        return this.secureSigner.createSignature(this.method, uri, nameValuePairs, '');
     }
 }
