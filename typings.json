@@ -3,7 +3,7 @@
     "chai": "registry:dt/chai#3.4.0+20160601211834",
     "chai-string": "registry:dt/chai-string#1.1.4+20160317120654",
     "mocha": "registry:dt/mocha#2.2.5+20160720003353",
-    "node": "registry:env/node#4.0.0+20160902022231",
+    "node": "registry:env/node#4.0.0+20160918225031",
     "request-promise": "registry:dt/request-promise#3.0.0+20160906190103",
     "urijs": "registry:dt/urijs#1.15.1+20160526132152"
   },
