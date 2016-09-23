@@ -124,6 +124,21 @@ export declare class FormBuilder {
      */
     generatePayWithTokenAndCvcParameters(token: string, successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean): FormContainer;
     /**
+     * Get parameters for MobilePay request.
+     *
+     * @param successUrl The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
+     * @param failureUrl The URL the user is redirected after a failure such as an authentication or connectivity error.
+     * @param cancelUrl The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
+     * @param language The language the form is displayed in.
+     * @param amount The amount to pay.
+     * @param currency In which currency is the amount, e.g. "EUR"
+     * @param orderId A generated order ID, may for example be always unique or used multiple times for recurring transactions.
+     * @param description Description of the payment shown in the form.
+     * @param exitIframeOnResult Exit from iframe after a result. May be null.
+     * @return FormContainer
+     */
+    generatePayWithMobilePayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, exitIframeOnResult?: boolean): FormContainer;
+    /**
      *
      * @param successUrl
      * @param failureUrl

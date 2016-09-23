@@ -227,11 +227,31 @@ describe('Form builder', () => {
         const use3ds = true;
 
         const formContainer = formBuilder.generateAddCardAndPaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
-        skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
+            skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
         testNameValuePairs(formContainer.nameValuePairs, 18);
         FormConnection.postForm(formContainer)
             .then((response) => {
                 testRedirectResponse(response, '/payment');
+                done();
+            });
+    });
+
+    it('Test mobilepay form with mandatory parameters', (done) => {
+        const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
+        testNameValuePairs(formContainer.nameValuePairs, 14);
+        FormConnection.postForm(formContainer)
+            .then((response) => {
+                assert(response.statusCode === 200, 'Response status code should be 200, got ' + response.statusCode);
+                done();
+            });
+    });
+
+    it('Test mobilepay form with optional parameters', (done) => {
+        const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, true);
+        testNameValuePairs(formContainer.nameValuePairs, 15);
+        FormConnection.postForm(formContainer)
+            .then((response) => {
+                assert(response.statusCode === 200, 'Response status code should be 200, got ' + response.statusCode);
                 done();
             });
     });

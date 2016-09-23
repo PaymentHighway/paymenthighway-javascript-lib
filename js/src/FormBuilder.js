@@ -199,6 +199,35 @@ class FormBuilder {
         return new FormContainer_1.FormContainer(this.method, this.baseUrl, payWithTokenAndCvcUri, nameValuePairs, requestId);
     }
     /**
+     * Get parameters for MobilePay request.
+     *
+     * @param successUrl The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
+     * @param failureUrl The URL the user is redirected after a failure such as an authentication or connectivity error.
+     * @param cancelUrl The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
+     * @param language The language the form is displayed in.
+     * @param amount The amount to pay.
+     * @param currency In which currency is the amount, e.g. "EUR"
+     * @param orderId A generated order ID, may for example be always unique or used multiple times for recurring transactions.
+     * @param description Description of the payment shown in the form.
+     * @param exitIframeOnResult Exit from iframe after a result. May be null.
+     * @return FormContainer
+     */
+    generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, exitIframeOnResult) {
+        const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
+        let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_CURRENCY, currency));
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_ORDER, orderId));
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.DESCRIPTION, description));
+        if (typeof exitIframeOnResult !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
+        }
+        const mobilePayUri = '/form/view/mobilepay';
+        const signature = this.createSignature(mobilePayUri, nameValuePairs);
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.SIGNATURE, signature));
+        return new FormContainer_1.FormContainer(this.method, this.baseUrl, mobilePayUri, nameValuePairs, requestId);
+    }
+    /**
      *
      * @param successUrl
      * @param failureUrl
