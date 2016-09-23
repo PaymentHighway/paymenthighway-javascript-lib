@@ -120,6 +120,26 @@ var formContainer = formBuilder.generateAddCardAndPaymentParameters(
     );
 ```
 
+#### MobilePay form payment
+```javascript
+var amount = 1990;
+var currency = 'EUR';
+var orderId = '1000123A';
+var description = 'A Box of Dreams. 19,90€';
+
+var formContainer = formBuilder.generatePayWithMobilePayParameters(
+        successUri, 
+        failureUri, 
+        cancelUri, 
+        language, 
+        amount, 
+        currency, 
+        orderId, 
+        description
+    );
+```
+_MobilePay payment is to be committed as any other Form Payment_
+
 In addition, after the user is redirected to one of your provided success, failure or cancel URLs, you should validate the request parameters and the signature.
 
 #### Example validateFormRedirect
