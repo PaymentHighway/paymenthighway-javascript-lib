@@ -170,7 +170,7 @@ var account = 'test';
 var merchant = 'test_merchantId';
 
 var paymentAPI = new PaymentAPI(
-                servieUrl, 
+                serviceUrl, 
                 testKey, 
                 testSecret, 
                 account, 
@@ -199,7 +199,7 @@ return paymentAPI.commitTransaction(transactionId, request); // Returns Promise
 ```javascript
 return paymentAPI.tokenization("tokenizationId");
 ```
-* return Promise<[TokenizationResponse](/ts/src/model/response/TokenizationResponse.ts)>
+* returns Promise<[TokenizationResponse](/ts/src/model/response/TokenizationResponse.ts)>
 
 #### Example Debit with Token
 ```javascript
