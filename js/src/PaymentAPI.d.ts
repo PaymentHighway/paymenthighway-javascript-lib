@@ -93,7 +93,7 @@ export declare class PaymentAPI {
      * Payment Highway Reconciliation Report Request
      *
      * @param date      The date to fetch the reconciliation report for.
-     * @param useDateProcessed
+     * @param useDateProcessed Use the acquirer processed date instead of report received date. Might cause changes to the past
      * @returns {Promise<ReconciliationReportResponse>}
      */
     fetchReconciliationReport(date: string, useDateProcessed?: boolean): Promise<ReconciliationReportResponse>;
