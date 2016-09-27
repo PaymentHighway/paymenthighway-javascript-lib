@@ -92,7 +92,7 @@ export declare class PaymentAPI {
     /**
      * Payment Highway Reconciliation Report Request
      *
-     * @param date      The date to fetch the reconciliation report for. Must be today - 1 day or earlier.
+     * @param date      The date to fetch the reconciliation report for.
      * @param useDateProcessed
      * @returns {Promise<ReconciliationReportResponse>}
      */
