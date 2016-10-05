@@ -1,5 +1,6 @@
 import {Card} from './Card';
 import {Token} from '../Token';
+import {Customer} from '../response/Customer';
 
 export class TransactionRequest {
     public card: Card;
@@ -7,10 +8,10 @@ export class TransactionRequest {
     public currency: string;
     public token: Token;
     public order: string;
-    public customer: string;
+    public customer: Customer;
     public commit: boolean;
 
-    constructor(cardOrToken: Card|Token, amount: number, currency: string, order?: string, customer?: string, commit?: boolean) {
+    constructor(cardOrToken: Card|Token, amount: number, currency: string, order?: string, customer?: Customer, commit?: boolean) {
         if (cardOrToken instanceof Card) {
             this.card = cardOrToken;
         } else {
