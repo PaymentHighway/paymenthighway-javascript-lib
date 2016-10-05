@@ -57,14 +57,20 @@ describe('PaymentAPI', () => {
     });
     it('Test commit transaction', (done) => {
         const commitRequest = new CommitTransactionRequest_1.CommitTransactionRequest(9999, 'EUR');
+        let transactionId;
         createDebitTransaction()
             .then((initResponse) => {
-            return api.commitTransaction(initResponse.id, commitRequest);
+            transactionId = initResponse.id;
+            return api.commitTransaction(transactionId, commitRequest);
         })
             .then((commitResponse) => {
             checkResult(commitResponse);
             chai_1.assert(commitResponse.card.type === 'Visa', 'Card type should be "Visa"' + printResult(commitResponse));
             chai_1.assert(commitResponse.card.cvc_required === 'not_tested', 'Test card should return cvc_required = not_tested' + printResult(commitResponse));
+            return api.transactionResult(transactionId);
+        })
+            .then((resultResponse) => {
+            checkResult(resultResponse);
             done();
         });
     });
@@ -154,6 +160,10 @@ describe('PaymentAPI', () => {
         })
             .then((resultResponse) => {
             chai_1.assert(resultResponse.result.code === 200, 'Authorization should fail (code 200), got ' + resultResponse.result.code);
+            return api.transactionStatus(transactionResponse.id);
+        })
+            .then((statusResponse) => {
+            chai_1.assert(statusResponse.transaction.committed === false, 'Committed should be false, got' + statusResponse.transaction.committed);
             done();
         });
     });
