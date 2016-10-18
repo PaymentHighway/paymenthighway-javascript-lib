@@ -27,12 +27,15 @@ beforeEach(() => {
     };
 });
 
-function createDebitTransaction(orderId?: string): Promise<TransactionResponse> {
+function createDebitTransaction(orderId?: string, commit?: boolean): Promise<TransactionResponse> {
     let initResponse: TransactionResponse;
 
     return api.initTransaction().then((response) => {
         initResponse = response;
-        const transactionRequest = new TransactionRequest(testCard, 9999, 'EUR', orderId);
+        let transactionRequest = new TransactionRequest(testCard, 9999, 'EUR', orderId);
+        if (typeof commit !== 'undefined') {
+            transactionRequest.commit = commit;
+        }
         return api.debitTransaction(initResponse.id, transactionRequest);
     }).then((debitResponse) => {
         checkResult(debitResponse);
@@ -71,7 +74,7 @@ describe('PaymentAPI', () => {
     it('Test commit transaction', (done) => {
         const commitRequest = new CommitTransactionRequest(9999, 'EUR');
         let transactionId: string;
-        createDebitTransaction()
+        createDebitTransaction('12345ABC', false)
             .then((initResponse) => {
                 transactionId = initResponse.id;
                 return api.commitTransaction(transactionId, commitRequest);
