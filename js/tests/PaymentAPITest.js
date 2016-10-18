@@ -21,11 +21,14 @@ beforeEach(() => {
         orderId: PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId()
     };
 });
-function createDebitTransaction(orderId) {
+function createDebitTransaction(orderId, commit) {
     let initResponse;
     return api.initTransaction().then((response) => {
         initResponse = response;
-        const transactionRequest = new TransactionRequest_1.TransactionRequest(testCard, 9999, 'EUR', orderId);
+        let transactionRequest = new TransactionRequest_1.TransactionRequest(testCard, 9999, 'EUR', orderId);
+        if (typeof commit !== 'undefined') {
+            transactionRequest.commit = commit;
+        }
         return api.debitTransaction(initResponse.id, transactionRequest);
     }).then((debitResponse) => {
         checkResult(debitResponse);
@@ -58,7 +61,7 @@ describe('PaymentAPI', () => {
     it('Test commit transaction', (done) => {
         const commitRequest = new CommitTransactionRequest_1.CommitTransactionRequest(9999, 'EUR');
         let transactionId;
-        createDebitTransaction()
+        createDebitTransaction('12345ABC', false)
             .then((initResponse) => {
             transactionId = initResponse.id;
             return api.commitTransaction(transactionId, commitRequest);
