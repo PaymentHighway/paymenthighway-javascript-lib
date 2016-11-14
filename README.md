@@ -25,7 +25,7 @@ Create an instance of the builder, then use the generate methods to receive a li
 #### Initializing the builder
 
 ```javascript
-var paymentHighway = require('paymenthighway-javascript-lib');
+var paymentHighway = require('paymenthighway');
 
 var method = 'POST';
 var testKey = 'testKey';
@@ -71,13 +71,13 @@ class FormContainer {
 ```
 #### GenerateAddCardParameters
 ```javascript
-var formContainer = formBuilder.generateAddCardParameters(successUri, failureUri, cancelUri, language);
+var formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language);
 // form parameters
 var action = formContainer.getAction();
 var method = formContainer.method;          // 'GET'|'POST'
 var fields = formContainer.nameValuePairs;  // Pair<string, string> []
 
-fields.each((pair) => {
+fields.forEach((pair) => {
     pair.first;
     pair.second;
 });
