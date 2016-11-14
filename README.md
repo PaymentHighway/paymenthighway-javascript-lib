@@ -25,7 +25,7 @@ Create an instance of the builder, then use the generate methods to receive a li
 #### Initializing the builder
 
 ```javascript
-var paymentHighway = require('paymenthighway-javascript-lib');
+var paymentHighway = require('paymenthighway');
 
 var method = 'POST';
 var testKey = 'testKey';
@@ -71,13 +71,13 @@ class FormContainer {
 ```
 #### GenerateAddCardParameters
 ```javascript
-var formContainer = formBuilder.generateAddCardParameters(successUri, failureUri, cancelUri, language);
+var formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language);
 // form parameters
 var action = formContainer.getAction();
 var method = formContainer.method;          // 'GET'|'POST'
 var fields = formContainer.nameValuePairs;  // Pair<string, string> []
 
-fields.each((pair) => {
+fields.forEach((pair) => {
     pair.first;
     pair.second;
 });
@@ -91,9 +91,9 @@ var orderId = '1000123A';
 var description = '10 balloons 19,50€';
 
 var formContainer = formBuilder.generatePaymentParameters(
-        successUri, 
-        failureUri, 
-        cancelUri, 
+        successUrl, 
+        failureUrl, 
+        cancelUrl, 
         language, 
         amount, 
         currency, 
@@ -109,9 +109,9 @@ var orderId = '1000123A';
 var description = 'A Box of Dreams. 19,90€';
 
 var formContainer = formBuilder.generateAddCardAndPaymentParameters(
-        successUri, 
-        failureUri, 
-        cancelUri, 
+        successUrl, 
+        failureUrl, 
+        cancelUrl, 
         language, 
         amount, 
         currency, 
@@ -128,9 +128,9 @@ var orderId = '1000123A';
 var description = 'A Box of Dreams. 19,90€';
 
 var formContainer = formBuilder.generatePayWithMobilePayParameters(
-        successUri, 
-        failureUri, 
-        cancelUri, 
+        successUrl, 
+        failureUrl, 
+        cancelUrl, 
         language, 
         amount, 
         currency, 
