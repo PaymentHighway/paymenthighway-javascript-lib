@@ -77,6 +77,14 @@ describe('PaymentAPI', () => {
             done();
         });
     });
+    it('Test uncommitted transaction', (done) => {
+        let transactionId;
+        createDebitTransaction('12345DEF', false)
+            .then((initResponse) => {
+            transactionId = initResponse.id;
+            done();
+        });
+    });
     it('Test revert transaction', (done) => {
         createDebitTransaction()
             .then((initResponse) => {

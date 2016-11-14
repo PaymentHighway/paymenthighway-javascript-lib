@@ -31,6 +31,7 @@ export declare class FormBuilder {
     private static SPH_EXIT_IFRAME_ON_RESULT;
     private static SPH_EXIT_IFRAME_ON_THREE_D_SECURE;
     private static SPH_USE_THREE_D_SECURE;
+    private static SPH_SHOP_LOGO_URL;
     private static LANGUAGE;
     private static DESCRIPTION;
     private static SIGNATURE;
@@ -135,9 +136,10 @@ export declare class FormBuilder {
      * @param orderId A generated order ID, may for example be always unique or used multiple times for recurring transactions.
      * @param description Description of the payment shown in the form.
      * @param exitIframeOnResult Exit from iframe after a result. May be null.
+     * @param shopLogoUrl The logo must be 250x250 pixel in .png format and must be hosted on a HTTPS (secure) server. Optional.
      * @return FormContainer
      */
-    generatePayWithMobilePayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, exitIframeOnResult?: boolean): FormContainer;
+    generatePayWithMobilePayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, exitIframeOnResult?: boolean, shopLogoUrl?: string): FormContainer;
     /**
      *
      * @param successUrl

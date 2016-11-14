@@ -209,8 +209,8 @@ describe('Form builder', () => {
         });
     });
     it('Test mobilepay form with optional parameters', (done) => {
-        const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, true);
-        testNameValuePairs(formContainer.nameValuePairs, 15);
+        const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, true, 'https://foo.bar');
+        testNameValuePairs(formContainer.nameValuePairs, 16);
         FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 200, 'Response status code should be 200, got ' + response.statusCode);
@@ -236,7 +236,7 @@ describe('Form builder', () => {
         const testCardToken = new Token_1.Token(cardToken);
         paymentAPI.initTransaction().then((response) => {
             initResponse = response;
-            const transactionRequest = new TransactionRequest_1.TransactionRequest(testCardToken, 9999, 'EUR', orderId);
+            const transactionRequest = new TransactionRequest_1.TransactionRequest(testCardToken, 9999, 'USD', orderId);
             return paymentAPI.debitTransaction(initResponse.id, transactionRequest);
         }).then((debitResponse) => {
             chai_1.assert(debitResponse.result.code === 100, 'Request should succeed with code 100, complete response was: ' + JSON.stringify(debitResponse));

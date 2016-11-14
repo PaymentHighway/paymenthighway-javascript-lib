@@ -30,6 +30,7 @@ export class FormBuilder {
     private static SPH_EXIT_IFRAME_ON_RESULT: string = 'sph-exit-iframe-on-result';
     private static SPH_EXIT_IFRAME_ON_THREE_D_SECURE: string = 'sph-exit-iframe-on-three-d-secure';
     private static SPH_USE_THREE_D_SECURE: string = 'sph-use-three-d-secure';
+    private static SPH_SHOP_LOGO_URL: string = 'sph-shop-logo-url';
     private static LANGUAGE: string = 'language';
     private static DESCRIPTION: string = 'description';
     private static SIGNATURE: string = 'signature';
@@ -270,11 +271,12 @@ export class FormBuilder {
      * @param orderId A generated order ID, may for example be always unique or used multiple times for recurring transactions.
      * @param description Description of the payment shown in the form.
      * @param exitIframeOnResult Exit from iframe after a result. May be null.
+     * @param shopLogoUrl The logo must be 250x250 pixel in .png format and must be hosted on a HTTPS (secure) server. Optional.
      * @return FormContainer
      */
     public generatePayWithMobilePayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                               amount: number, currency: string, orderId: string, description: string,
-                                              exitIframeOnResult?: boolean): FormContainer {
+                                              exitIframeOnResult?: boolean, shopLogoUrl?: string): FormContainer {
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
 
@@ -285,6 +287,9 @@ export class FormBuilder {
 
         if (typeof exitIframeOnResult !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
+        }
+        if (typeof shopLogoUrl !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_SHOP_LOGO_URL, shopLogoUrl));
         }
 
         const mobilePayUri = '/form/view/mobilepay';
