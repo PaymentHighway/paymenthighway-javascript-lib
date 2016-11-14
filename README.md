@@ -91,9 +91,9 @@ var orderId = '1000123A';
 var description = '10 balloons 19,50€';
 
 var formContainer = formBuilder.generatePaymentParameters(
-        successUri, 
-        failureUri, 
-        cancelUri, 
+        successUrl, 
+        failureUrl, 
+        cancelUrl, 
         language, 
         amount, 
         currency, 
@@ -109,9 +109,9 @@ var orderId = '1000123A';
 var description = 'A Box of Dreams. 19,90€';
 
 var formContainer = formBuilder.generateAddCardAndPaymentParameters(
-        successUri, 
-        failureUri, 
-        cancelUri, 
+        successUrl, 
+        failureUrl, 
+        cancelUrl, 
         language, 
         amount, 
         currency, 
@@ -128,9 +128,9 @@ var orderId = '1000123A';
 var description = 'A Box of Dreams. 19,90€';
 
 var formContainer = formBuilder.generatePayWithMobilePayParameters(
-        successUri, 
-        failureUri, 
-        cancelUri, 
+        successUrl, 
+        failureUrl, 
+        cancelUrl, 
         language, 
         amount, 
         currency, 
