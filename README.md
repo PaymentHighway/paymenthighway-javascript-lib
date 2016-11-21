@@ -120,7 +120,7 @@ var formContainer = formBuilder.generateAddCardAndPaymentParameters(
     );
 ```
 
-#### MobilePay form payment
+#### Simple MobilePay form payment
 ```javascript
 var amount = 1990;
 var currency = 'EUR';
@@ -138,7 +138,38 @@ var formContainer = formBuilder.generatePayWithMobilePayParameters(
         description
     );
 ```
+
 _MobilePay payment is to be committed as any other Form Payment_
+
+#### MobilePay form payment with shop logo
+```javascript
+var amount = 1990;
+var currency = 'EUR';
+var orderId = '1000123A';
+var description = 'A Box of Dreams. 19,90€';
+var exitIframeOnResult = undefined;
+var logoUrl = 'https://foo.bar/biz.png';
+
+var formContainer = formBuilder.generatePayWithMobilePayParameters(
+        successUrl, 
+        failureUrl, 
+        cancelUrl, 
+        language, 
+        amount, 
+        currency, 
+        orderId, 
+        description,
+        exitIframeOnResult,
+        logoUrl
+    );
+```
+##### About shop logo in MobilePay
+* The logo must be 250x250 pixel in .png format. 
+* MPO will show a default logo in the app if this is empty or the image location doesn’t exist. 
+* Once a ShopLogoURL has been sent to MPOnline the .png-file on that URL must never be changed. If the shop wants a new (or more than one) logo, a new ShopLogoURL must be used. 
+* The logo must be hosted on a HTTPS (secure) server.
+
+---
 
 In addition, after the user is redirected to one of your provided success, failure or cancel URLs, you should validate the request parameters and the signature.
 
