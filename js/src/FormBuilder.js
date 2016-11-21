@@ -210,9 +210,10 @@ class FormBuilder {
      * @param orderId A generated order ID, may for example be always unique or used multiple times for recurring transactions.
      * @param description Description of the payment shown in the form.
      * @param exitIframeOnResult Exit from iframe after a result. May be null.
+     * @param shopLogoUrl The logo must be 250x250 pixel in .png format and must be hosted on a HTTPS (secure) server. Optional.
      * @return FormContainer
      */
-    generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, exitIframeOnResult) {
+    generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, exitIframeOnResult, shopLogoUrl) {
         const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
@@ -221,6 +222,9 @@ class FormBuilder {
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.DESCRIPTION, description));
         if (typeof exitIframeOnResult !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
+        }
+        if (typeof shopLogoUrl !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SHOP_LOGO_URL, shopLogoUrl));
         }
         const mobilePayUri = '/form/view/mobilepay';
         const signature = this.createSignature(mobilePayUri, nameValuePairs);
@@ -277,6 +281,7 @@ FormBuilder.SPH_SKIP_FORM_NOTIFICATIONS = 'sph-skip-form-notifications';
 FormBuilder.SPH_EXIT_IFRAME_ON_RESULT = 'sph-exit-iframe-on-result';
 FormBuilder.SPH_EXIT_IFRAME_ON_THREE_D_SECURE = 'sph-exit-iframe-on-three-d-secure';
 FormBuilder.SPH_USE_THREE_D_SECURE = 'sph-use-three-d-secure';
+FormBuilder.SPH_SHOP_LOGO_URL = 'sph-shop-logo-url';
 FormBuilder.LANGUAGE = 'language';
 FormBuilder.DESCRIPTION = 'description';
 FormBuilder.SIGNATURE = 'signature';
