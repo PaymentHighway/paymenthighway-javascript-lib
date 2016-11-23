@@ -1,5 +1,5 @@
 "use strict";
-const Uuid = require('node-uuid');
+const Uuid = require('uuid');
 class PaymentHighwayUtility {
     /**
      * Cryptographically strong pseudo random number generator.
