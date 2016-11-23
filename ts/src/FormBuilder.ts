@@ -30,10 +30,10 @@ export class FormBuilder {
     private static SPH_EXIT_IFRAME_ON_RESULT: string = 'sph-exit-iframe-on-result';
     private static SPH_EXIT_IFRAME_ON_THREE_D_SECURE: string = 'sph-exit-iframe-on-three-d-secure';
     private static SPH_USE_THREE_D_SECURE: string = 'sph-use-three-d-secure';
-    private static SPH_MOBILEPAY_PHONE_NUMBER: string = 'ph-mobilepay-phone-number';
-    private static SPH_MOBILEPAY_SHOP_NAME: string = 'ph-mobilepay-shop-name';
-    private static SPH_SUB_MERCHANT_NAME: string = 'ph-sub.merchant-name';
-    private static SPH_SUB_MERCHANT_ID: string = 'ph-sub.merchant-id';
+    private static SPH_MOBILEPAY_PHONE_NUMBER: string = 'sph-mobilepay-phone-number';
+    private static SPH_MOBILEPAY_SHOP_NAME: string = 'sph-mobilepay-shop-name';
+    private static SPH_SUB_MERCHANT_NAME: string = 'sph-sub.merchant-name';
+    private static SPH_SUB_MERCHANT_ID: string = 'sph-sub.merchant-id';
     private static SPH_SHOP_LOGO_URL: string = 'sph-shop-logo-url';
     private static LANGUAGE: string = 'language';
     private static DESCRIPTION: string = 'description';
