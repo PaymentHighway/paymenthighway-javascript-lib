@@ -1,4 +1,4 @@
-import * as Uuid from 'node-uuid';
+import * as Uuid from 'uuid';
 
 export class PaymentHighwayUtility {
 
