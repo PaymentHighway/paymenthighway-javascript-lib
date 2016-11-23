@@ -211,9 +211,13 @@ class FormBuilder {
      * @param description Description of the payment shown in the form.
      * @param exitIframeOnResult Exit from iframe after a result. May be null.
      * @param shopLogoUrl The logo must be 250x250 pixel in .png format and must be hosted on a HTTPS (secure) server. Optional.
+     * @param phoneNumber User phone number with country code. Max AN 15. Optional.
+     * @param shopName Shop name. Max AN 100. Optional.
+     * @param subMerchantId Sub merchant ID
+     * @param subMerchantName Sub merchant name
      * @return FormContainer
      */
-    generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, exitIframeOnResult, shopLogoUrl) {
+    generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, exitIframeOnResult, shopLogoUrl, phoneNumber, shopName, subMerchantId, subMerchantName) {
         const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
@@ -225,6 +229,18 @@ class FormBuilder {
         }
         if (typeof shopLogoUrl !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SHOP_LOGO_URL, shopLogoUrl));
+        }
+        if (typeof phoneNumber !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_MOBILEPAY_PHONE_NUMBER, phoneNumber));
+        }
+        if (typeof shopName !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_MOBILEPAY_SHOP_NAME, shopName));
+        }
+        if (typeof subMerchantId !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SUB_MERCHANT_ID, subMerchantId));
+        }
+        if (typeof subMerchantName !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SUB_MERCHANT_NAME, subMerchantName));
         }
         const mobilePayUri = '/form/view/mobilepay';
         const signature = this.createSignature(mobilePayUri, nameValuePairs);
@@ -281,6 +297,10 @@ FormBuilder.SPH_SKIP_FORM_NOTIFICATIONS = 'sph-skip-form-notifications';
 FormBuilder.SPH_EXIT_IFRAME_ON_RESULT = 'sph-exit-iframe-on-result';
 FormBuilder.SPH_EXIT_IFRAME_ON_THREE_D_SECURE = 'sph-exit-iframe-on-three-d-secure';
 FormBuilder.SPH_USE_THREE_D_SECURE = 'sph-use-three-d-secure';
+FormBuilder.SPH_MOBILEPAY_PHONE_NUMBER = 'ph-mobilepay-phone-number';
+FormBuilder.SPH_MOBILEPAY_SHOP_NAME = 'ph-mobilepay-shop-name';
+FormBuilder.SPH_SUB_MERCHANT_NAME = 'ph-sub.merchant-name';
+FormBuilder.SPH_SUB_MERCHANT_ID = 'ph-sub.merchant-id';
 FormBuilder.SPH_SHOP_LOGO_URL = 'sph-shop-logo-url';
 FormBuilder.LANGUAGE = 'language';
 FormBuilder.DESCRIPTION = 'description';

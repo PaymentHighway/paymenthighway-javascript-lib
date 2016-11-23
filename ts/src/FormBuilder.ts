@@ -30,6 +30,10 @@ export class FormBuilder {
     private static SPH_EXIT_IFRAME_ON_RESULT: string = 'sph-exit-iframe-on-result';
     private static SPH_EXIT_IFRAME_ON_THREE_D_SECURE: string = 'sph-exit-iframe-on-three-d-secure';
     private static SPH_USE_THREE_D_SECURE: string = 'sph-use-three-d-secure';
+    private static SPH_MOBILEPAY_PHONE_NUMBER: string = 'ph-mobilepay-phone-number';
+    private static SPH_MOBILEPAY_SHOP_NAME: string = 'ph-mobilepay-shop-name';
+    private static SPH_SUB_MERCHANT_NAME: string = 'ph-sub.merchant-name';
+    private static SPH_SUB_MERCHANT_ID: string = 'ph-sub.merchant-id';
     private static SPH_SHOP_LOGO_URL: string = 'sph-shop-logo-url';
     private static LANGUAGE: string = 'language';
     private static DESCRIPTION: string = 'description';
@@ -272,11 +276,16 @@ export class FormBuilder {
      * @param description Description of the payment shown in the form.
      * @param exitIframeOnResult Exit from iframe after a result. May be null.
      * @param shopLogoUrl The logo must be 250x250 pixel in .png format and must be hosted on a HTTPS (secure) server. Optional.
+     * @param phoneNumber User phone number with country code. Max AN 15. Optional.
+     * @param shopName Shop name. Max AN 100. Optional.
+     * @param subMerchantId Sub merchant ID
+     * @param subMerchantName Sub merchant name
      * @return FormContainer
      */
     public generatePayWithMobilePayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                               amount: number, currency: string, orderId: string, description: string,
-                                              exitIframeOnResult?: boolean, shopLogoUrl?: string): FormContainer {
+                                              exitIframeOnResult?: boolean, shopLogoUrl?: string, phoneNumber?: string,
+                                              shopName?: string, subMerchantId?: string, subMerchantName?: string): FormContainer {
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
 
@@ -290,6 +299,18 @@ export class FormBuilder {
         }
         if (typeof shopLogoUrl !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_SHOP_LOGO_URL, shopLogoUrl));
+        }
+        if (typeof phoneNumber !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_MOBILEPAY_PHONE_NUMBER, phoneNumber));
+        }
+        if (typeof shopName !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_MOBILEPAY_SHOP_NAME, shopName));
+        }
+        if (typeof subMerchantId !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_SUB_MERCHANT_ID, subMerchantId));
+        }
+        if (typeof subMerchantName !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_SUB_MERCHANT_NAME, subMerchantName));
         }
 
         const mobilePayUri = '/form/view/mobilepay';
