@@ -149,6 +149,8 @@ var orderId = '1000123A';
 var description = 'A Box of Dreams. 19,90€';
 var exitIframeOnResult = undefined;
 var logoUrl = 'https://foo.bar/biz.png';
+var phoneNumber = '+358401234567';
+var shopName = 'Jaskan kenkä';
 
 var formContainer = formBuilder.generatePayWithMobilePayParameters(
         successUrl, 
@@ -160,7 +162,9 @@ var formContainer = formBuilder.generatePayWithMobilePayParameters(
         orderId, 
         description,
         exitIframeOnResult,
-        logoUrl
+        logoUrl,
+        phoneNumber,
+        shopName
     );
 ```
 ##### About shop logo in MobilePay
