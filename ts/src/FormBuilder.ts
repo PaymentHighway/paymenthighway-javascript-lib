@@ -32,8 +32,8 @@ export class FormBuilder {
     private static SPH_USE_THREE_D_SECURE: string = 'sph-use-three-d-secure';
     private static SPH_MOBILEPAY_PHONE_NUMBER: string = 'sph-mobilepay-phone-number';
     private static SPH_MOBILEPAY_SHOP_NAME: string = 'sph-mobilepay-shop-name';
-    private static SPH_SUB_MERCHANT_NAME: string = 'sph-sub.merchant-name';
-    private static SPH_SUB_MERCHANT_ID: string = 'sph-sub.merchant-id';
+    private static SPH_SUB_MERCHANT_NAME: string = 'sph-sub-merchant-name';
+    private static SPH_SUB_MERCHANT_ID: string = 'sph-sub-merchant-id';
     private static SPH_SHOP_LOGO_URL: string = 'sph-shop-logo-url';
     private static LANGUAGE: string = 'language';
     private static DESCRIPTION: string = 'description';
