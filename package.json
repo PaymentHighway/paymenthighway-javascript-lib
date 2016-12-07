@@ -26,9 +26,9 @@
     "email": "pauli.kostamo@solinor.com",
     "url": "http://paymenthighway.fi/"
   },
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/solinor/paymenthighway-javascript-lib"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/solinor/paymenthighway-javascript-lib"
   },
   "license": "MIT",
   "dependencies": {
