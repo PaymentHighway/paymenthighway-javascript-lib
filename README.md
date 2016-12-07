@@ -141,7 +141,7 @@ var formContainer = formBuilder.generatePayWithMobilePayParameters(
 
 _MobilePay payment is to be committed as any other Form Payment_
 
-#### MobilePay form payment with shop logo
+#### MobilePay form payment with optional parameters
 ```javascript
 var amount = 1990;
 var currency = 'EUR';

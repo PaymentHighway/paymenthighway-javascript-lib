@@ -142,9 +142,9 @@ export declare class FormBuilder {
      * @param exitIframeOnResult Exit from iframe after a result. May be null.
      * @param shopLogoUrl The logo must be 250x250 pixel in .png format and must be hosted on a HTTPS (secure) server. Optional.
      * @param phoneNumber User phone number with country code. Max AN 15. Optional.
-     * @param shopName Shop name. Max AN 100. Optional.
-     * @param subMerchantId Sub merchant ID
-     * @param subMerchantName Sub merchant name
+     * @param shopName Max 100 AN. Name of the shop/merchant. MobilePay app displays this under the shop logo.  If omitted, the merchant name from PH is used. Optional.
+     * @param subMerchantId Max 15 AN. Should only be used by a Payment Facilitator customer
+     * @param subMerchantName Max 21 AN. Should only be used by a Payment Facilitator customer
      * @return FormContainer
      */
     generatePayWithMobilePayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, exitIframeOnResult?: boolean, shopLogoUrl?: string, phoneNumber?: string, shopName?: string, subMerchantId?: string, subMerchantName?: string): FormContainer;

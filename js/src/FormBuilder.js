@@ -212,9 +212,9 @@ class FormBuilder {
      * @param exitIframeOnResult Exit from iframe after a result. May be null.
      * @param shopLogoUrl The logo must be 250x250 pixel in .png format and must be hosted on a HTTPS (secure) server. Optional.
      * @param phoneNumber User phone number with country code. Max AN 15. Optional.
-     * @param shopName Shop name. Max AN 100. Optional.
-     * @param subMerchantId Sub merchant ID
-     * @param subMerchantName Sub merchant name
+     * @param shopName Max 100 AN. Name of the shop/merchant. MobilePay app displays this under the shop logo.  If omitted, the merchant name from PH is used. Optional.
+     * @param subMerchantId Max 15 AN. Should only be used by a Payment Facilitator customer
+     * @param subMerchantName Max 21 AN. Should only be used by a Payment Facilitator customer
      * @return FormContainer
      */
     generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, exitIframeOnResult, shopLogoUrl, phoneNumber, shopName, subMerchantId, subMerchantName) {
@@ -299,8 +299,8 @@ FormBuilder.SPH_EXIT_IFRAME_ON_THREE_D_SECURE = 'sph-exit-iframe-on-three-d-secu
 FormBuilder.SPH_USE_THREE_D_SECURE = 'sph-use-three-d-secure';
 FormBuilder.SPH_MOBILEPAY_PHONE_NUMBER = 'sph-mobilepay-phone-number';
 FormBuilder.SPH_MOBILEPAY_SHOP_NAME = 'sph-mobilepay-shop-name';
-FormBuilder.SPH_SUB_MERCHANT_NAME = 'sph-sub.merchant-name';
-FormBuilder.SPH_SUB_MERCHANT_ID = 'sph-sub.merchant-id';
+FormBuilder.SPH_SUB_MERCHANT_NAME = 'sph-sub-merchant-name';
+FormBuilder.SPH_SUB_MERCHANT_ID = 'sph-sub-merchant-id';
 FormBuilder.SPH_SHOP_LOGO_URL = 'sph-shop-logo-url';
 FormBuilder.LANGUAGE = 'language';
 FormBuilder.DESCRIPTION = 'description';
