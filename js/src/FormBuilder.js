@@ -1,8 +1,8 @@
 "use strict";
-const PaymentHighwayUtility_1 = require('./PaymentHighwayUtility');
-const Pair_1 = require('./util/Pair');
-const SecureSigner_1 = require('./security/SecureSigner');
-const FormContainer_1 = require('./FormContainer');
+const PaymentHighwayUtility_1 = require("./PaymentHighwayUtility");
+const Pair_1 = require("./util/Pair");
+const SecureSigner_1 = require("./security/SecureSigner");
+const FormContainer_1 = require("./FormContainer");
 /**
  * Creates parameters that can used on the form that sends them to
  * Payment Highway.

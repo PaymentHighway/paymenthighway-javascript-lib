@@ -1,7 +1,7 @@
 "use strict";
-const Crypto = require('crypto');
-const Pair_1 = require('../util/Pair');
-const _ = require('lodash');
+const Crypto = require("crypto");
+const Pair_1 = require("../util/Pair");
+const _ = require("lodash");
 /**
  * Creates a signature for PaymentHighway messages
  */

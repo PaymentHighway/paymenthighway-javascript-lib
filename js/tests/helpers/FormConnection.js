@@ -1,6 +1,6 @@
 "use strict";
-const requestPromise = require('request-promise');
-const PaymentAPI_1 = require('../../src/PaymentAPI');
+const requestPromise = require("request-promise");
+const PaymentAPI_1 = require("../../src/PaymentAPI");
 class FormConnection {
     static postForm(container) {
         const options = {

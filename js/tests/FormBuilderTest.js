@@ -1,15 +1,13 @@
 "use strict";
-const chai_1 = require('chai');
-const chaiString = require('chai-string');
-const FormBuilder_1 = require('../src/FormBuilder');
-const FormConnection_1 = require('./helpers/FormConnection');
-const PaymentAPI_1 = require('../src/PaymentAPI');
-const URI = require('urijs');
-const SecureSigner_1 = require('../src/security/SecureSigner');
-const TransactionRequest_1 = require('../src/model/request/TransactionRequest');
-const Token_1 = require('../src/model/Token');
-const Browser = require('zombie');
-chai_1.use(chaiString);
+const chai_1 = require("chai");
+const FormBuilder_1 = require("../src/FormBuilder");
+const FormConnection_1 = require("./helpers/FormConnection");
+const PaymentAPI_1 = require("../src/PaymentAPI");
+const URI = require("urijs");
+const SecureSigner_1 = require("../src/security/SecureSigner");
+const TransactionRequest_1 = require("../src/model/request/TransactionRequest");
+const Token_1 = require("../src/model/Token");
+chai_1.use(require('chai-string'));
 const method = 'POST';
 const signatureKeyId = 'testKey';
 const signatureSecret = 'testSecret';
@@ -27,9 +25,12 @@ const description = 'order description';
 const sphAccount = 'test';
 const sphMerchant = 'test_merchantId';
 let formBuilder;
-const ss = new SecureSigner_1.SecureSigner(signatureKeyId, signatureSecret);
+let ss;
 let cardToken;
+let Browser;
 beforeEach(() => {
+    Browser = require('zombie');
+    ss = new SecureSigner_1.SecureSigner(signatureKeyId, signatureSecret);
     formBuilder = new FormBuilder_1.FormBuilder(method, signatureKeyId, signatureSecret, account, merchant, baseUrl);
 });
 function testRedirectResponse(response, locationEndsWith) {
