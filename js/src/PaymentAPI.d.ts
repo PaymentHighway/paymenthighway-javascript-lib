@@ -24,25 +24,25 @@ export declare class PaymentAPI {
     /**
      * Payment Highway Init Transaction
      *
-     * @returns {Promise<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResponse>}
      */
-    initTransaction(): Promise<TransactionResponse>;
+    initTransaction(): PromiseLike<TransactionResponse>;
     /**
      * Payment Highway Debit Transaction
      *
      * @param transactionId
      * @param request
-     * @returns {Promise<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResponse>}
      */
-    debitTransaction(transactionId: string, request: TransactionRequest): Promise<TransactionResponse>;
+    debitTransaction(transactionId: string, request: TransactionRequest): PromiseLike<TransactionResponse>;
     /**
      * Payment Highway Revert Transaction with amount
      *
      * @param transactionId
      * @param request
-     * @returns {Promise<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResponse>}
      */
-    revertTransaction(transactionId: string, request: RevertTransactionRequest): Promise<TransactionResponse>;
+    revertTransaction(transactionId: string, request: RevertTransactionRequest): PromiseLike<TransactionResponse>;
     /**
      * Payment Highway Transaction Commit Request
      * Used to commit (capture) the transaction.
@@ -50,53 +50,53 @@ export declare class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {Promise<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResponse>}
      */
-    commitTransaction(transactionId: string, request: CommitTransactionRequest): Promise<TransactionResponse>;
+    commitTransaction(transactionId: string, request: CommitTransactionRequest): PromiseLike<TransactionResponse>;
     /**
      * Payment Highway Transaction Status Request
      *
      * @param transactionId
-     * @returns {Promise<TransactionStatusResponse>}
+     * @returns {PromiseLike<TransactionStatusResponse>}
      */
-    transactionStatus(transactionId: string): Promise<TransactionStatusResponse>;
+    transactionStatus(transactionId: string): PromiseLike<TransactionStatusResponse>;
     /**
      * Payment Highway Order Status Request
      *
      * @param orderId   The ID of the order whose transactions should be searched for
-     * @returns {Promise<OrderSearchResponse>}
+     * @returns {PromiseLike<OrderSearchResponse>}
      */
-    searchOrders(orderId: string): Promise<OrderSearchResponse>;
+    searchOrders(orderId: string): PromiseLike<OrderSearchResponse>;
     /**
      * Payment Highway Tokenize Request
      *
      * @param tokenizationId
-     * @returns {Promise<TokenizationResponse>}
+     * @returns {PromiseLike<TokenizationResponse>}
      */
-    tokenization(tokenizationId: string): Promise<TokenizationResponse>;
+    tokenization(tokenizationId: string): PromiseLike<TokenizationResponse>;
     /**
      * Payment Highway Transaction Result Request
      * Used to find out whether or not an uncommitted transaction succeeded, without actually committing (capturing) it.
      *
      * @param transactionId
-     * @returns {Promise<TransactionResultResponse>}
+     * @returns {PromiseLike<TransactionResultResponse>}
      */
-    transactionResult(transactionId: string): Promise<TransactionResultResponse>;
+    transactionResult(transactionId: string): PromiseLike<TransactionResultResponse>;
     /**
      * Payment Highway Daily Report Request
      *
      * @param date
-     * @returns {Promise<ReportResponse>}
+     * @returns {PromiseLike<ReportResponse>}
      */
-    fetchDailyReport(date: string): Promise<ReportResponse>;
+    fetchDailyReport(date: string): PromiseLike<ReportResponse>;
     /**
      * Payment Highway Reconciliation Report Request
      *
      * @param date      The date to fetch the reconciliation report for.
      * @param useDateProcessed Use the acquirer processed date instead of report received date. Might cause changes to the past
-     * @returns {Promise<ReconciliationReportResponse>}
+     * @returns {PromiseLike<ReconciliationReportResponse>}
      */
-    fetchReconciliationReport(date: string, useDateProcessed?: boolean): Promise<ReconciliationReportResponse>;
+    fetchReconciliationReport(date: string, useDateProcessed?: boolean): PromiseLike<ReconciliationReportResponse>;
     /**
      * Create name value pairs
      *
@@ -108,7 +108,7 @@ export declare class PaymentAPI {
      * @param method
      * @param paymentUri
      * @param requestBody
-     * @returns {Promise<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResponse>}
      */
     private makeRequest(method, paymentUri, requestBody?);
     /**

@@ -217,7 +217,7 @@ var paymentAPI = new PaymentAPI(
 ```javascript
 return paymentAPI.initTransaction();
 ```
-* returns Promise<[TransactionResponse](/ts/src/model/response/TransactionResponse.ts)>
+* returns PromiseLike<[TransactionResponse](/ts/src/model/response/TransactionResponse.ts)>
 
 #### Commit Form Transaction
 ```javascript
@@ -225,16 +225,16 @@ var amount = 1990;
 var currency = 'EUR';
 var request = new paymentHighway.CommitTransactionRequest(amount, currency);
 
-return paymentAPI.commitTransaction(transactionId, request); // Returns Promise
+return paymentAPI.commitTransaction(transactionId, request); // Returns PromiseLike
 ```
 * takes CommitTransactionRequest[(TS)](/ts/src/model/request/CommitTransactionRequest.ts)/[(JS)](/js/src/model/request/CommitTransactionRequest.js)
-* returns Promise<[TransactionResponse](/ts/src/model/response/TransactionResponse.ts)>
+* returns PromiseLike<[TransactionResponse](/ts/src/model/response/TransactionResponse.ts)>
 
 #### Tokenize (get the actual card token by using token id)
 ```javascript
 return paymentAPI.tokenization("tokenizationId");
 ```
-* returns Promise<[TokenizationResponse](/ts/src/model/response/TokenizationResponse.ts)>
+* returns PromiseLike<[TokenizationResponse](/ts/src/model/response/TokenizationResponse.ts)>
 
 #### Example Debit with Token
 ```javascript
@@ -248,36 +248,36 @@ return paymentAPI.initTransaction()
             return paymentAPI.debitTransaction(init.id, request);
         });
 ```
-* returns Promise<[TransactionResultResponse](/ts/src/model/response/TransactionResultResponse.ts)>
+* returns PromiseLike<[TransactionResultResponse](/ts/src/model/response/TransactionResultResponse.ts)>
 
 #### Revert
 ```javascript
 return paymentAPI.revertTransaction("transactionId", "amount");
 ```
-* retruns Promise<[TransactionResponse](/ts/src/model/response/TransactionResponse.ts)>
+* retruns PromiseLike<[TransactionResponse](/ts/src/model/response/TransactionResponse.ts)>
 
 #### Transaction Status
 ```javascript
 return paymentAPI.transactionStatus("transactionId");
 ```
-* returns Promise<[TransactionStatusResponse](/ts/src/model/response/TransactionStatusResponse.ts)>
+* returns PromiseLike<[TransactionStatusResponse](/ts/src/model/response/TransactionStatusResponse.ts)>
 
 #### Order status
 ```javascript 
 return paymentAPI.searchOrders("order");
 ```
-* returns Promise<[OrderSearchResponse](/ts/src/model/response/OrderSearchResponse.ts)>
+* returns PromiseLike<[OrderSearchResponse](/ts/src/model/response/OrderSearchResponse.ts)>
 
 #### Daily batch report
 ```javascript
 return paymentAPI.fetchDailyReport("yyyyMMdd");
 ```
-* returns Promise<[ReportResponse](/ts/src/model/response/ReportResponse.ts)>
+* returns PromiseLike<[ReportResponse](/ts/src/model/response/ReportResponse.ts)>
 
 
 # Errors
 Payment Highway authenticates each request and if there is invalid parameters or a signature mismatch, it returns an error.
-PaymentHighwayAPI returns Promise from each requests.
+PaymentHighwayAPI returns PromiseLike from each requests.
 
 It is recommended to gracefully handle errors from the API.
 ```javascript

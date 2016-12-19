@@ -27,7 +27,7 @@ beforeEach(() => {
     };
 });
 
-function createDebitTransaction(orderId?: string, commit?: boolean): Promise<TransactionResponse> {
+function createDebitTransaction(orderId?: string, commit?: boolean): PromiseLike<TransactionResponse> {
     let initResponse: TransactionResponse;
 
     return api.initTransaction().then((response) => {

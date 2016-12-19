@@ -1,8 +1,8 @@
 "use strict";
-const chai_1 = require('chai');
-const SecureSigner_1 = require('../src/security/SecureSigner');
-const Pair_1 = require('../src/util/Pair');
-const PaymentHighwayUtility_1 = require('../src/PaymentHighwayUtility');
+const chai_1 = require("chai");
+const SecureSigner_1 = require("../src/security/SecureSigner");
+const Pair_1 = require("../src/util/Pair");
+const PaymentHighwayUtility_1 = require("../src/PaymentHighwayUtility");
 describe('Secure signer', () => {
     it('Test create signature', () => {
         const secretKeyId = 'account001-key001';

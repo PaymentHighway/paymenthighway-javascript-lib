@@ -1,1 +1,1 @@
-{"version":3,"file":"RevertTransactionRequest.js","sourceRoot":"","sources":["../../../../ts/src/model/request/RevertTransactionRequest.ts"],"names":[],"mappings":";AAAA;IACI,YAAmB,MAAe;QAAf,WAAM,GAAN,MAAM,CAAS;IAClC,CAAC;AACL,CAAC;AAHY,gCAAwB,2BAGpC,CAAA"}
+{"version":3,"file":"RevertTransactionRequest.js","sourceRoot":"","sources":["../../../../ts/src/model/request/RevertTransactionRequest.ts"],"names":[],"mappings":";AAAA;IACI,YAAmB,MAAe;QAAf,WAAM,GAAN,MAAM,CAAS;IAClC,CAAC;CACJ;AAHD,4DAGC"}

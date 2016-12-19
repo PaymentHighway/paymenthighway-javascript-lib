@@ -1,5 +1,5 @@
 "use strict";
-const Card_1 = require('./Card');
+const Card_1 = require("./Card");
 class TransactionRequest {
     constructor(cardOrToken, amount, currency, order, customer, commit) {
         if (cardOrToken instanceof Card_1.Card) {

@@ -1,8 +1,8 @@
 "use strict";
-const requestPromise = require('request-promise');
-const PaymentHighwayUtility_1 = require('./PaymentHighwayUtility');
-const SecureSigner_1 = require('./security/SecureSigner');
-const Pair_1 = require('./util/Pair');
+const requestPromise = require("request-promise");
+const PaymentHighwayUtility_1 = require("./PaymentHighwayUtility");
+const SecureSigner_1 = require("./security/SecureSigner");
+const Pair_1 = require("./util/Pair");
 /**
  * Payment Highway Payment API Service.
  */
@@ -18,7 +18,7 @@ class PaymentAPI {
     /**
      * Payment Highway Init Transaction
      *
-     * @returns {Promise<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResponse>}
      */
     initTransaction() {
         const paymentUri = '/transaction';
@@ -29,7 +29,7 @@ class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {Promise<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResponse>}
      */
     debitTransaction(transactionId, request) {
         const debitUri = '/transaction/' + transactionId + '/debit';
@@ -40,7 +40,7 @@ class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {Promise<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResponse>}
      */
     revertTransaction(transactionId, request) {
         const revertUri = '/transaction/' + transactionId + '/revert';
@@ -53,7 +53,7 @@ class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {Promise<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResponse>}
      */
     commitTransaction(transactionId, request) {
         const commitUri = '/transaction/' + transactionId + '/commit';
@@ -63,7 +63,7 @@ class PaymentAPI {
      * Payment Highway Transaction Status Request
      *
      * @param transactionId
-     * @returns {Promise<TransactionStatusResponse>}
+     * @returns {PromiseLike<TransactionStatusResponse>}
      */
     transactionStatus(transactionId) {
         const statusUri = '/transaction/' + transactionId;
@@ -73,7 +73,7 @@ class PaymentAPI {
      * Payment Highway Order Status Request
      *
      * @param orderId   The ID of the order whose transactions should be searched for
-     * @returns {Promise<OrderSearchResponse>}
+     * @returns {PromiseLike<OrderSearchResponse>}
      */
     searchOrders(orderId) {
         const searchUri = '/transactions/?order=' + orderId;
@@ -83,7 +83,7 @@ class PaymentAPI {
      * Payment Highway Tokenize Request
      *
      * @param tokenizationId
-     * @returns {Promise<TokenizationResponse>}
+     * @returns {PromiseLike<TokenizationResponse>}
      */
     tokenization(tokenizationId) {
         const tokenUri = '/tokenization/' + tokenizationId;
@@ -94,7 +94,7 @@ class PaymentAPI {
      * Used to find out whether or not an uncommitted transaction succeeded, without actually committing (capturing) it.
      *
      * @param transactionId
-     * @returns {Promise<TransactionResultResponse>}
+     * @returns {PromiseLike<TransactionResultResponse>}
      */
     transactionResult(transactionId) {
         const transactionResultUrl = '/transaction/' + transactionId + '/result';
@@ -104,7 +104,7 @@ class PaymentAPI {
      * Payment Highway Daily Report Request
      *
      * @param date
-     * @returns {Promise<ReportResponse>}
+     * @returns {PromiseLike<ReportResponse>}
      */
     fetchDailyReport(date) {
         const reportUri = '/report/batch/' + date;
@@ -115,7 +115,7 @@ class PaymentAPI {
      *
      * @param date      The date to fetch the reconciliation report for.
      * @param useDateProcessed Use the acquirer processed date instead of report received date. Might cause changes to the past
-     * @returns {Promise<ReconciliationReportResponse>}
+     * @returns {PromiseLike<ReconciliationReportResponse>}
      */
     fetchReconciliationReport(date, useDateProcessed) {
         if (!useDateProcessed) {
@@ -143,7 +143,7 @@ class PaymentAPI {
      * @param method
      * @param paymentUri
      * @param requestBody
-     * @returns {Promise<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResponse>}
      */
     makeRequest(method, paymentUri, requestBody) {
         return this.executeRequest(method, paymentUri, this.createNameValuePairs(), requestBody)
@@ -190,7 +190,7 @@ class PaymentAPI {
     }
 }
 PaymentAPI.API_VERSION = '20160630';
-/* Payment API headers */
+// Payment API headers
 PaymentAPI.USER_AGENT = 'PaymentHighway Javascript Library';
 exports.PaymentAPI = PaymentAPI;
 //# sourceMappingURL=PaymentAPI.js.map
