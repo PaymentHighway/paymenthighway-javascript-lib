@@ -31,6 +31,10 @@ export declare class FormBuilder {
     private static SPH_EXIT_IFRAME_ON_RESULT;
     private static SPH_EXIT_IFRAME_ON_THREE_D_SECURE;
     private static SPH_USE_THREE_D_SECURE;
+    private static SPH_MOBILEPAY_PHONE_NUMBER;
+    private static SPH_MOBILEPAY_SHOP_NAME;
+    private static SPH_SUB_MERCHANT_NAME;
+    private static SPH_SUB_MERCHANT_ID;
     private static SPH_SHOP_LOGO_URL;
     private static LANGUAGE;
     private static DESCRIPTION;
@@ -137,9 +141,13 @@ export declare class FormBuilder {
      * @param description Description of the payment shown in the form.
      * @param exitIframeOnResult Exit from iframe after a result. May be null.
      * @param shopLogoUrl The logo must be 250x250 pixel in .png format and must be hosted on a HTTPS (secure) server. Optional.
+     * @param phoneNumber User phone number with country code. Max AN 15. Optional.
+     * @param shopName Max 100 AN. Name of the shop/merchant. MobilePay app displays this under the shop logo.  If omitted, the merchant name from PH is used. Optional.
+     * @param subMerchantId Max 15 AN. Should only be used by a Payment Facilitator customer
+     * @param subMerchantName Max 21 AN. Should only be used by a Payment Facilitator customer
      * @return FormContainer
      */
-    generatePayWithMobilePayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, exitIframeOnResult?: boolean, shopLogoUrl?: string): FormContainer;
+    generatePayWithMobilePayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, exitIframeOnResult?: boolean, shopLogoUrl?: string, phoneNumber?: string, shopName?: string, subMerchantId?: string, subMerchantName?: string): FormContainer;
     /**
      *
      * @param successUrl
