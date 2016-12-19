@@ -22,7 +22,7 @@ export class PaymentAPI {
 
     private static API_VERSION: string = '20160630';
 
-    /* Payment API headers */
+    // Payment API headers
     public static USER_AGENT: string = 'PaymentHighway Javascript Library';
 
     private secureSigner: SecureSigner;
@@ -38,9 +38,9 @@ export class PaymentAPI {
     /**
      * Payment Highway Init Transaction
      *
-     * @returns {Promise<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResponse>}
      */
-    public initTransaction(): Promise<TransactionResponse> {
+    public initTransaction(): PromiseLike<TransactionResponse> {
         const paymentUri = '/transaction';
         return this.makeRequest('POST', paymentUri);
     }
@@ -50,9 +50,9 @@ export class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {Promise<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResponse>}
      */
-    public debitTransaction(transactionId: string, request: TransactionRequest): Promise<TransactionResponse> {
+    public debitTransaction(transactionId: string, request: TransactionRequest): PromiseLike<TransactionResponse> {
         const debitUri = '/transaction/' + transactionId + '/debit';
         return this.makeRequest('POST', debitUri, request);
     }
@@ -62,9 +62,9 @@ export class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {Promise<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResponse>}
      */
-    public revertTransaction(transactionId: string, request: RevertTransactionRequest): Promise<TransactionResponse> {
+    public revertTransaction(transactionId: string, request: RevertTransactionRequest): PromiseLike<TransactionResponse> {
         const revertUri = '/transaction/' + transactionId + '/revert';
         return this.makeRequest('POST', revertUri, request);
     }
@@ -76,9 +76,9 @@ export class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {Promise<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResponse>}
      */
-    public commitTransaction(transactionId: string, request: CommitTransactionRequest): Promise<TransactionResponse> {
+    public commitTransaction(transactionId: string, request: CommitTransactionRequest): PromiseLike<TransactionResponse> {
         const commitUri = '/transaction/' + transactionId + '/commit';
         return this.makeRequest('POST', commitUri, request);
     }
@@ -87,9 +87,9 @@ export class PaymentAPI {
      * Payment Highway Transaction Status Request
      *
      * @param transactionId
-     * @returns {Promise<TransactionStatusResponse>}
+     * @returns {PromiseLike<TransactionStatusResponse>}
      */
-    public transactionStatus(transactionId: string): Promise<TransactionStatusResponse> {
+    public transactionStatus(transactionId: string): PromiseLike<TransactionStatusResponse> {
         const statusUri = '/transaction/' + transactionId;
         return this.makeRequest('GET', statusUri);
     }
@@ -98,9 +98,9 @@ export class PaymentAPI {
      * Payment Highway Order Status Request
      *
      * @param orderId   The ID of the order whose transactions should be searched for
-     * @returns {Promise<OrderSearchResponse>}
+     * @returns {PromiseLike<OrderSearchResponse>}
      */
-    public searchOrders(orderId: string): Promise<OrderSearchResponse> {
+    public searchOrders(orderId: string): PromiseLike<OrderSearchResponse> {
         const searchUri = '/transactions/?order=' + orderId;
         return this.makeRequest('GET', searchUri);
     }
@@ -109,9 +109,9 @@ export class PaymentAPI {
      * Payment Highway Tokenize Request
      *
      * @param tokenizationId
-     * @returns {Promise<TokenizationResponse>}
+     * @returns {PromiseLike<TokenizationResponse>}
      */
-    public tokenization(tokenizationId: string): Promise<TokenizationResponse> {
+    public tokenization(tokenizationId: string): PromiseLike<TokenizationResponse> {
         const tokenUri = '/tokenization/' + tokenizationId;
         return this.makeRequest('GET', tokenUri);
     }
@@ -121,9 +121,9 @@ export class PaymentAPI {
      * Used to find out whether or not an uncommitted transaction succeeded, without actually committing (capturing) it.
      *
      * @param transactionId
-     * @returns {Promise<TransactionResultResponse>}
+     * @returns {PromiseLike<TransactionResultResponse>}
      */
-    public transactionResult(transactionId: string): Promise<TransactionResultResponse> {
+    public transactionResult(transactionId: string): PromiseLike<TransactionResultResponse> {
         const transactionResultUrl = '/transaction/' + transactionId + '/result';
         return this.makeRequest('GET', transactionResultUrl);
     }
@@ -132,9 +132,9 @@ export class PaymentAPI {
      * Payment Highway Daily Report Request
      *
      * @param date
-     * @returns {Promise<ReportResponse>}
+     * @returns {PromiseLike<ReportResponse>}
      */
-    public fetchDailyReport(date: string): Promise<ReportResponse> {
+    public fetchDailyReport(date: string): PromiseLike<ReportResponse> {
         const reportUri = '/report/batch/' + date;
         return this.makeRequest('GET', reportUri);
     }
@@ -144,9 +144,9 @@ export class PaymentAPI {
      *
      * @param date      The date to fetch the reconciliation report for.
      * @param useDateProcessed Use the acquirer processed date instead of report received date. Might cause changes to the past
-     * @returns {Promise<ReconciliationReportResponse>}
+     * @returns {PromiseLike<ReconciliationReportResponse>}
      */
-    public fetchReconciliationReport(date: string, useDateProcessed?: boolean): Promise<ReconciliationReportResponse> {
+    public fetchReconciliationReport(date: string, useDateProcessed?: boolean): PromiseLike<ReconciliationReportResponse> {
         if (!useDateProcessed) {
             useDateProcessed = false;
         }
@@ -174,9 +174,9 @@ export class PaymentAPI {
      * @param method
      * @param paymentUri
      * @param requestBody
-     * @returns {Promise<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResponse>}
      */
-    private makeRequest(method: Method, paymentUri: string, requestBody?: Object): Promise<any> {
+    private makeRequest(method: Method, paymentUri: string, requestBody?: Object): PromiseLike<any> {
         return this.executeRequest(method, paymentUri, this.createNameValuePairs(), requestBody)
             .then((body: TransactionResponse) => {
                 return body;

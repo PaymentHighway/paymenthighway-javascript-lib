@@ -1,5 +1,4 @@
 import {use, assert} from 'chai';
-import * as chaiString from 'chai-string';
 import {FormBuilder} from '../src/FormBuilder';
 import {Method} from '../src/util/Method';
 import {Pair} from '../src/util/Pair';
@@ -12,9 +11,7 @@ import {TransactionRequest} from '../src/model/request/TransactionRequest';
 import {Token} from '../src/model/Token';
 import {TransactionResponse} from '../src/model/response/TransactionResponse';
 
-const Browser = require('zombie');
-
-use(chaiString);
+use(require('chai-string'));
 
 const method: Method = 'POST';
 const signatureKeyId = 'testKey';
@@ -34,10 +31,13 @@ const sphAccount = 'test';
 const sphMerchant = 'test_merchantId';
 
 let formBuilder: FormBuilder;
-const ss = new SecureSigner(signatureKeyId, signatureSecret);
+let ss: any;
 let cardToken: string;
+let Browser: any;
 
 beforeEach(() => {
+    Browser = require('zombie');
+    ss = new SecureSigner(signatureKeyId, signatureSecret);
     formBuilder = new FormBuilder(method, signatureKeyId, signatureSecret, account, merchant, baseUrl);
 });
 
