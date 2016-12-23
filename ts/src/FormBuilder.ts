@@ -121,12 +121,14 @@ export class FormBuilder {
      * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
      * @param primaryColor          Primary color of the form. Hex code. Optional
      * @param secondaryColor        Secondary color of the form. Hex code. Optional
+     * @param shopLogoUrl           The logo must be hosted on a HTTPS (secure) server. Optional.
      * @returns {FormContainer}
      */
     public generatePaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                      amount: number, currency: string, orderId: string, description: string,
                                      skipFormNotifications?: boolean, exitIframeOnResult?: boolean,
-                                     exitIframeOn3ds?: boolean, use3ds?: boolean, primaryColor?: string, secondaryColor?: string): FormContainer {
+                                     exitIframeOn3ds?: boolean, use3ds?: boolean, primaryColor?: string,
+                                     secondaryColor?: string, shopLogoUrl?: string): FormContainer {
 
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
@@ -153,6 +155,9 @@ export class FormBuilder {
         }
         if (typeof secondaryColor !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_FORM_SECONDARY_COLOR, secondaryColor));
+        }
+        if (typeof shopLogoUrl !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_SHOP_LOGO_URL, shopLogoUrl));
         }
 
         const payWithCardUri = '/form/view/pay_with_card';
