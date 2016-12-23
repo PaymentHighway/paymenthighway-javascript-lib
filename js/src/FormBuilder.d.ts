@@ -84,9 +84,10 @@ export declare class FormBuilder {
      * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
      * @param primaryColor          Primary color of the form. Hex code. Optional
      * @param secondaryColor        Secondary color of the form. Hex code. Optional
+     * @param shopLogoUrl           The logo must be hosted on a HTTPS (secure) server. Optional.
      * @returns {FormContainer}
      */
-    generatePaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean, primaryColor?: string, secondaryColor?: string): FormContainer;
+    generatePaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean, primaryColor?: string, secondaryColor?: string, shopLogoUrl?: string): FormContainer;
     /**
      * Get parameters for Add Card and Pay request with the possibility to
      * <li>skip notifications displayed on the Payment Highway form</li>
