@@ -39,6 +39,8 @@ export declare class FormBuilder {
     private static LANGUAGE;
     private static DESCRIPTION;
     private static SIGNATURE;
+    private static SPH_FORM_PRIMARY_COLOR;
+    private static SPH_FORM_SECONDARY_COLOR;
     private secureSigner;
     constructor(method: Method, signatureKeyId: string, signatureSecret: string, account: string, merchant: string, baseUrl: string);
     /**
@@ -80,9 +82,11 @@ export declare class FormBuilder {
      * @param exitIframeOnResult    Exit from iframe after a result. May be null.
      * @param exitIframeOn3ds       Exit from iframe when redirecting the user to 3DS. May be null.
      * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
+     * @param primaryColor          Primary color of the form. Hex code. Optional
+     * @param secondaryColor        Secondary color of the form. Hex code. Optional
      * @returns {FormContainer}
      */
-    generatePaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean): FormContainer;
+    generatePaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean, primaryColor?: string, secondaryColor?: string): FormContainer;
     /**
      * Get parameters for Add Card and Pay request with the possibility to
      * <li>skip notifications displayed on the Payment Highway form</li>

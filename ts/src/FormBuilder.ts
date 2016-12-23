@@ -38,6 +38,8 @@ export class FormBuilder {
     private static LANGUAGE: string = 'language';
     private static DESCRIPTION: string = 'description';
     private static SIGNATURE: string = 'signature';
+    private static SPH_FORM_PRIMARY_COLOR: string = 'sph-form-primary-color';
+    private static SPH_FORM_SECONDARY_COLOR: string = 'sph-form-secondary-color';
 
     private secureSigner: SecureSigner;
 
@@ -117,12 +119,14 @@ export class FormBuilder {
      * @param exitIframeOnResult    Exit from iframe after a result. May be null.
      * @param exitIframeOn3ds       Exit from iframe when redirecting the user to 3DS. May be null.
      * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
+     * @param primaryColor          Primary color of the form. Hex code. Optional
+     * @param secondaryColor        Secondary color of the form. Hex code. Optional
      * @returns {FormContainer}
      */
     public generatePaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                      amount: number, currency: string, orderId: string, description: string,
                                      skipFormNotifications?: boolean, exitIframeOnResult?: boolean,
-                                     exitIframeOn3ds?: boolean, use3ds?: boolean): FormContainer {
+                                     exitIframeOn3ds?: boolean, use3ds?: boolean, primaryColor?: string, secondaryColor?: string): FormContainer {
 
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
@@ -143,6 +147,12 @@ export class FormBuilder {
         }
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
+        }
+        if (typeof primaryColor !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_FORM_PRIMARY_COLOR, primaryColor));
+        }
+        if (typeof secondaryColor !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_FORM_SECONDARY_COLOR, secondaryColor));
         }
 
         const payWithCardUri = '/form/view/pay_with_card';

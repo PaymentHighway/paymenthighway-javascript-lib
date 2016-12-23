@@ -80,9 +80,11 @@ class FormBuilder {
      * @param exitIframeOnResult    Exit from iframe after a result. May be null.
      * @param exitIframeOn3ds       Exit from iframe when redirecting the user to 3DS. May be null.
      * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
+     * @param primaryColor          Primary color of the form. Hex code. Optional
+     * @param secondaryColor        Secondary color of the form. Hex code. Optional
      * @returns {FormContainer}
      */
-    generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds) {
+    generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, primaryColor, secondaryColor) {
         const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
@@ -100,6 +102,12 @@ class FormBuilder {
         }
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
+        }
+        if (typeof primaryColor !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_FORM_PRIMARY_COLOR, primaryColor));
+        }
+        if (typeof secondaryColor !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_FORM_SECONDARY_COLOR, secondaryColor));
         }
         const payWithCardUri = '/form/view/pay_with_card';
         const signature = this.createSignature(payWithCardUri, nameValuePairs);
@@ -305,5 +313,7 @@ FormBuilder.SPH_SHOP_LOGO_URL = 'sph-shop-logo-url';
 FormBuilder.LANGUAGE = 'language';
 FormBuilder.DESCRIPTION = 'description';
 FormBuilder.SIGNATURE = 'signature';
+FormBuilder.SPH_FORM_PRIMARY_COLOR = 'sph-form-primary-color';
+FormBuilder.SPH_FORM_SECONDARY_COLOR = 'sph-form-secondary-color';
 exports.FormBuilder = FormBuilder;
 //# sourceMappingURL=FormBuilder.js.map
