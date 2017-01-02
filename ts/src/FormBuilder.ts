@@ -321,6 +321,29 @@ export class FormBuilder {
         return new FormContainer(this.method, this.baseUrl, mobilePayUri, nameValuePairs, requestId);
     }
 
+    public generatepayWithMasterPassParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
+                                               amount: number, currency: string, orderId: string, description: string,
+                                               exitIframeOnResult?: boolean): FormContainer {
+        const requestId = PaymentHighwayUtility.createRequestId();
+        let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
+
+        nameValuePairs.push(new Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
+        nameValuePairs.push(new Pair(FormBuilder.SPH_CURRENCY, currency));
+        nameValuePairs.push(new Pair(FormBuilder.SPH_ORDER, orderId));
+        nameValuePairs.push(new Pair(FormBuilder.DESCRIPTION, description));
+
+        if (typeof exitIframeOnResult !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
+        }
+
+        const masterPassUri = '/form/view/masterpass';
+        const signature = this.createSignature(masterPassUri, nameValuePairs);
+
+        nameValuePairs.push(new Pair(FormBuilder.SIGNATURE, signature));
+
+        return new FormContainer(this.method, this.baseUrl, masterPassUri, nameValuePairs, requestId);
+    }
+
     /**
      *
      * @param successUrl
