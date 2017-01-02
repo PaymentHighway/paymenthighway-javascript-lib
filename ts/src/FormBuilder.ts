@@ -321,7 +321,7 @@ export class FormBuilder {
         return new FormContainer(this.method, this.baseUrl, mobilePayUri, nameValuePairs, requestId);
     }
 
-    public generatepayWithMasterPassParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
+    public generateMasterPassParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                                amount: number, currency: string, orderId: string, description: string,
                                                exitIframeOnResult?: boolean): FormContainer {
         const requestId = PaymentHighwayUtility.createRequestId();

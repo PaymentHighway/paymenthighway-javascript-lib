@@ -247,7 +247,7 @@ class FormBuilder {
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SIGNATURE, signature));
         return new FormContainer_1.FormContainer(this.method, this.baseUrl, mobilePayUri, nameValuePairs, requestId);
     }
-    generatepayWithMasterPassParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, exitIframeOnResult) {
+    generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, exitIframeOnResult) {
         const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
