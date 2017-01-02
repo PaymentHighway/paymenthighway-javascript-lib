@@ -148,7 +148,7 @@ export declare class FormBuilder {
      * @return FormContainer
      */
     generatePayWithMobilePayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, exitIframeOnResult?: boolean, shopLogoUrl?: string, phoneNumber?: string, shopName?: string, subMerchantId?: string, subMerchantName?: string): FormContainer;
-    generatepayWithMasterPassParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, exitIframeOnResult?: boolean): FormContainer;
+    generateMasterPassParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, exitIframeOnResult?: boolean): FormContainer;
     /**
      *
      * @param successUrl
