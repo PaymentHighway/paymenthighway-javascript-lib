@@ -321,9 +321,27 @@ export class FormBuilder {
         return new FormContainer(this.method, this.baseUrl, mobilePayUri, nameValuePairs, requestId);
     }
 
+    /**
+     * Get parameters for Masterpass request.
+     *
+     * @param successUrl            The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
+     * @param failureUrl            The URL the user is redirected after a failure such as an authentication or connectivity error.
+     * @param cancelUrl             The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
+     * @param language              The language the form is displayed in.
+     * @param amount                The amount to pay.
+     * @param currency              In which currency is the amount, e.g. "EUR"
+     * @param orderId               A generated order ID, may for example be always unique or used multiple times for recurring transactions.
+     * @param description           Description of the payment shown in the form.
+     * @param skipFormNotifications Skip notifications displayed on the Payment Highway form. May be null.
+     * @param exitIframeOnResult    Exit from iframe after a result. May be null.
+     * @param exitIframeOn3ds       Exit from iframe when redirecting the user to 3DS. May be null.
+     * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
+     * @return FormContainer
+     */
     public generateMasterPassParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
-                                               amount: number, currency: string, orderId: string, description: string,
-                                               exitIframeOnResult?: boolean): FormContainer {
+                                        amount: number, currency: string, orderId: string, description: string,
+                                        skipFormNotifications?: boolean, exitIframeOnResult?: boolean,
+                                        exitIframeOn3ds?: boolean, use3ds?: boolean): FormContainer {
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
 
@@ -332,8 +350,17 @@ export class FormBuilder {
         nameValuePairs.push(new Pair(FormBuilder.SPH_ORDER, orderId));
         nameValuePairs.push(new Pair(FormBuilder.DESCRIPTION, description));
 
+        if (typeof skipFormNotifications !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_SKIP_FORM_NOTIFICATIONS, skipFormNotifications.toString()));
+        }
         if (typeof exitIframeOnResult !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
+        }
+        if (typeof exitIframeOn3ds !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_THREE_D_SECURE, exitIframeOn3ds.toString()));
+        }
+        if (typeof use3ds !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
 
         const masterPassUri = '/form/view/masterpass';
