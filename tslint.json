@@ -58,15 +58,6 @@
     "no-bitwise": true,
     "no-conditional-assignment": true,
     "no-consecutive-blank-lines": [true],
-    "no-console": [
-      true,
-      "debug",
-      "info",
-      "log",
-      "time",
-      "timeEnd",
-      "trace"
-    ],
     "no-constant-condition": true,
     "no-construct": true,
     "no-control-regex": true,
@@ -89,11 +80,6 @@
     "no-for-in-array": false,
     "no-function-constructor-with-string-args": true,
     "no-function-expression": true,
-    "no-http-string": [
-      true,
-      "http://www.example.com/?.*",
-      "http://www.examples.com/?.*"
-    ],
     "no-increment-decrement": true,
     "no-inferrable-types": [false],
     "no-inner-html": true,

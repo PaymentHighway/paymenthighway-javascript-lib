@@ -29,6 +29,10 @@ const orderId = '1000123A';
 const description = 'order description';
 const sphAccount = 'test';
 const sphMerchant = 'test_merchantId';
+const webhookSuccessUrl = 'http://example.com/?q=success';
+const webhookFailureUrl = 'http://example.com/?q=failure';
+const webhookCancelUrl = 'http://example.com/?q=cancel';
+const webhookDelay = 0;
 
 let formBuilder: FormBuilder;
 let ss: any;
@@ -48,6 +52,19 @@ function testRedirectResponse(response: any, locationEndsWith: string): void {
 
 function testNameValuePairs(nameValuePairs: Pair<string, string>[], rightAmount: number): void {
     assert(nameValuePairs.length === rightAmount, 'Should have ' + rightAmount + ' name value pairs. Got ' + nameValuePairs.length);
+}
+
+function testWebhookNameValuePairs(nameValuePairs: Pair<string, string>[], skipDeayTest?: boolean): void {
+    const testSuccessUrl = nameValuePairs.find((x) => x.first === 'sph-webhook-success-url').second;
+    assert(testSuccessUrl === webhookSuccessUrl, 'sph-webhook-success-url should be ' + webhookSuccessUrl + 'got ' + testSuccessUrl);
+    const testFailureUrl = nameValuePairs.find((x) => x.first === 'sph-webhook-failure-url').second;
+    assert(testFailureUrl === webhookFailureUrl, 'sph-webhook-failure-url should be ' + webhookFailureUrl + 'got ' + testFailureUrl);
+    const testCancelUrl = nameValuePairs.find((x) => x.first === 'sph-webhook-cancel-url').second;
+    assert(testCancelUrl === webhookCancelUrl, 'sph-webhook-cancel-url should be ' + webhookCancelUrl + 'got ' + testCancelUrl);
+    if (typeof skipDeayTest === 'undefined') {
+        const testDelay = nameValuePairs.find((x) => x.first === 'sph-webhook-delay').second;
+        assert(testDelay === webhookDelay.toString(), 'sph-webhook-delay should be ' + webhookDelay + 'got ' + testDelay);
+    }
 }
 
 describe('Form builder', () => {
@@ -286,6 +303,98 @@ describe('Form builder', () => {
             assert(debitResponse.result.message === 'OK', 'Request should succeed with message "OK", complete response was: ' + JSON.stringify(debitResponse));
             done();
         });
+    });
+
+    it('Test masterpass form with mandatory parameters', (done) => {
+        const formContainer = formBuilder.generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
+        testNameValuePairs(formContainer.nameValuePairs, 14);
+        FormConnection.postForm(formContainer)
+            .then((response) => {
+                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+                assert.match(response.headers.location, /\/masterpass\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/, 'redirect location doesn\'t match ' + response.header);
+                done();
+            });
+    });
+
+    it('Test masterpass form with optional parameters', (done) => {
+        const formContainer = formBuilder.generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language,
+            amount, currency, orderId, description, true);
+        testNameValuePairs(formContainer.nameValuePairs, 15);
+        FormConnection.postForm(formContainer)
+            .then((response) => {
+                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+                assert.match(response.headers.location, /\/masterpass\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/, 'redirect location doesn\'t match ' + response.header);
+                done();
+            });
+    });
+
+    it('Test add card webhook parameters', () => {
+        const formContainer = formBuilder.generateAddCardParameters(
+            successUrl, failureUrl, cancelUrl, language, undefined, undefined, undefined, undefined, undefined,
+            webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay);
+
+        testNameValuePairs(formContainer.nameValuePairs, 14);
+        testWebhookNameValuePairs(formContainer.nameValuePairs);
+    });
+
+    it('Test payment webhook parameters', () => {
+        const formContainer = formBuilder.generatePaymentParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            undefined, undefined, undefined, undefined, webhookSuccessUrl, webhookFailureUrl,
+            webhookCancelUrl, webhookDelay);
+
+        testNameValuePairs(formContainer.nameValuePairs, 18);
+        testWebhookNameValuePairs(formContainer.nameValuePairs);
+    });
+
+    it('Test add card and payment webhook parameters', () => {
+        const formContainer = formBuilder.generateAddCardAndPaymentParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            undefined, undefined, undefined, undefined, webhookSuccessUrl, webhookFailureUrl,
+            webhookCancelUrl, webhookDelay);
+
+        testNameValuePairs(formContainer.nameValuePairs, 18);
+        testWebhookNameValuePairs(formContainer.nameValuePairs);
+    });
+
+    it('Test pay with token and cvc webhook parameters', () => {
+        const token = '123';
+        const formContainer = formBuilder.generatePayWithTokenAndCvcParameters(
+            token, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            undefined, undefined, undefined, undefined, webhookSuccessUrl, webhookFailureUrl,
+            webhookCancelUrl, webhookDelay);
+
+        testNameValuePairs(formContainer.nameValuePairs, 19);
+        testWebhookNameValuePairs(formContainer.nameValuePairs);
+    });
+
+    it('Test mobilepay webhook parameters', () => {
+        const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language,
+            amount, currency, orderId, description, undefined, undefined, undefined, undefined, undefined, undefined,
+            webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay);
+
+        testNameValuePairs(formContainer.nameValuePairs, 18);
+        testWebhookNameValuePairs(formContainer.nameValuePairs);
+    });
+
+    it('Test masterpass webhook parameters', () => {
+        const formContainer = formBuilder.generateMasterPassParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            undefined, undefined, undefined, undefined, webhookSuccessUrl, webhookFailureUrl,
+            webhookCancelUrl, webhookDelay);
+
+        testNameValuePairs(formContainer.nameValuePairs, 18);
+        testWebhookNameValuePairs(formContainer.nameValuePairs);
+    });
+
+    it('Test webhook parameters without delay', () => {
+        const formContainer = formBuilder.generatePaymentParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            undefined, undefined, undefined, undefined, webhookSuccessUrl, webhookFailureUrl,
+            webhookCancelUrl);
+
+        testNameValuePairs(formContainer.nameValuePairs, 17);
+        testWebhookNameValuePairs(formContainer.nameValuePairs, true);
     });
 
 });
