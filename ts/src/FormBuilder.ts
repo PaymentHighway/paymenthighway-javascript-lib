@@ -39,6 +39,7 @@ export class FormBuilder {
     private static SPH_WEBHOOK_FAILURE_URL: string = 'sph-webhook-failure-url';
     private static SPH_WEBHOOK_CANCEL_URL: string = 'sph-webhook-cancel-url';
     private static SPH_WEBHOOK_DELAY: string = 'sph-webhook-delay';
+    private static SPH_SKIP_PAYMENT_METHOD_SELECTOR: string = 'sph-skip-payment-method-selector';
     private static LANGUAGE: string = 'language';
     private static DESCRIPTION: string = 'description';
     private static SIGNATURE: string = 'signature';
@@ -133,13 +134,14 @@ export class FormBuilder {
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay          Delay for webhook in seconds. Between 0-900
+     * @param skipPaymentMethodSelector Skip payment method selection page
      * @returns {FormContainer}
      */
     public generatePaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                      amount: number, currency: string, orderId: string, description: string,
                                      skipFormNotifications?: boolean, exitIframeOnResult?: boolean,
                                      exitIframeOn3ds?: boolean, use3ds?: boolean, webhookSuccessUrl?: string,
-                                     webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number): FormContainer {
+                                     webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number, skipPaymentMethodSelector?: boolean): FormContainer {
 
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
@@ -160,6 +162,9 @@ export class FormBuilder {
         }
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
+        }
+        if (typeof skipPaymentMethodSelector !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_SKIP_PAYMENT_METHOD_SELECTOR, skipPaymentMethodSelector.toString()));
         }
 
         nameValuePairs = nameValuePairs.concat(this.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
