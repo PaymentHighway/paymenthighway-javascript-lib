@@ -40,6 +40,7 @@ export declare class FormBuilder {
     private static SPH_WEBHOOK_FAILURE_URL;
     private static SPH_WEBHOOK_CANCEL_URL;
     private static SPH_WEBHOOK_DELAY;
+    private static SPH_SKIP_PAYMENT_METHOD_SELECTOR;
     private static LANGUAGE;
     private static DESCRIPTION;
     private static SIGNATURE;
@@ -92,9 +93,10 @@ export declare class FormBuilder {
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay          Delay for webhook in seconds. Between 0-900
+     * @param skipPaymentMethodSelector Skip payment method selection page
      * @returns {FormContainer}
      */
-    generatePaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number): FormContainer;
+    generatePaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number, skipPaymentMethodSelector?: boolean): FormContainer;
     /**
      * Get parameters for Add Card and Pay request with the possibility to
      * <li>skip notifications displayed on the Payment Highway form</li>

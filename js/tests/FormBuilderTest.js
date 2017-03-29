@@ -155,7 +155,7 @@ describe('Form builder', () => {
         chai_1.assert(formContainer.nameValuePairs.find((x) => x.first === 'description').second === description, 'Description should be same than given description');
         FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
-            testRedirectResponse(response, '/payment');
+            testRedirectResponse(response, '/select_payment_method');
             done();
         });
     });
@@ -164,8 +164,9 @@ describe('Form builder', () => {
         const exitIframeOnResult = true;
         const exitIframeOn3ds = true;
         const use3ds = true;
-        const formContainer = formBuilder.generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
-        testNameValuePairs(formContainer.nameValuePairs, 18);
+        const skipPaymentMethodSelector = true;
+        const formContainer = formBuilder.generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, undefined, undefined, undefined, undefined, skipPaymentMethodSelector);
+        testNameValuePairs(formContainer.nameValuePairs, 19);
         FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             testRedirectResponse(response, '/payment');
