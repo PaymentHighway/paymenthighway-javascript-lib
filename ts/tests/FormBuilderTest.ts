@@ -75,7 +75,7 @@ describe('Form builder', () => {
                         .fill('input[name=expiration_year]', '2017')
                         .fill('input[name=expiry]', '11 / 17')
                         .fill('input[name=cvv]', '024')
-                        .pressButton('OK', () => {
+                        .pressButton(' OK', () => {
                             const uri = URI.parse(browser.resources[0].response.url);
                             const parameters = <Dictionary<string>> URI.parseQuery(uri.query);
                             assert.isTrue(ss.validateFormRedirect(parameters), 'Validate redirect should return true');
