@@ -76,9 +76,9 @@ export class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {PromiseLike<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResultResponse>}
      */
-    public commitTransaction(transactionId: string, request: CommitTransactionRequest): PromiseLike<TransactionResponse> {
+    public commitTransaction(transactionId: string, request: CommitTransactionRequest): PromiseLike<TransactionResultResponse> {
         const commitUri = '/transaction/' + transactionId + '/commit';
         return this.makeRequest('POST', commitUri, request);
     }
