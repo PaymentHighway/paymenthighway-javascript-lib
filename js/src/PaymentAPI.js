@@ -29,7 +29,7 @@ class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {PromiseLike<TransactionResponse>}
+     * @returns {PromiseLike<DebitResponse>}
      */
     debitTransaction(transactionId, request) {
         const debitUri = '/transaction/' + transactionId + '/debit';
@@ -40,7 +40,7 @@ class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {PromiseLike<TransactionResponse>}
+     * @returns {PromiseLike<Response>}
      */
     revertTransaction(transactionId, request) {
         const revertUri = '/transaction/' + transactionId + '/revert';
@@ -53,7 +53,7 @@ class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {PromiseLike<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResultResponse>}
      */
     commitTransaction(transactionId, request) {
         const commitUri = '/transaction/' + transactionId + '/commit';
