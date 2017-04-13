@@ -7,5 +7,5 @@ export interface CardResponse {
     bin: string;
     funding: string;
     category: string;
-    country_code: string;
+    country_code?: string;
 }
