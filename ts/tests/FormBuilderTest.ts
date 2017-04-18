@@ -160,7 +160,7 @@ describe('Form builder', () => {
         assert(formContainer.nameValuePairs.find((x) => x.first === 'description').second === description, 'Description should be same than given description');
         FormConnection.postForm(formContainer)
             .then((response) => {
-                testRedirectResponse(response, '/select_payment_method');
+                testRedirectResponse(response, '/payment');
                 done();
             });
     });
@@ -170,15 +170,15 @@ describe('Form builder', () => {
         const exitIframeOnResult = true;
         const exitIframeOn3ds = true;
         const use3ds = true;
-        const skipPaymentMethodSelector = true;
+        const showPaymentMethodSelector = true;
         const formContainer = formBuilder.generatePaymentParameters(
             successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
-            skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, undefined, undefined, undefined, undefined, skipPaymentMethodSelector);
+            skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, showPaymentMethodSelector);
 
         testNameValuePairs(formContainer.nameValuePairs, 19);
         FormConnection.postForm(formContainer)
             .then((response) => {
-                testRedirectResponse(response, '/payment');
+                testRedirectResponse(response, '/select_payment_method');
                 done();
             });
     });

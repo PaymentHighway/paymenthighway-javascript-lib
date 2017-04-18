@@ -35,7 +35,7 @@ export class FormBuilder {
     private static SPH_SUB_MERCHANT_NAME: string = 'sph-sub-merchant-name';
     private static SPH_SUB_MERCHANT_ID: string = 'sph-sub-merchant-id';
     private static SPH_SHOP_LOGO_URL: string = 'sph-shop-logo-url';
-    private static SPH_SKIP_PAYMENT_METHOD_SELECTOR: string = 'sph-skip-payment-method-selector';
+    private static SPH_SHOW_PAYMENT_METHOD_SELECTOR: string = 'sph-show-payment-method-selector';
     private static LANGUAGE: string = 'language';
     private static DESCRIPTION: string = 'description';
     private static SIGNATURE: string = 'signature';
@@ -118,13 +118,13 @@ export class FormBuilder {
      * @param exitIframeOnResult    Exit from iframe after a result. May be null.
      * @param exitIframeOn3ds       Exit from iframe when redirecting the user to 3DS. May be null.
      * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
-     * @param skipPaymentMethodSelector Skip payment method selection page
+     * @param showPaymentMethodSelector Show payment method selection page
      * @returns {FormContainer}
      */
     public generatePaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                      amount: number, currency: string, orderId: string, description: string,
                                      skipFormNotifications?: boolean, exitIframeOnResult?: boolean,
-                                     exitIframeOn3ds?: boolean, use3ds?: boolean, skipPaymentMethodSelector?: boolean): FormContainer {
+                                     exitIframeOn3ds?: boolean, use3ds?: boolean, showPaymentMethodSelector?: boolean): FormContainer {
 
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
@@ -146,8 +146,8 @@ export class FormBuilder {
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
-        if (typeof skipPaymentMethodSelector !== 'undefined') {
-            nameValuePairs.push(new Pair(FormBuilder.SPH_SKIP_PAYMENT_METHOD_SELECTOR, skipPaymentMethodSelector.toString()));
+        if (typeof showPaymentMethodSelector !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_SHOW_PAYMENT_METHOD_SELECTOR, showPaymentMethodSelector.toString()));
         }
 
         const payWithCardUri = '/form/view/pay_with_card';
