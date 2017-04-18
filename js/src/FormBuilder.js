@@ -60,7 +60,7 @@ class FormBuilder {
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
-        nameValuePairs = nameValuePairs.concat(this.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
+        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
         const addCardUri = '/form/view/add_card';
         const signature = this.createSignature(addCardUri, nameValuePairs);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SIGNATURE, signature));
@@ -73,26 +73,26 @@ class FormBuilder {
      * <li>exit from iframe when redirecting the user to 3DS.</li>
      * <li>force enable/disable 3ds</li>
      *
-     * @param successUrl            The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
-     * @param failureUrl            The URL the user is redirected after a failure such as an authentication or connectivity error.
-     * @param cancelUrl             The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
-     * @param language              The language the form is displayed in.
-     * @param amount                The amount to pay.
-     * @param currency              In which currency is the amount, e.g. "EUR"
-     * @param orderId               A generated order ID, may for example be always unique or used multiple times for recurring transactions.
-     * @param description           Description of the payment shown in the form.
-     * @param skipFormNotifications Skip notifications displayed on the Payment Highway form. May be null.
-     * @param exitIframeOnResult    Exit from iframe after a result. May be null.
-     * @param exitIframeOn3ds       Exit from iframe when redirecting the user to 3DS. May be null.
-     * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
-     * @param webhookSuccessUrl     The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
-     * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
-     * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
-     * @param webhookDelay          Delay for webhook in seconds. Between 0-900
-     * @param skipPaymentMethodSelector Skip payment method selection page
+     * @param successUrl                The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
+     * @param failureUrl                The URL the user is redirected after a failure such as an authentication or connectivity error.
+     * @param cancelUrl                 The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
+     * @param language                  The language the form is displayed in.
+     * @param amount                    The amount to pay.
+     * @param currency                  In which currency is the amount, e.g. "EUR"
+     * @param orderId                   A generated order ID, may for example be always unique or used multiple times for recurring transactions.
+     * @param description               Description of the payment shown in the form.
+     * @param skipFormNotifications     Skip notifications displayed on the Payment Highway form. May be null.
+     * @param exitIframeOnResult        Exit from iframe after a result. May be null.
+     * @param exitIframeOn3ds           Exit from iframe when redirecting the user to 3DS. May be null.
+     * @param use3ds                    Force enable/disable 3ds. Null to use default configured parameter.
+     * @param webhookSuccessUrl         The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
+     * @param webhookFailureUrl         The URL the PH server makes request after a failure such as an authentication or connectivity error.
+     * @param webhookCancelUrl          The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param webhookDelay              Delay for webhook in seconds. Between 0-900
+     * @param skipPaymentMethodSelector Show payment method selection page
      * @returns {FormContainer}
      */
-    generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay, skipPaymentMethodSelector) {
+    generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay, showPaymentMethodSelector) {
         const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
@@ -111,10 +111,10 @@ class FormBuilder {
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
-        if (typeof skipPaymentMethodSelector !== 'undefined') {
-            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SKIP_PAYMENT_METHOD_SELECTOR, skipPaymentMethodSelector.toString()));
+        if (typeof showPaymentMethodSelector !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SHOW_PAYMENT_METHOD_SELECTOR, showPaymentMethodSelector.toString()));
         }
-        nameValuePairs = nameValuePairs.concat(this.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
+        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
         const payWithCardUri = '/form/view/pay_with_card';
         const signature = this.createSignature(payWithCardUri, nameValuePairs);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SIGNATURE, signature));
@@ -164,7 +164,7 @@ class FormBuilder {
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
-        nameValuePairs = nameValuePairs.concat(this.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
+        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
         const addCardAndPayUri = '/form/view/add_and_pay_with_card';
         const signature = this.createSignature(addCardAndPayUri, nameValuePairs);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SIGNATURE, signature));
@@ -216,7 +216,7 @@ class FormBuilder {
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
-        nameValuePairs = nameValuePairs.concat(this.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
+        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
         const payWithTokenAndCvcUri = '/form/view/pay_with_token_and_cvc';
         const signature = this.createSignature(payWithTokenAndCvcUri, nameValuePairs);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SIGNATURE, signature));
@@ -270,7 +270,7 @@ class FormBuilder {
         if (typeof subMerchantName !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SUB_MERCHANT_NAME, subMerchantName));
         }
-        nameValuePairs = nameValuePairs.concat(this.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
+        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
         const mobilePayUri = '/form/view/mobilepay';
         const signature = this.createSignature(mobilePayUri, nameValuePairs);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SIGNATURE, signature));
@@ -316,7 +316,7 @@ class FormBuilder {
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
-        nameValuePairs = nameValuePairs.concat(this.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
+        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
         const masterPassUri = '/form/view/masterpass';
         const signature = this.createSignature(masterPassUri, nameValuePairs);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SIGNATURE, signature));
@@ -330,7 +330,7 @@ class FormBuilder {
      * @param webhookDelay
      * @returns {Array}
      */
-    createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay) {
+    static createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay) {
         let nameValuePairs = [];
         if (typeof webhookSuccessUrl !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_WEBHOOK_SUCCESS_URL, webhookSuccessUrl));
@@ -405,7 +405,7 @@ FormBuilder.SPH_WEBHOOK_SUCCESS_URL = 'sph-webhook-success-url';
 FormBuilder.SPH_WEBHOOK_FAILURE_URL = 'sph-webhook-failure-url';
 FormBuilder.SPH_WEBHOOK_CANCEL_URL = 'sph-webhook-cancel-url';
 FormBuilder.SPH_WEBHOOK_DELAY = 'sph-webhook-delay';
-FormBuilder.SPH_SKIP_PAYMENT_METHOD_SELECTOR = 'sph-skip-payment-method-selector';
+FormBuilder.SPH_SHOW_PAYMENT_METHOD_SELECTOR = 'sph-show-payment-method-selector';
 FormBuilder.LANGUAGE = 'language';
 FormBuilder.DESCRIPTION = 'description';
 FormBuilder.SIGNATURE = 'signature';
