@@ -177,7 +177,7 @@ describe('Form builder', () => {
         assert(formContainer.nameValuePairs.find((x) => x.first === 'description').second === description, 'Description should be same than given description');
         FormConnection.postForm(formContainer)
             .then((response) => {
-                testRedirectResponse(response, '/select_payment_method');
+                testRedirectResponse(response, '/payment');
                 done();
             });
     });
@@ -187,15 +187,15 @@ describe('Form builder', () => {
         const exitIframeOnResult = true;
         const exitIframeOn3ds = true;
         const use3ds = true;
-        const skipPaymentMethodSelector = true;
+        const showPaymentMethodSelector = true;
         const formContainer = formBuilder.generatePaymentParameters(
             successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
-            skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, undefined, undefined, undefined, undefined, skipPaymentMethodSelector);
+            skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, undefined, undefined, undefined, undefined, showPaymentMethodSelector);
 
         testNameValuePairs(formContainer.nameValuePairs, 19);
         FormConnection.postForm(formContainer)
             .then((response) => {
-                testRedirectResponse(response, '/payment');
+                testRedirectResponse(response, '/select_payment_method');
                 done();
             });
     });
@@ -311,7 +311,7 @@ describe('Form builder', () => {
         FormConnection.postForm(formContainer)
             .then((response) => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                assert.match(response.headers.location, /\/masterpass\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/, 'redirect location doesn\'t match ' + response.header);
+                assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/masterpass/, 'redirect location doesn\'t match ' + response.header);
                 done();
             });
     });
@@ -323,7 +323,7 @@ describe('Form builder', () => {
         FormConnection.postForm(formContainer)
             .then((response) => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                assert.match(response.headers.location, /\/masterpass\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/, 'redirect location doesn\'t match ' + response.header);
+                assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/masterpass/, 'redirect location doesn\'t match ' + response.header);
                 done();
             });
     });
