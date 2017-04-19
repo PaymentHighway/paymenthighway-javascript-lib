@@ -80,9 +80,10 @@ class FormBuilder {
      * @param exitIframeOnResult    Exit from iframe after a result. May be null.
      * @param exitIframeOn3ds       Exit from iframe when redirecting the user to 3DS. May be null.
      * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
+     * @param showPaymentMethodSelector Show payment method selection page
      * @returns {FormContainer}
      */
-    generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds) {
+    generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, showPaymentMethodSelector) {
         const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
@@ -100,6 +101,9 @@ class FormBuilder {
         }
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
+        }
+        if (typeof showPaymentMethodSelector !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SHOW_PAYMENT_METHOD_SELECTOR, showPaymentMethodSelector.toString()));
         }
         const payWithCardUri = '/form/view/pay_with_card';
         const signature = this.createSignature(payWithCardUri, nameValuePairs);
@@ -247,15 +251,41 @@ class FormBuilder {
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SIGNATURE, signature));
         return new FormContainer_1.FormContainer(this.method, this.baseUrl, mobilePayUri, nameValuePairs, requestId);
     }
-    generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, exitIframeOnResult) {
+    /**
+     * Get parameters for Masterpass request.
+     *
+     * @param successUrl            The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
+     * @param failureUrl            The URL the user is redirected after a failure such as an authentication or connectivity error.
+     * @param cancelUrl             The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
+     * @param language              The language the form is displayed in.
+     * @param amount                The amount to pay.
+     * @param currency              In which currency is the amount, e.g. "EUR"
+     * @param orderId               A generated order ID, may for example be always unique or used multiple times for recurring transactions.
+     * @param description           Description of the payment shown in the form.
+     * @param skipFormNotifications Skip notifications displayed on the Payment Highway form. May be null.
+     * @param exitIframeOnResult    Exit from iframe after a result. May be null.
+     * @param exitIframeOn3ds       Exit from iframe when redirecting the user to 3DS. May be null.
+     * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
+     * @return FormContainer
+     */
+    generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds) {
         const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_CURRENCY, currency));
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_ORDER, orderId));
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.DESCRIPTION, description));
+        if (typeof skipFormNotifications !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SKIP_FORM_NOTIFICATIONS, skipFormNotifications.toString()));
+        }
         if (typeof exitIframeOnResult !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
+        }
+        if (typeof exitIframeOn3ds !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_EXIT_IFRAME_ON_THREE_D_SECURE, exitIframeOn3ds.toString()));
+        }
+        if (typeof use3ds !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
         const masterPassUri = '/form/view/masterpass';
         const signature = this.createSignature(masterPassUri, nameValuePairs);
@@ -317,6 +347,7 @@ FormBuilder.SPH_MOBILEPAY_SHOP_NAME = 'sph-mobilepay-shop-name';
 FormBuilder.SPH_SUB_MERCHANT_NAME = 'sph-sub-merchant-name';
 FormBuilder.SPH_SUB_MERCHANT_ID = 'sph-sub-merchant-id';
 FormBuilder.SPH_SHOP_LOGO_URL = 'sph-shop-logo-url';
+FormBuilder.SPH_SHOW_PAYMENT_METHOD_SELECTOR = 'sph-show-payment-method-selector';
 FormBuilder.LANGUAGE = 'language';
 FormBuilder.DESCRIPTION = 'description';
 FormBuilder.SIGNATURE = 'signature';
