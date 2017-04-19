@@ -89,7 +89,7 @@ class FormBuilder {
      * @param webhookFailureUrl         The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl          The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay              Delay for webhook in seconds. Between 0-900
-     * @param skipPaymentMethodSelector Show payment method selection page
+     * @param showPaymentMethodSelector Show payment method selection page
      * @returns {FormContainer}
      */
     generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay, showPaymentMethodSelector) {
