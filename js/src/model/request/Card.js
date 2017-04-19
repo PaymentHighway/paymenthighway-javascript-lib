@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 class Card {
     constructor(pan, expiry_year, expiry_month, cvc, verification) {
         this.pan = pan;
