@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const requestPromise = require("request-promise");
 const PaymentHighwayUtility_1 = require("./PaymentHighwayUtility");
 const SecureSigner_1 = require("./security/SecureSigner");
