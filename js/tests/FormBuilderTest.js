@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const FormBuilder_1 = require("../src/FormBuilder");
 const FormConnection_1 = require("./helpers/FormConnection");

@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 class CommitTransactionRequest {
     constructor(amount, currency) {
         this.amount = amount;

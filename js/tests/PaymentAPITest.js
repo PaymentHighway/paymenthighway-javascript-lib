@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const moment = require("moment");
 const PaymentAPI_1 = require("../src/PaymentAPI");

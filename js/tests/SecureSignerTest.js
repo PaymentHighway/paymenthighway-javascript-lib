@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const SecureSigner_1 = require("../src/security/SecureSigner");
 const Pair_1 = require("../src/util/Pair");
