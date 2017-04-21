@@ -14,6 +14,8 @@ import {TransactionResultResponse} from './model/response/TransactionResultRespo
 import {TransactionRequest} from './model/request/TransactionRequest';
 import {RevertTransactionRequest} from './model/request/RevertTransactionRequest';
 import {CommitTransactionRequest} from './model/request/CommitTransactionRequest';
+import {DebitResponse} from './model/response/DebitResponse';
+import {Response} from './model/response/Response';
 
 /**
  * Payment Highway Payment API Service.
@@ -50,9 +52,9 @@ export class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {PromiseLike<TransactionResponse>}
+     * @returns {PromiseLike<DebitResponse>}
      */
-    public debitTransaction(transactionId: string, request: TransactionRequest): PromiseLike<TransactionResponse> {
+    public debitTransaction(transactionId: string, request: TransactionRequest): PromiseLike<DebitResponse> {
         const debitUri = '/transaction/' + transactionId + '/debit';
         return this.makeRequest('POST', debitUri, request);
     }
@@ -62,9 +64,9 @@ export class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {PromiseLike<TransactionResponse>}
+     * @returns {PromiseLike<Response>}
      */
-    public revertTransaction(transactionId: string, request: RevertTransactionRequest): PromiseLike<TransactionResponse> {
+    public revertTransaction(transactionId: string, request: RevertTransactionRequest): PromiseLike<Response> {
         const revertUri = '/transaction/' + transactionId + '/revert';
         return this.makeRequest('POST', revertUri, request);
     }
@@ -76,9 +78,9 @@ export class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {PromiseLike<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResultResponse>}
      */
-    public commitTransaction(transactionId: string, request: CommitTransactionRequest): PromiseLike<TransactionResponse> {
+    public commitTransaction(transactionId: string, request: CommitTransactionRequest): PromiseLike<TransactionResultResponse> {
         const commitUri = '/transaction/' + transactionId + '/commit';
         return this.makeRequest('POST', commitUri, request);
     }

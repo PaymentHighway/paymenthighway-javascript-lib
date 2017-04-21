@@ -8,6 +8,8 @@ import { TransactionResultResponse } from './model/response/TransactionResultRes
 import { TransactionRequest } from './model/request/TransactionRequest';
 import { RevertTransactionRequest } from './model/request/RevertTransactionRequest';
 import { CommitTransactionRequest } from './model/request/CommitTransactionRequest';
+import { DebitResponse } from './model/response/DebitResponse';
+import { Response } from './model/response/Response';
 /**
  * Payment Highway Payment API Service.
  */
@@ -32,17 +34,17 @@ export declare class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {PromiseLike<TransactionResponse>}
+     * @returns {PromiseLike<DebitResponse>}
      */
-    debitTransaction(transactionId: string, request: TransactionRequest): PromiseLike<TransactionResponse>;
+    debitTransaction(transactionId: string, request: TransactionRequest): PromiseLike<DebitResponse>;
     /**
      * Payment Highway Revert Transaction with amount
      *
      * @param transactionId
      * @param request
-     * @returns {PromiseLike<TransactionResponse>}
+     * @returns {PromiseLike<Response>}
      */
-    revertTransaction(transactionId: string, request: RevertTransactionRequest): PromiseLike<TransactionResponse>;
+    revertTransaction(transactionId: string, request: RevertTransactionRequest): PromiseLike<Response>;
     /**
      * Payment Highway Transaction Commit Request
      * Used to commit (capture) the transaction.
@@ -50,9 +52,9 @@ export declare class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {PromiseLike<TransactionResponse>}
+     * @returns {PromiseLike<TransactionResultResponse>}
      */
-    commitTransaction(transactionId: string, request: CommitTransactionRequest): PromiseLike<TransactionResponse>;
+    commitTransaction(transactionId: string, request: CommitTransactionRequest): PromiseLike<TransactionResultResponse>;
     /**
      * Payment Highway Transaction Status Request
      *
