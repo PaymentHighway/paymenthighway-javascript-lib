@@ -3,7 +3,8 @@
   "version": "2.0.1",
   "description": "Paymenthighway SDK",
   "homepage": "https://www.paymenthighway.fi/dev/",
-  "main": "js/index.js",
+  "main": "./js/index.js",
+  "types": "./js/index.d.ts",
   "scripts": {
     "preversion": "npm run compile && npm test",
     "precompile": "npm run clean",

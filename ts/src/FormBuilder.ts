@@ -416,12 +416,12 @@ export class FormBuilder {
 
         nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
 
-        const masterPassUri = '/form/view/masterpass';
-        const signature = this.createSignature(masterPassUri, nameValuePairs);
+        const masterpassUri = '/form/view/masterpass';
+        const signature = this.createSignature(masterpassUri, nameValuePairs);
 
         nameValuePairs.push(new Pair(FormBuilder.SIGNATURE, signature));
 
-        return new FormContainer(this.method, this.baseUrl, masterPassUri, nameValuePairs, requestId);
+        return new FormContainer(this.method, this.baseUrl, masterpassUri, nameValuePairs, requestId);
     }
 
     /**
