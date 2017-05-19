@@ -1,3 +1,3 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-//# sourceMappingURL=Response.js.map
+//# sourceMappingURL=DebitResponse.js.map

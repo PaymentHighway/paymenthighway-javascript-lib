@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const PaymentHighwayUtility_1 = require("./PaymentHighwayUtility");
 const Pair_1 = require("./util/Pair");
 const SecureSigner_1 = require("./security/SecureSigner");
@@ -73,6 +74,7 @@ class FormBuilder {
      * <li>exit from iframe when redirecting the user to 3DS.</li>
      * <li>force enable/disable 3ds</li>
      *
+<<<<<<< HEAD
      * @param successUrl                The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
      * @param failureUrl                The URL the user is redirected after a failure such as an authentication or connectivity error.
      * @param cancelUrl                 The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
@@ -89,6 +91,20 @@ class FormBuilder {
      * @param webhookFailureUrl         The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl          The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay              Delay for webhook in seconds. Between 0-900
+=======
+     * @param successUrl            The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
+     * @param failureUrl            The URL the user is redirected after a failure such as an authentication or connectivity error.
+     * @param cancelUrl             The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
+     * @param language              The language the form is displayed in.
+     * @param amount                The amount to pay.
+     * @param currency              In which currency is the amount, e.g. "EUR"
+     * @param orderId               A generated order ID, may for example be always unique or used multiple times for recurring transactions.
+     * @param description           Description of the payment shown in the form.
+     * @param skipFormNotifications Skip notifications displayed on the Payment Highway form. May be null.
+     * @param exitIframeOnResult    Exit from iframe after a result. May be null.
+     * @param exitIframeOn3ds       Exit from iframe when redirecting the user to 3DS. May be null.
+     * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
+>>>>>>> masterpass_rebased
      * @param showPaymentMethodSelector Show payment method selection page
      * @returns {FormContainer}
      */
@@ -291,10 +307,13 @@ class FormBuilder {
      * @param exitIframeOnResult    Exit from iframe after a result. May be null.
      * @param exitIframeOn3ds       Exit from iframe when redirecting the user to 3DS. May be null.
      * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
+<<<<<<< HEAD
      * @param webhookSuccessUrl     The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay          Delay for webhook in seconds. Between 0-900
+=======
+>>>>>>> masterpass_rebased
      * @return FormContainer
      */
     generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay) {
@@ -323,6 +342,7 @@ class FormBuilder {
         return new FormContainer_1.FormContainer(this.method, this.baseUrl, masterPassUri, nameValuePairs, requestId);
     }
     /**
+<<<<<<< HEAD
      *
      * @param webhookSuccessUrl
      * @param webhookFailureUrl
@@ -347,6 +367,8 @@ class FormBuilder {
         return nameValuePairs;
     }
     /**
+=======
+>>>>>>> masterpass_rebased
      *
      * @param successUrl
      * @param failureUrl

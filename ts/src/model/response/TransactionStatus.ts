@@ -14,14 +14,14 @@ export interface TransactionStatus {
     timestamp: string;
     modified: string;
     filing_code: string;
-    authorization_code: string;
-    token: string;
+    authorization_code?: string;
+    token?: string;
     status: Status;
     card: CardResponse;
-    reverts: Revert[];
-    customer: Customer;
+    reverts?: Revert[];
+    customer?: Customer;
     cardholder_authentication: string;
-    order: string;
+    order?: string;
     committed: boolean;
-    committed_amount: string;
+    committed_amount?: string;
 }

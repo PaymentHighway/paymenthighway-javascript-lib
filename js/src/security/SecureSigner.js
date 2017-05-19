@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const Crypto = require("crypto");
 const Pair_1 = require("../util/Pair");
 const _ = require("lodash");
