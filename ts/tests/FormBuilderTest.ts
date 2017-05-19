@@ -75,7 +75,7 @@ describe('Form builder', () => {
                         .fill('input[name=expiration_year]', '2017')
                         .fill('input[name=expiry]', '11 / 17')
                         .fill('input[name=cvv]', '024')
-                        .pressButton('OK', () => {
+                        .pressButton(' OK', () => {
                             const uri = URI.parse(browser.resources[0].response.url);
                             const parameters = <Dictionary<string>> URI.parseQuery(uri.query);
                             assert.isTrue(ss.validateFormRedirect(parameters), 'Validate redirect should return true');
@@ -170,15 +170,15 @@ describe('Form builder', () => {
         const exitIframeOnResult = true;
         const exitIframeOn3ds = true;
         const use3ds = true;
-
+        const showPaymentMethodSelector = true;
         const formContainer = formBuilder.generatePaymentParameters(
             successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
-            skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
+            skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, showPaymentMethodSelector);
 
-        testNameValuePairs(formContainer.nameValuePairs, 18);
+        testNameValuePairs(formContainer.nameValuePairs, 19);
         FormConnection.postForm(formContainer)
             .then((response) => {
-                testRedirectResponse(response, '/payment');
+                testRedirectResponse(response, '/select_payment_method');
                 done();
             });
     });

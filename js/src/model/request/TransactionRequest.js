@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const Card_1 = require("./Card");
 class TransactionRequest {
     constructor(cardOrToken, amount, currency, order, customer, commit) {
