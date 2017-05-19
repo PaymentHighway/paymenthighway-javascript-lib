@@ -45,14 +45,14 @@ function testRedirectResponse(response, locationEndsWith) {
 function testNameValuePairs(nameValuePairs, rightAmount) {
     chai_1.assert(nameValuePairs.length === rightAmount, 'Should have ' + rightAmount + ' name value pairs. Got ' + nameValuePairs.length);
 }
-function testWebhookNameValuePairs(nameValuePairs, skipDeayTest) {
+function testWebhookNameValuePairs(nameValuePairs, skipDelayTest) {
     const testSuccessUrl = nameValuePairs.find((x) => x.first === 'sph-webhook-success-url').second;
     chai_1.assert(testSuccessUrl === webhookSuccessUrl, 'sph-webhook-success-url should be ' + webhookSuccessUrl + 'got ' + testSuccessUrl);
     const testFailureUrl = nameValuePairs.find((x) => x.first === 'sph-webhook-failure-url').second;
     chai_1.assert(testFailureUrl === webhookFailureUrl, 'sph-webhook-failure-url should be ' + webhookFailureUrl + 'got ' + testFailureUrl);
     const testCancelUrl = nameValuePairs.find((x) => x.first === 'sph-webhook-cancel-url').second;
     chai_1.assert(testCancelUrl === webhookCancelUrl, 'sph-webhook-cancel-url should be ' + webhookCancelUrl + 'got ' + testCancelUrl);
-    if (typeof skipDeayTest === 'undefined') {
+    if (typeof skipDelayTest === 'undefined') {
         const testDelay = nameValuePairs.find((x) => x.first === 'sph-webhook-delay').second;
         chai_1.assert(testDelay === webhookDelay.toString(), 'sph-webhook-delay should be ' + webhookDelay + 'got ' + testDelay);
     }
