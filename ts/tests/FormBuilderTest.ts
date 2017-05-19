@@ -54,14 +54,14 @@ function testNameValuePairs(nameValuePairs: Pair<string, string>[], rightAmount:
     assert(nameValuePairs.length === rightAmount, 'Should have ' + rightAmount + ' name value pairs. Got ' + nameValuePairs.length);
 }
 
-function testWebhookNameValuePairs(nameValuePairs: Pair<string, string>[], skipDeayTest?: boolean): void {
+function testWebhookNameValuePairs(nameValuePairs: Pair<string, string>[], skipDelayTest?: boolean): void {
     const testSuccessUrl = nameValuePairs.find((x) => x.first === 'sph-webhook-success-url').second;
     assert(testSuccessUrl === webhookSuccessUrl, 'sph-webhook-success-url should be ' + webhookSuccessUrl + 'got ' + testSuccessUrl);
     const testFailureUrl = nameValuePairs.find((x) => x.first === 'sph-webhook-failure-url').second;
     assert(testFailureUrl === webhookFailureUrl, 'sph-webhook-failure-url should be ' + webhookFailureUrl + 'got ' + testFailureUrl);
     const testCancelUrl = nameValuePairs.find((x) => x.first === 'sph-webhook-cancel-url').second;
     assert(testCancelUrl === webhookCancelUrl, 'sph-webhook-cancel-url should be ' + webhookCancelUrl + 'got ' + testCancelUrl);
-    if (typeof skipDeayTest === 'undefined') {
+    if (typeof skipDelayTest === 'undefined') {
         const testDelay = nameValuePairs.find((x) => x.first === 'sph-webhook-delay').second;
         assert(testDelay === webhookDelay.toString(), 'sph-webhook-delay should be ' + webhookDelay + 'got ' + testDelay);
     }
