@@ -1,6 +1,6 @@
 {
   "name": "paymenthighway",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Paymenthighway SDK",
   "homepage": "https://www.paymenthighway.fi/dev/",
   "main": "js/index.js",
