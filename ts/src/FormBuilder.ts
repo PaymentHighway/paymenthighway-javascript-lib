@@ -35,6 +35,10 @@ export class FormBuilder {
     private static SPH_SUB_MERCHANT_NAME: string = 'sph-sub-merchant-name';
     private static SPH_SUB_MERCHANT_ID: string = 'sph-sub-merchant-id';
     private static SPH_SHOP_LOGO_URL: string = 'sph-shop-logo-url';
+    private static SPH_WEBHOOK_SUCCESS_URL: string = 'sph-webhook-success-url';
+    private static SPH_WEBHOOK_FAILURE_URL: string = 'sph-webhook-failure-url';
+    private static SPH_WEBHOOK_CANCEL_URL: string = 'sph-webhook-cancel-url';
+    private static SPH_WEBHOOK_DELAY: string = 'sph-webhook-delay';
     private static SPH_SHOW_PAYMENT_METHOD_SELECTOR: string = 'sph-show-payment-method-selector';
     private static LANGUAGE: string = 'language';
     private static DESCRIPTION: string = 'description';
@@ -68,11 +72,17 @@ export class FormBuilder {
      * @param exitIframeOnResult    Exit from iframe after a result. May be null.
      * @param exitIframeOn3ds       Exit from iframe when redirecting the user to 3DS. May be null.
      * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
+     * @param webhookSuccessUrl     The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
+     * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
+     * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param webhookDelay          Delay for webhook in seconds. Between 0-900
      * @returns {FormContainer}
      */
     public generateAddCardParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                      acceptCvcRequired?: boolean, skipFormNotifications?: boolean,
-                                     exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean): FormContainer {
+                                     exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean,
+                                     webhookSuccessUrl?: string, webhookFailureUrl?: string,
+                                     webhookCancelUrl?: string, webhookDelay?: number): FormContainer {
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
 
@@ -92,6 +102,8 @@ export class FormBuilder {
             nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
 
+        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
+
         const addCardUri = '/form/view/add_card';
         const signature = this.createSignature(addCardUri, nameValuePairs);
         nameValuePairs.push(new Pair(FormBuilder.SIGNATURE, signature));
@@ -106,25 +118,30 @@ export class FormBuilder {
      * <li>exit from iframe when redirecting the user to 3DS.</li>
      * <li>force enable/disable 3ds</li>
      *
-     * @param successUrl            The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
-     * @param failureUrl            The URL the user is redirected after a failure such as an authentication or connectivity error.
-     * @param cancelUrl             The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
-     * @param language              The language the form is displayed in.
-     * @param amount                The amount to pay.
-     * @param currency              In which currency is the amount, e.g. "EUR"
-     * @param orderId               A generated order ID, may for example be always unique or used multiple times for recurring transactions.
-     * @param description           Description of the payment shown in the form.
-     * @param skipFormNotifications Skip notifications displayed on the Payment Highway form. May be null.
-     * @param exitIframeOnResult    Exit from iframe after a result. May be null.
-     * @param exitIframeOn3ds       Exit from iframe when redirecting the user to 3DS. May be null.
-     * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
+     * @param successUrl                The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
+     * @param failureUrl                The URL the user is redirected after a failure such as an authentication or connectivity error.
+     * @param cancelUrl                 The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
+     * @param language                  The language the form is displayed in.
+     * @param amount                    The amount to pay.
+     * @param currency                  In which currency is the amount, e.g. "EUR"
+     * @param orderId                   A generated order ID, may for example be always unique or used multiple times for recurring transactions.
+     * @param description               Description of the payment shown in the form.
+     * @param skipFormNotifications     Skip notifications displayed on the Payment Highway form. May be null.
+     * @param exitIframeOnResult        Exit from iframe after a result. May be null.
+     * @param exitIframeOn3ds           Exit from iframe when redirecting the user to 3DS. May be null.
+     * @param use3ds                    Force enable/disable 3ds. Null to use default configured parameter.
+     * @param webhookSuccessUrl         The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
+     * @param webhookFailureUrl         The URL the PH server makes request after a failure such as an authentication or connectivity error.
+     * @param webhookCancelUrl          The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param webhookDelay              Delay for webhook in seconds. Between 0-900
      * @param showPaymentMethodSelector Show payment method selection page
      * @returns {FormContainer}
      */
     public generatePaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                      amount: number, currency: string, orderId: string, description: string,
                                      skipFormNotifications?: boolean, exitIframeOnResult?: boolean,
-                                     exitIframeOn3ds?: boolean, use3ds?: boolean, showPaymentMethodSelector?: boolean): FormContainer {
+                                     exitIframeOn3ds?: boolean, use3ds?: boolean, webhookSuccessUrl?: string,
+                                     webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number, showPaymentMethodSelector?: boolean): FormContainer {
 
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
@@ -149,6 +166,8 @@ export class FormBuilder {
         if (typeof showPaymentMethodSelector !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_SHOW_PAYMENT_METHOD_SELECTOR, showPaymentMethodSelector.toString()));
         }
+
+        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
 
         const payWithCardUri = '/form/view/pay_with_card';
         const signature = this.createSignature(payWithCardUri, nameValuePairs);
@@ -176,13 +195,18 @@ export class FormBuilder {
      * @param exitIframeOnResult    Exit from iframe after a result. May be null.
      * @param exitIframeOn3ds       Exit from iframe when redirecting the user to 3DS. May be null.
      * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
+     * @param webhookSuccessUrl     The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
+     * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
+     * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param webhookDelay          Delay for webhook in seconds. Between 0-900
      * @return {FormContainer}
      */
     public generateAddCardAndPaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string,
                                                language: string, amount: number, currency: string, orderId: string,
                                                description: string, skipFormNotifications?: boolean,
                                                exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean,
-                                               use3ds?: boolean): FormContainer {
+                                               use3ds?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string,
+                                               webhookCancelUrl?: string, webhookDelay?: number): FormContainer {
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
 
@@ -202,6 +226,8 @@ export class FormBuilder {
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
+
+        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
 
         const addCardAndPayUri = '/form/view/add_and_pay_with_card';
         const signature = this.createSignature(addCardAndPayUri, nameValuePairs);
@@ -232,13 +258,18 @@ export class FormBuilder {
      * @param exitIframeOnResult    Exit from iframe after a result. May be null.
      * @param exitIframeOn3ds       Exit from iframe when redirecting the user to 3DS. May be null.
      * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
+     * @param webhookSuccessUrl     The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
+     * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
+     * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param webhookDelay          Delay for webhook in seconds. Between 0-900
      * @returns {FormContainer}
      */
     public generatePayWithTokenAndCvcParameters(token: string, successUrl: string, failureUrl: string,
                                                 cancelUrl: string, language: string, amount: number, currency: string,
                                                 orderId: string, description: string, skipFormNotifications?: boolean,
                                                 exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean,
-                                                use3ds?: boolean): FormContainer {
+                                                use3ds?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string,
+                                                webhookCancelUrl?: string, webhookDelay?: number): FormContainer {
 
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
@@ -261,6 +292,8 @@ export class FormBuilder {
             nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
 
+        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
+
         const payWithTokenAndCvcUri = '/form/view/pay_with_token_and_cvc';
         const signature = this.createSignature(payWithTokenAndCvcUri, nameValuePairs);
         nameValuePairs.push(new Pair(FormBuilder.SIGNATURE, signature));
@@ -271,26 +304,32 @@ export class FormBuilder {
     /**
      * Get parameters for MobilePay request.
      *
-     * @param successUrl The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
-     * @param failureUrl The URL the user is redirected after a failure such as an authentication or connectivity error.
-     * @param cancelUrl The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
-     * @param language The language the form is displayed in.
-     * @param amount The amount to pay.
-     * @param currency In which currency is the amount, e.g. "EUR"
-     * @param orderId A generated order ID, may for example be always unique or used multiple times for recurring transactions.
-     * @param description Description of the payment shown in the form.
-     * @param exitIframeOnResult Exit from iframe after a result. May be null.
-     * @param shopLogoUrl The logo must be 250x250 pixel in .png format and must be hosted on a HTTPS (secure) server. Optional.
-     * @param phoneNumber User phone number with country code. Max AN 15. Optional.
-     * @param shopName Max 100 AN. Name of the shop/merchant. MobilePay app displays this under the shop logo.  If omitted, the merchant name from PH is used. Optional.
-     * @param subMerchantId Max 15 AN. Should only be used by a Payment Facilitator customer
-     * @param subMerchantName Max 21 AN. Should only be used by a Payment Facilitator customer
+     * @param successUrl            The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
+     * @param failureUrl            The URL the user is redirected after a failure such as an authentication or connectivity error.
+     * @param cancelUrl             The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
+     * @param language              The language the form is displayed in.
+     * @param amount                The amount to pay.
+     * @param currency              In which currency is the amount, e.g. "EUR"
+     * @param orderId               A generated order ID, may for example be always unique or used multiple times for recurring transactions.
+     * @param description           Description of the payment shown in the form.
+     * @param exitIframeOnResult    Exit from iframe after a result. May be null.
+     * @param shopLogoUrl           The logo must be 250x250 pixel in .png format and must be hosted on a HTTPS (secure) server. Optional.
+     * @param phoneNumber           User phone number with country code. Max AN 15. Optional.
+     * @param shopName              Max 100 AN. Name of the shop/merchant. MobilePay app displays this under the shop logo.  If omitted, the merchant name from PH is used. Optional.
+     * @param subMerchantId         Max 15 AN. Should only be used by a Payment Facilitator customer
+     * @param subMerchantName       Max 21 AN. Should only be used by a Payment Facilitator customer
+     * @param webhookSuccessUrl     The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
+     * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
+     * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param webhookDelay          Delay for webhook in seconds. Between 0-900
      * @return FormContainer
      */
     public generatePayWithMobilePayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                               amount: number, currency: string, orderId: string, description: string,
                                               exitIframeOnResult?: boolean, shopLogoUrl?: string, phoneNumber?: string,
-                                              shopName?: string, subMerchantId?: string, subMerchantName?: string): FormContainer {
+                                              shopName?: string, subMerchantId?: string, subMerchantName?: string,
+                                              webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string,
+                                              webhookDelay?: number): FormContainer {
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
 
@@ -318,6 +357,8 @@ export class FormBuilder {
             nameValuePairs.push(new Pair(FormBuilder.SPH_SUB_MERCHANT_NAME, subMerchantName));
         }
 
+        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
+
         const mobilePayUri = '/form/view/mobilepay';
         const signature = this.createSignature(mobilePayUri, nameValuePairs);
 
@@ -341,12 +382,17 @@ export class FormBuilder {
      * @param exitIframeOnResult    Exit from iframe after a result. May be null.
      * @param exitIframeOn3ds       Exit from iframe when redirecting the user to 3DS. May be null.
      * @param use3ds                Force enable/disable 3ds. Null to use default configured parameter.
+     * @param webhookSuccessUrl     The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
+     * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
+     * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param webhookDelay          Delay for webhook in seconds. Between 0-900
      * @return FormContainer
      */
     public generateMasterPassParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                         amount: number, currency: string, orderId: string, description: string,
                                         skipFormNotifications?: boolean, exitIframeOnResult?: boolean,
-                                        exitIframeOn3ds?: boolean, use3ds?: boolean): FormContainer {
+                                        exitIframeOn3ds?: boolean, use3ds?: boolean, webhookSuccessUrl?: string,
+                                        webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number): FormContainer {
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
 
@@ -368,12 +414,40 @@ export class FormBuilder {
             nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
 
-        const masterPassUri = '/form/view/masterpass';
-        const signature = this.createSignature(masterPassUri, nameValuePairs);
+        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
+
+        const masterpassUri = '/form/view/masterpass';
+        const signature = this.createSignature(masterpassUri, nameValuePairs);
 
         nameValuePairs.push(new Pair(FormBuilder.SIGNATURE, signature));
 
-        return new FormContainer(this.method, this.baseUrl, masterPassUri, nameValuePairs, requestId);
+        return new FormContainer(this.method, this.baseUrl, masterpassUri, nameValuePairs, requestId);
+    }
+
+    /**
+     *
+     * @param webhookSuccessUrl
+     * @param webhookFailureUrl
+     * @param webhookCancelUrl
+     * @param webhookDelay
+     * @returns {Array}
+     */
+    private static createWebhookNameValuePairs(webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string,
+                                        webhookDelay?: number) {
+        let nameValuePairs = [];
+        if (typeof webhookSuccessUrl !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_WEBHOOK_SUCCESS_URL, webhookSuccessUrl));
+        }
+        if (typeof webhookFailureUrl !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_WEBHOOK_FAILURE_URL, webhookFailureUrl));
+        }
+        if (typeof webhookCancelUrl !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_WEBHOOK_CANCEL_URL, webhookCancelUrl));
+        }
+        if (typeof webhookDelay !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_WEBHOOK_DELAY, webhookDelay.toString()));
+        }
+        return nameValuePairs;
     }
 
     /**
