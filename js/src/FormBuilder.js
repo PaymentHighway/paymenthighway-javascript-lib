@@ -324,6 +324,39 @@ class FormBuilder {
         return new FormContainer_1.FormContainer(this.method, this.baseUrl, masterpassUri, nameValuePairs, requestId);
     }
     /**
+     * Get parameters for Siirto request.
+     *
+     * @param successUrl            The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
+     * @param failureUrl            The URL the user is redirected after a failure such as an authentication or connectivity error.
+     * @param cancelUrl             The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
+     * @param language              The language the form is displayed in.
+     * @param amount                The amount to pay.
+     * @param orderId               A generated order ID, may for example be always unique or used multiple times for recurring transactions.
+     * @param description           Description of the payment shown in the form.
+     * @param webhookSuccessUrl     The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
+     * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
+     * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param webhookDelay          Delay for webhook in seconds. Between 0-900
+     * @return FormContainer
+     */
+    generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, phoneNumber, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay) {
+        const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
+        let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
+        // Siirto supports only euros
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_CURRENCY, 'EUR'));
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_ORDER, orderId));
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.DESCRIPTION, description));
+        if (typeof phoneNumber !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SIIRTO_PHONE_NUMBER, phoneNumber));
+        }
+        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
+        const siirtoUri = '/form/view/siirto';
+        const signature = this.createSignature(siirtoUri, nameValuePairs);
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.SIGNATURE, signature));
+        return new FormContainer_1.FormContainer(this.method, this.baseUrl, siirtoUri, nameValuePairs, requestId);
+    }
+    /**
      *
      * @param webhookSuccessUrl
      * @param webhookFailureUrl
@@ -379,7 +412,7 @@ class FormBuilder {
         return this.secureSigner.createSignature(this.method, uri, nameValuePairs, '');
     }
 }
-FormBuilder.FORM_API_VERSION = '20160630';
+FormBuilder.FORM_API_VERSION = '20170704';
 FormBuilder.SPH_API_VERSION = 'sph-api-version';
 FormBuilder.SPH_ACCEPT_CVC_REQUIRED = 'sph-accept-cvc-required';
 FormBuilder.SPH_ACCOUNT = 'sph-account';
@@ -407,6 +440,7 @@ FormBuilder.SPH_WEBHOOK_FAILURE_URL = 'sph-webhook-failure-url';
 FormBuilder.SPH_WEBHOOK_CANCEL_URL = 'sph-webhook-cancel-url';
 FormBuilder.SPH_WEBHOOK_DELAY = 'sph-webhook-delay';
 FormBuilder.SPH_SHOW_PAYMENT_METHOD_SELECTOR = 'sph-show-payment-method-selector';
+FormBuilder.SPH_SIIRTO_PHONE_NUMBER = 'sph-siirto-phone-number';
 FormBuilder.LANGUAGE = 'language';
 FormBuilder.DESCRIPTION = 'description';
 FormBuilder.SIGNATURE = 'signature';
