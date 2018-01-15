@@ -435,6 +435,7 @@ export class FormBuilder {
      * @param amount                The amount to pay.
      * @param orderId               A generated order ID, may for example be always unique or used multiple times for recurring transactions.
      * @param description           Description of the payment shown in the form.
+     * @param phoneNumber           User phone number with country code. Max AN 15. Optional
      * @param webhookSuccessUrl     The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
