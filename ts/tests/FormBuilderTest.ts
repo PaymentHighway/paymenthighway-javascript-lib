@@ -89,8 +89,8 @@ describe('Form builder', () => {
                 browser.visit(baseUrl + response.headers.location, () => {
                     browser.fill('input[name=card_number_formatted]', '4153 0139 9970 0024')
                         .fill('input[name=expiration_month]', '11')
-                        .fill('input[name=expiration_year]', '2017')
-                        .fill('input[name=expiry]', '11 / 17')
+                        .fill('input[name=expiration_year]', '2023')
+                        .fill('input[name=expiry]', '11 / 23')
                         .fill('input[name=cvv]', '024')
                         .pressButton(' OK', () => {
                             const uri = URI.parse(browser.resources[0].response.url);
@@ -98,7 +98,7 @@ describe('Form builder', () => {
                             assert.isTrue(ss.validateFormRedirect(parameters), 'Validate redirect should return true');
                             paymentAPI.tokenization(parameters['sph-tokenization-id'])
                                 .then((tokenResponse) => {
-                                    assert(tokenResponse.card.expire_year === '2017', 'Expire year should be 2017');
+                                    assert(tokenResponse.card.expire_year === '2023', 'Expire year should be 2023');
                                     assert(tokenResponse.card.expire_month === '11', 'Expire month should be 11');
                                     assert(tokenResponse.card.type === 'Visa', 'Card type should be Visa');
                                     assert(tokenResponse.card.cvc_required === 'no', 'Should not require CVC');

@@ -17,7 +17,7 @@ let testCard: Card;
 
 beforeEach(() => {
     api = new PaymentAPI('https://v1-hub-staging.sph-test-solinor.com/', 'testKey', 'testSecret', 'test', 'test_merchantId');
-    testCard = new Card('4153013999700024', '2017', '11', '024');
+    testCard = new Card('4153013999700024', '2023', '11', '024');
     validCard = {
         card: testCard,
         amount: 99,
@@ -176,7 +176,7 @@ describe('PaymentAPI', () => {
     });
 
     it('Test rejected debit response', (done) => {
-        const testCardTokenizeOkPaymentFails = new Card('4153013999700156', '2017', '11', '156');
+        const testCardTokenizeOkPaymentFails = new Card('4153013999700156', '2023', '11', '156');
         const orderId = PaymentHighwayUtility.createRequestId();
         let transactionResponse: TransactionResponse;
         api.initTransaction()
