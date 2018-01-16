@@ -23,4 +23,5 @@ export interface TransactionStatus {
     order?: string;
     committed: boolean;
     committed_amount?: string;
+    recurring: boolean;
 }

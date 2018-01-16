@@ -71,9 +71,11 @@ describe('PaymentAPI', () => {
             checkResult(commitResponse);
             chai_1.assert(commitResponse.card.type === 'Visa', 'Card type should be "Visa"' + printResult(commitResponse));
             chai_1.assert(commitResponse.card.cvc_required === 'not_tested', 'Test card should return cvc_required = not_tested' + printResult(commitResponse));
+            chai_1.assert(commitResponse.recurring === false, 'Transaction should have recurring as false.' + printResult(commitResponse));
             return api.transactionResult(transactionId);
         })
             .then((resultResponse) => {
+            chai_1.assert(resultResponse.recurring === false, 'Transaction result should have recurring false.' + printResult(resultResponse));
             checkResult(resultResponse);
             done();
         });
@@ -144,6 +146,7 @@ describe('PaymentAPI', () => {
             checkResult(searchResponse);
             chai_1.assert(searchResponse.transactions[0].current_amount === 9999, 'Current amount for tested order should be 9999, it was: ' + searchResponse.transactions[0].current_amount + printResult(searchResponse));
             chai_1.assert(searchResponse.transactions[0].id === transactionId, 'Transaction id should be same with init response and search response' + printResult(searchResponse));
+            chai_1.assert(searchResponse.transactions[0].recurring === false, 'Transaction should have recurring false' + printResult(searchResponse));
             done();
         });
     });

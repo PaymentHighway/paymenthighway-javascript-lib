@@ -11,4 +11,5 @@ export interface Transaction {
     status: Status;
     cardholder_authentication: string;
     order: string;
+    recurring: boolean;
 }
