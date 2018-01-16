@@ -10,6 +10,7 @@ import {RevertTransactionRequest} from '../src/model/request/RevertTransactionRe
 import {TransactionStatusResponse} from '../src/model/response/TransactionStatusResponse';
 import {Response} from '../src/model/response/Response';
 import {OrderSearchResponse} from '../src/model/response/OrderSearchResponse';
+import {MasterpassTransactionRequest} from '../src/model/request/MasterpassTransactionRequest';
 
 let api: PaymentAPI;
 let validCard: any;
@@ -201,5 +202,34 @@ describe('PaymentAPI', () => {
                 assert(statusResponse.transaction.committed === false, 'Committed should be false, got' + statusResponse.transaction.committed);
                 done();
             });
+    });
+
+    it('Test Masterpass transaction', (done) => {
+        const preGeneratedMasterpassTransaction = '327c6f29-9b46-40b9-b85b-85e908015d92';
+
+        api.userProfile(preGeneratedMasterpassTransaction)
+            .then((userProfileResponse) => {
+                checkResult(userProfileResponse);
+
+                const masterpass = userProfileResponse.masterpass;
+                assert(masterpass.amount === 100);
+                assert(masterpass.currency === 'EUR');
+                assert(masterpass.masterpass_wallet_id === '101');
+
+                const profile = userProfileResponse.profile;
+                assert(profile.email_address === 'matti.meikalainen@gmail.com');
+                assert.isNotNull(profile.billing_address);
+                assert(profile.billing_address.country === 'FI');
+                assert.isNotNull(profile.shipping_address);
+                assert(profile.shipping_address.country === 'FI');
+
+                const request = new MasterpassTransactionRequest(50, 'EUR');
+                return api.debitMasterpassTransaction(preGeneratedMasterpassTransaction, request);
+            })
+            .then((debitResponse) => {
+                checkResult(debitResponse);
+
+                done();
+            })
     });
 });

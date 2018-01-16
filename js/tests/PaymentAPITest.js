@@ -8,6 +8,7 @@ const Card_1 = require("../src/model/request/Card");
 const TransactionRequest_1 = require("../src/model/request/TransactionRequest");
 const CommitTransactionRequest_1 = require("../src/model/request/CommitTransactionRequest");
 const RevertTransactionRequest_1 = require("../src/model/request/RevertTransactionRequest");
+const MasterpassTransactionRequest_1 = require("../src/model/request/MasterpassTransactionRequest");
 let api;
 let validCard;
 let testCard;
@@ -179,6 +180,29 @@ describe('PaymentAPI', () => {
         })
             .then((statusResponse) => {
             chai_1.assert(statusResponse.transaction.committed === false, 'Committed should be false, got' + statusResponse.transaction.committed);
+            done();
+        });
+    });
+    it('Test Masterpass transaction', (done) => {
+        const preGeneratedMasterpassTransaction = '327c6f29-9b46-40b9-b85b-85e908015d92';
+        api.userProfile(preGeneratedMasterpassTransaction)
+            .then((userProfileResponse) => {
+            checkResult(userProfileResponse);
+            const masterpass = userProfileResponse.masterpass;
+            chai_1.assert(masterpass.amount === 100);
+            chai_1.assert(masterpass.currency === 'EUR');
+            chai_1.assert(masterpass.masterpass_wallet_id === '101');
+            const profile = userProfileResponse.profile;
+            chai_1.assert(profile.email_address === 'matti.meikalainen@gmail.com');
+            chai_1.assert.isNotNull(profile.billing_address);
+            chai_1.assert(profile.billing_address.country === 'FI');
+            chai_1.assert.isNotNull(profile.shipping_address);
+            chai_1.assert(profile.shipping_address.country === 'FI');
+            const request = new MasterpassTransactionRequest_1.MasterpassTransactionRequest(50, 'EUR');
+            return api.debitMasterpassTransaction(preGeneratedMasterpassTransaction, request);
+        })
+            .then((debitResponse) => {
+            checkResult(debitResponse);
             done();
         });
     });

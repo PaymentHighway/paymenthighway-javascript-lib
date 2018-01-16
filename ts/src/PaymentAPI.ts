@@ -16,6 +16,8 @@ import {RevertTransactionRequest} from './model/request/RevertTransactionRequest
 import {CommitTransactionRequest} from './model/request/CommitTransactionRequest';
 import {DebitResponse} from './model/response/DebitResponse';
 import {Response} from './model/response/Response';
+import {UserProfileResponse} from './model/response/UserProfileResponse';
+import {MasterpassTransactionRequest} from './model/request/MasterpassTransactionRequest';
 
 /**
  * Payment Highway Payment API Service.
@@ -58,6 +60,17 @@ export class PaymentAPI {
         const debitUri = '/transaction/' + transactionId + '/debit';
         return this.makeRequest('POST', debitUri, request);
     }
+
+    /**
+     * Payment Highway Debit Masterpass Transaction
+     *
+     * @param {string} transactionId
+     * @param {MasterpassTransactionRequest} request
+     * @returns {PromiseLike<DebitResponse>}
+     */
+    public debitMasterpassTransaction(transactionId: string, request: MasterpassTransactionRequest): PromiseLike<DebitResponse> {
+        const debitUri = '/transaction/' + transactionId + '/debit_masterpass';
+        return this.makeRequest('POST', debitUri, request);    }
 
     /**
      * Payment Highway Revert Transaction with amount
@@ -116,6 +129,18 @@ export class PaymentAPI {
     public tokenization(tokenizationId: string): PromiseLike<TokenizationResponse> {
         const tokenUri = '/tokenization/' + tokenizationId;
         return this.makeRequest('GET', tokenUri);
+    }
+
+    /**
+     * This api is available only for Masterpass transactions. It is is mainly intended for fetching shipping
+     * address before calculating shipping cost.
+     *
+     * After fetching user profile for the transaction, [Masterpass debit transaction]{@link #debitMasterpassTransaction}
+     * can be performed.
+     */
+    public userProfile(transactionId: string): PromiseLike<UserProfileResponse> {
+        const userProfileUrl = '/transaction/' + transactionId + '/user_profile';
+        return this.makeRequest('GET', userProfileUrl);
     }
 
     /**
