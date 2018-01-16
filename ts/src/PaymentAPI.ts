@@ -22,7 +22,7 @@ import {Response} from './model/response/Response';
  */
 export class PaymentAPI {
 
-    private static API_VERSION: string = '20160630';
+    private static API_VERSION: string = '20171127';
 
     // Payment API headers
     public static USER_AGENT: string = 'PaymentHighway Javascript Library';
