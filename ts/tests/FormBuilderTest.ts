@@ -318,8 +318,10 @@ describe('Form builder', () => {
 
     it('Test masterpass form with optional parameters', (done) => {
         const formContainer = formBuilder.generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language,
-            amount, currency, orderId, description, true);
-        testNameValuePairs(formContainer.nameValuePairs, 15);
+            amount, currency, orderId, description, true,
+            undefined, undefined, undefined, undefined,
+            undefined, undefined, undefined, true);
+        testNameValuePairs(formContainer.nameValuePairs, 16);
         FormConnection.postForm(formContainer)
             .then((response) => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
