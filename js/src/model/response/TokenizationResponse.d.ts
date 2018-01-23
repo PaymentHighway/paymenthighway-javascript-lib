@@ -6,4 +6,5 @@ export interface TokenizationResponse extends Response {
     card: CardResponse;
     customer: Customer;
     cardholder_authentication: string;
+    recurring: boolean;
 }

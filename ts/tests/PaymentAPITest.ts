@@ -10,6 +10,7 @@ import {RevertTransactionRequest} from '../src/model/request/RevertTransactionRe
 import {TransactionStatusResponse} from '../src/model/response/TransactionStatusResponse';
 import {Response} from '../src/model/response/Response';
 import {OrderSearchResponse} from '../src/model/response/OrderSearchResponse';
+import {MasterpassTransactionRequest} from '../src/model/request/MasterpassTransactionRequest';
 
 let api: PaymentAPI;
 let validCard: any;
@@ -83,9 +84,11 @@ describe('PaymentAPI', () => {
                 checkResult(commitResponse);
                 assert(commitResponse.card.type === 'Visa', 'Card type should be "Visa"' + printResult(commitResponse));
                 assert(commitResponse.card.cvc_required === 'not_tested', 'Test card should return cvc_required = not_tested' + printResult(commitResponse));
+                assert(commitResponse.recurring === false, 'Transaction should have recurring as false.' + printResult(commitResponse));
                 return api.transactionResult(transactionId);
             })
             .then((resultResponse) => {
+                assert(resultResponse.recurring === false, 'Transaction result should have recurring false.' + printResult(resultResponse));
                 checkResult(resultResponse);
                 done();
             });
@@ -162,6 +165,7 @@ describe('PaymentAPI', () => {
                 checkResult(searchResponse);
                 assert(searchResponse.transactions[0].current_amount === 9999, 'Current amount for tested order should be 9999, it was: ' + searchResponse.transactions[0].current_amount + printResult(searchResponse));
                 assert(searchResponse.transactions[0].id === transactionId, 'Transaction id should be same with init response and search response' + printResult(searchResponse));
+                assert(searchResponse.transactions[0].recurring === false, 'Transaction should have recurring false' + printResult(searchResponse));
                 done();
             });
     });
@@ -198,5 +202,34 @@ describe('PaymentAPI', () => {
                 assert(statusResponse.transaction.committed === false, 'Committed should be false, got' + statusResponse.transaction.committed);
                 done();
             });
+    });
+
+    it('Test Masterpass transaction', (done) => {
+        const preGeneratedMasterpassTransaction = '327c6f29-9b46-40b9-b85b-85e908015d92';
+
+        api.userProfile(preGeneratedMasterpassTransaction)
+            .then((userProfileResponse) => {
+                checkResult(userProfileResponse);
+
+                const masterpass = userProfileResponse.masterpass;
+                assert(masterpass.amount === 100);
+                assert(masterpass.currency === 'EUR');
+                assert(masterpass.masterpass_wallet_id === '101');
+
+                const profile = userProfileResponse.profile;
+                assert(profile.email_address === 'matti.meikalainen@gmail.com');
+                assert.isNotNull(profile.billing_address);
+                assert(profile.billing_address.country === 'FI');
+                assert.isNotNull(profile.shipping_address);
+                assert(profile.shipping_address.country === 'FI');
+
+                const request = new MasterpassTransactionRequest(50, 'EUR');
+                return api.debitMasterpassTransaction(preGeneratedMasterpassTransaction, request);
+            })
+            .then((debitResponse) => {
+                checkResult(debitResponse);
+
+                done();
+            })
     });
 });
