@@ -42,6 +42,9 @@ export declare class FormBuilder {
     private static SPH_WEBHOOK_DELAY;
     private static SPH_SHOW_PAYMENT_METHOD_SELECTOR;
     private static SPH_REQUEST_SHIPPING_ADDRESS;
+    private static SPH_PHONE_NUMBER;
+    private static SPH_APP_URL;
+    private static SPH_REFERENCE_NUMBER;
     private static LANGUAGE;
     private static DESCRIPTION;
     private static SIGNATURE;
@@ -198,6 +201,28 @@ export declare class FormBuilder {
      * @return FormContainer
      */
     generateMasterPassParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number, requestShippingAddress?: boolean): FormContainer;
+    /**
+     * Get parameters for Pivo request.
+     *
+     * @param successUrl             The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
+     * @param failureUrl             The URL the user is redirected after a failure such as an authentication or connectivity error.
+     * @param cancelUrl              The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
+     * @param language               The language the form is displayed in.
+     * @param amount                 The amount to pay.
+     * @param orderId                A generated order ID, may for example be always unique or used multiple times for recurring transactions.
+     * @param description            Description of the payment shown in the form.
+     * @param phoneNumber            User phone number with country code. Max AN 15. Optional.
+     * @param referenceNumber        Reference number for payment. Optional.
+     * @param appUrl                 When used, Pivo tries to open application with this url. Optional.
+     * @param skipFormNotifications  Skip notifications displayed on the Payment Highway form. May be null.
+     * @param exitIframeOnResult     Exit from iframe after a result. May be null.
+     * @param webhookSuccessUrl      The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
+     * @param webhookFailureUrl      The URL the PH server makes request after a failure such as an authentication or connectivity error.
+     * @param webhookCancelUrl       The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param webhookDelay           Delay for webhook in seconds. Between 0-900
+     * @return FormContainer
+     */
+    generatePivoParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, orderId: string, description: string, phoneNumber?: string, referenceNumber?: string, appUrl?: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number): FormContainer;
     /**
      *
      * @param webhookSuccessUrl

@@ -57,6 +57,12 @@ function testWebhookNameValuePairs(nameValuePairs, skipDelayTest) {
         chai_1.assert(testDelay === webhookDelay.toString(), 'sph-webhook-delay should be ' + webhookDelay + 'got ' + testDelay);
     }
 }
+function assertNameValuePair(nameValuePairs, key, value) {
+    const element = nameValuePairs.find((pair) => {
+        return pair.first === key;
+    });
+    chai_1.assert(element.second === value);
+}
 describe('Form builder', () => {
     it('Should have instance of FormBuilder', () => {
         chai_1.assert.instanceOf(formBuilder, FormBuilder_1.FormBuilder, 'Was not instance of FormBuilder');
@@ -318,6 +324,20 @@ describe('Form builder', () => {
         const formContainer = formBuilder.generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, undefined, undefined, undefined, undefined, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl);
         testNameValuePairs(formContainer.nameValuePairs, 17);
         testWebhookNameValuePairs(formContainer.nameValuePairs, true);
+    });
+    it('Test pivo mandatory parameters', () => {
+        const formContainer = formBuilder.generatePivoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+        testNameValuePairs(formContainer.nameValuePairs, 14);
+    });
+    it('Test pivo optional parameters', () => {
+        const phoneNumber = '+358444160589';
+        const referenceNumber = '1313';
+        const appUrl = 'myapp://url';
+        const formContainer = formBuilder.generatePivoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, phoneNumber, referenceNumber, appUrl, undefined, undefined, undefined, undefined, undefined, undefined);
+        testNameValuePairs(formContainer.nameValuePairs, 17);
+        assertNameValuePair(formContainer.nameValuePairs, 'sph-phone-number', phoneNumber);
+        assertNameValuePair(formContainer.nameValuePairs, 'sph-reference-number', referenceNumber);
+        assertNameValuePair(formContainer.nameValuePairs, 'sph-app-url', appUrl);
     });
 });
 //# sourceMappingURL=FormBuilderTest.js.map
