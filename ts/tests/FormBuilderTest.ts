@@ -67,6 +67,14 @@ function testWebhookNameValuePairs(nameValuePairs: Pair<string, string>[], skipD
     }
 }
 
+function assertNameValuePair(nameValuePairs: Pair<string, string>[], key: string, value: string): void {
+    const element = nameValuePairs.find((pair) => {
+        return pair.first === key;
+    });
+
+    assert(element.second === value);
+}
+
 describe('Form builder', () => {
     it('Should have instance of FormBuilder', () => {
         assert.instanceOf(formBuilder, FormBuilder, 'Was not instance of FormBuilder');
@@ -399,4 +407,26 @@ describe('Form builder', () => {
         testWebhookNameValuePairs(formContainer.nameValuePairs, true);
     });
 
+    it('Test pivo mandatory parameters', () => {
+        const formContainer = formBuilder.generatePivoParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, orderId, description, undefined, undefined,
+            undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+
+        testNameValuePairs(formContainer.nameValuePairs, 14);
+    });
+
+    it('Test pivo optional parameters', () => {
+        const phoneNumber = '+358444160589';
+        const referenceNumber = '1313';
+        const appUrl = 'myapp://url';
+
+        const formContainer = formBuilder.generatePivoParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, orderId, description, phoneNumber, referenceNumber,
+            appUrl, undefined, undefined, undefined, undefined, undefined, undefined);
+
+        testNameValuePairs(formContainer.nameValuePairs, 17);
+        assertNameValuePair(formContainer.nameValuePairs, 'sph-phone-number', phoneNumber);
+        assertNameValuePair(formContainer.nameValuePairs, 'sph-reference-number', referenceNumber);
+        assertNameValuePair(formContainer.nameValuePairs, 'sph-app-url', appUrl);
+    });
 });
