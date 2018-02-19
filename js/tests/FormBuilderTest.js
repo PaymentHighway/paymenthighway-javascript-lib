@@ -326,18 +326,26 @@ describe('Form builder', () => {
         testWebhookNameValuePairs(formContainer.nameValuePairs, true);
     });
     it('Test pivo mandatory parameters', () => {
-        const formContainer = formBuilder.generatePivoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+        const formContainer = formBuilder.generatePivoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description);
         testNameValuePairs(formContainer.nameValuePairs, 14);
+        const actionUrl = '/form/view/pivo';
+        chai_1.assert(formContainer.actionUrl === actionUrl, 'action url should be ' + actionUrl + 'got ' + formContainer.actionUrl);
     });
     it('Test pivo optional parameters', () => {
         const phoneNumber = '+358444160589';
         const referenceNumber = '1313';
         const appUrl = 'myapp://url';
-        const formContainer = formBuilder.generatePivoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, phoneNumber, referenceNumber, appUrl, undefined, undefined, undefined, undefined, undefined, undefined);
+        const formContainer = formBuilder.generatePivoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, phoneNumber, referenceNumber, appUrl);
         testNameValuePairs(formContainer.nameValuePairs, 17);
         assertNameValuePair(formContainer.nameValuePairs, 'sph-phone-number', phoneNumber);
         assertNameValuePair(formContainer.nameValuePairs, 'sph-reference-number', referenceNumber);
         assertNameValuePair(formContainer.nameValuePairs, 'sph-app-url', appUrl);
+    });
+    it('Test pivo app url', () => {
+        const formContainer = formBuilder.generatePivoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, '+358444160589', undefined, 'myapp://url', true);
+        testNameValuePairs(formContainer.nameValuePairs, 16);
+        const actionUrl = '/pivo/mobile';
+        chai_1.assert(formContainer.actionUrl === actionUrl, 'action url should be ' + actionUrl + 'got ' + formContainer.actionUrl);
     });
 });
 //# sourceMappingURL=FormBuilderTest.js.map
