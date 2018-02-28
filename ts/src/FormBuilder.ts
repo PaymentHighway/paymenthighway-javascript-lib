@@ -445,7 +445,6 @@ export class FormBuilder {
      * @param phoneNumber            User phone number with country code. Max AN 15. Optional.
      * @param referenceNumber        Reference number for payment. Optional.
      * @param appUrl                 When used, Pivo tries to open application with this url. Optional.
-     * @param getPivoUrl             Get string response containing pivo app url
      * @param skipFormNotifications  Skip notifications displayed on the Payment Highway form. May be null.
      * @param exitIframeOnResult     Exit from iframe after a result. May be null.
      * @param webhookSuccessUrl      The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
@@ -485,19 +484,13 @@ export class FormBuilder {
 
         nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
 
-        const pivoUri = () => {
-            if (typeof getPivoUrl !== 'undefined' && getPivoUrl) {
-                return '/pivo/mobile';
-            } else {
-                return '/form/view/pivo';
-            }
-        };
+        const pivoUri = '/form/view/pivo';
 
-        const signature = this.createSignature(pivoUri(), nameValuePairs);
+        const signature = this.createSignature(pivoUri, nameValuePairs);
 
         nameValuePairs.push(new Pair(FormBuilder.SIGNATURE, signature));
 
-        return new FormContainer(this.method, this.baseUrl, pivoUri(), nameValuePairs, requestId);
+        return new FormContainer(this.method, this.baseUrl, pivoUri, nameValuePairs, requestId);
     }
 
     /**
