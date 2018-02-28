@@ -43,7 +43,7 @@ export class FormBuilder {
     private static SPH_REQUEST_SHIPPING_ADDRESS: string = 'sph-request-shipping-address';
     private static SPH_PHONE_NUMBER: string = 'sph-phone-number';
     private static SPH_APP_URL: string = 'sph-app-url';
-    private static SPH_REFERENCE_NUMBER: string = 'sph-reference-number';
+    private static SPH_REFERENCE: string = 'sph-reference';
     private static LANGUAGE: string = 'language';
     private static DESCRIPTION: string = 'description';
     private static SIGNATURE: string = 'signature';
@@ -439,11 +439,11 @@ export class FormBuilder {
      * @param failureUrl             The URL the user is redirected after a failure such as an authentication or connectivity error.
      * @param cancelUrl              The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
      * @param language               The language the form is displayed in.
-     * @param amount                 The amount to pay.
+     * @param amount                 The amount to pay in euro cents. Pivo supports only euros.
      * @param orderId                A generated order ID, may for example be always unique or used multiple times for recurring transactions.
      * @param description            Description of the payment shown in the form.
      * @param phoneNumber            User phone number with country code. Max AN 15. Optional.
-     * @param referenceNumber        Reference number for payment. Optional.
+     * @param reference              Reference for payment. Optional.
      * @param appUrl                 When used, Pivo tries to open application with this url. Optional.
      * @param skipFormNotifications  Skip notifications displayed on the Payment Highway form. May be null.
      * @param exitIframeOnResult     Exit from iframe after a result. May be null.
@@ -455,7 +455,7 @@ export class FormBuilder {
      */
     public generatePivoParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                   amount: number, orderId: string, description: string, phoneNumber?: string,
-                                  referenceNumber?: string, appUrl?: string, getPivoUrl?: boolean, skipFormNotifications?: boolean,
+                                  reference?: string, appUrl?: string, skipFormNotifications?: boolean,
                                   exitIframeOnResult?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string,
                                   webhookCancelUrl?: string, webhookDelay?: number): FormContainer {
         const requestId = PaymentHighwayUtility.createRequestId();
@@ -475,8 +475,8 @@ export class FormBuilder {
         if (typeof phoneNumber !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_PHONE_NUMBER, phoneNumber));
         }
-        if (typeof referenceNumber !== 'undefined') {
-            nameValuePairs.push(new Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
+        if (typeof reference !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_REFERENCE, reference));
         }
         if (typeof appUrl !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_APP_URL, appUrl));

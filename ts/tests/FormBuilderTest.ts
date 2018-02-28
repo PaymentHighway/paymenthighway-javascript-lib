@@ -418,25 +418,25 @@ describe('Form builder', () => {
 
     it('Test pivo optional parameters', () => {
         const phoneNumber = '+358444160589';
-        const referenceNumber = '1313';
+        const reference = '1313';
         const appUrl = 'myapp://url';
 
         const formContainer = formBuilder.generatePivoParameters(
-            successUrl, failureUrl, cancelUrl, language, amount, orderId, description, phoneNumber, referenceNumber,
+            successUrl, failureUrl, cancelUrl, language, amount, orderId, description, phoneNumber, reference,
             appUrl);
 
         testNameValuePairs(formContainer.nameValuePairs, 17);
         assertNameValuePair(formContainer.nameValuePairs, 'sph-phone-number', phoneNumber);
-        assertNameValuePair(formContainer.nameValuePairs, 'sph-reference-number', referenceNumber);
+        assertNameValuePair(formContainer.nameValuePairs, 'sph-reference', reference);
         assertNameValuePair(formContainer.nameValuePairs, 'sph-app-url', appUrl);
     });
 
     it('Test pivo app url', () => {
         const formContainer = formBuilder.generatePivoParameters(
-            successUrl, failureUrl, cancelUrl, language, amount, orderId, description, '+358444160589', undefined, 'myapp://url', true );
+            successUrl, failureUrl, cancelUrl, language, amount, orderId, description, '+358444160589', undefined, 'myapp://url');
 
         testNameValuePairs(formContainer.nameValuePairs, 16);
-        const actionUrl = '/pivo/mobile';
+        const actionUrl = '/form/view/pivo';
         assert(formContainer.actionUrl === actionUrl, 'action url should be ' + actionUrl + 'got ' + formContainer.actionUrl);
     });
 });
