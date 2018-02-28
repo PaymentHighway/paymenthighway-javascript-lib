@@ -338,13 +338,14 @@ class FormBuilder {
      * @param orderId               A generated order ID, may for example be always unique or used multiple times for recurring transactions.
      * @param description           Description of the payment shown in the form.
      * @param phoneNumber           User phone number with country code. Max AN 15. Optional
+     * @param referenceNumber       Reference number
      * @param webhookSuccessUrl     The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay          Delay for webhook in seconds. Between 0-900
      * @return FormContainer
      */
-    generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, phoneNumber, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay) {
+    generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, phoneNumber, referenceNumber, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay) {
         const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
@@ -353,7 +354,10 @@ class FormBuilder {
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_ORDER, orderId));
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.DESCRIPTION, description));
         if (typeof phoneNumber !== 'undefined') {
-            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SIIRTO_PHONE_NUMBER, phoneNumber));
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_PHONE_NUMBER, phoneNumber));
+        }
+        if (typeof referenceNumber !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
         }
         nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
         const siirtoUri = '/form/view/siirto';
@@ -446,7 +450,8 @@ FormBuilder.SPH_WEBHOOK_CANCEL_URL = 'sph-webhook-cancel-url';
 FormBuilder.SPH_WEBHOOK_DELAY = 'sph-webhook-delay';
 FormBuilder.SPH_SHOW_PAYMENT_METHOD_SELECTOR = 'sph-show-payment-method-selector';
 FormBuilder.SPH_REQUEST_SHIPPING_ADDRESS = 'sph-request-shipping-address';
-FormBuilder.SPH_SIIRTO_PHONE_NUMBER = 'sph-siirto-phone-number';
+FormBuilder.SPH_PHONE_NUMBER = 'sph-phone-number';
+FormBuilder.SPH_REFERENCE_NUMBER = 'sph-reference-number';
 FormBuilder.LANGUAGE = 'language';
 FormBuilder.DESCRIPTION = 'description';
 FormBuilder.SIGNATURE = 'signature';
