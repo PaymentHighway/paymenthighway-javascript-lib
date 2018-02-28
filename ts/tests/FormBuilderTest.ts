@@ -330,6 +330,30 @@ describe('Form builder', () => {
             });
     });
 
+    it('Test siirto form with mandatory parameters', (done) => {
+        const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description);
+        testNameValuePairs(formContainer.nameValuePairs, 14);
+        FormConnection.postForm(formContainer)
+            .then((response) => {
+                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+                assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/masterpass/, 'redirect location doesn\'t match ' + response.header);
+                done();
+            });
+    });
+
+    it('Test siirto form with optional parameters', (done) => {
+        const phoneNumber = '+358441234567';
+        const referenceNumber = '1313';
+        const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, phoneNumber, referenceNumber);
+        testNameValuePairs(formContainer.nameValuePairs, 16);
+        FormConnection.postForm(formContainer)
+            .then((response) => {
+                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+                assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/masterpass/, 'redirect location doesn\'t match ' + response.header);
+                done();
+            });
+    });
+
     it('Test add card webhook parameters', () => {
         const formContainer = formBuilder.generateAddCardParameters(
             successUrl, failureUrl, cancelUrl, language, undefined, undefined, undefined, undefined, undefined,
