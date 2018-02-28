@@ -10,4 +10,5 @@ export interface TransactionResultResponse {
     committed: boolean;
     committed_amount?: number;
     filing_code: string;
+    recurring: boolean;
 }
