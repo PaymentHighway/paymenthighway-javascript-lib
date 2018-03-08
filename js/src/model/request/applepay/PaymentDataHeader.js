@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class PaymentTokenHeader {
+class PaymentDataHeader {
     constructor(ephemeralPublicKey, publicKeyHash, transactionId, applicationData) {
         this.ephemeralPublicKey = ephemeralPublicKey;
         this.publicKeyHash = publicKeyHash;
@@ -8,5 +8,5 @@ class PaymentTokenHeader {
         this.applicationData = applicationData;
     }
 }
-exports.PaymentTokenHeader = PaymentTokenHeader;
-//# sourceMappingURL=PaymentTokenHeader.js.map
+exports.PaymentDataHeader = PaymentDataHeader;
+//# sourceMappingURL=PaymentDataHeader.js.map

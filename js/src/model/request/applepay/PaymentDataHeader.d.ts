@@ -1,4 +1,4 @@
-export declare class PaymentTokenHeader {
+export declare class PaymentDataHeader {
     ephemeralPublicKey: string;
     publicKeyHash: string;
     transactionId: string;

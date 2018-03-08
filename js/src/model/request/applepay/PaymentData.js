@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class PaymentToken {
+class PaymentData {
     constructor(data, header, signature, version) {
         this.data = data;
         this.header = header;
@@ -8,5 +8,5 @@ class PaymentToken {
         this.version = version;
     }
 }
-exports.PaymentToken = PaymentToken;
-//# sourceMappingURL=PaymentToken.js.map
+exports.PaymentData = PaymentData;
+//# sourceMappingURL=PaymentData.js.map

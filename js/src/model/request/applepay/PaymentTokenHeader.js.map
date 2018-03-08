@@ -1,1 +1,0 @@
-{"version":3,"file":"PaymentTokenHeader.js","sourceRoot":"","sources":["../../../../../ts/src/model/request/applepay/PaymentTokenHeader.ts"],"names":[],"mappings":";;AAAA;IACI,YAAmB,kBAA0B,EAC1B,aAAqB,EACrB,aAAqB,EACrB,eAAwB;QAHxB,uBAAkB,GAAlB,kBAAkB,CAAQ;QAC1B,kBAAa,GAAb,aAAa,CAAQ;QACrB,kBAAa,GAAb,aAAa,CAAQ;QACrB,oBAAe,GAAf,eAAe,CAAS;IAC3C,CAAC;CACJ;AAND,gDAMC"}
