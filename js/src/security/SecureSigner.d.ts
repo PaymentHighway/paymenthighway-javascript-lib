@@ -1,4 +1,3 @@
-/// <reference types="lodash" />
 import { Pair } from '../util/Pair';
 import { Method } from '../util/Method';
 import { Dictionary } from 'lodash';
