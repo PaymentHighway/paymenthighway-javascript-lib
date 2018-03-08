@@ -42,7 +42,7 @@ export class FormBuilder {
     private static SPH_SHOW_PAYMENT_METHOD_SELECTOR: string = 'sph-show-payment-method-selector';
     private static SPH_REQUEST_SHIPPING_ADDRESS: string = 'sph-request-shipping-address';
     private static SPH_PHONE_NUMBER: string = 'sph-phone-number';
-    private static SPH_REFERENCE: string = 'sph-reference';
+    private static SPH_REFERENCE_NUMBER: string = 'sph-reference-number';
     private static LANGUAGE: string = 'language';
     private static DESCRIPTION: string = 'description';
     private static SIGNATURE: string = 'signature';
@@ -442,7 +442,7 @@ export class FormBuilder {
      * @param orderId               A generated order ID, may for example be always unique or used multiple times for recurring transactions.
      * @param description           Description of the payment shown in the form.
      * @param phoneNumber           User phone number with country code. Max AN 15. Optional
-     * @param reference             Reference
+     * @param referenceNumber       Reference number
      * @param webhookSuccessUrl     The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
@@ -451,7 +451,7 @@ export class FormBuilder {
      */
     public generateSiirtoParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                     amount: number, orderId: string, description: string, phoneNumber?: string,
-                                    reference?: string, webhookSuccessUrl?: string, webhookFailureUrl?: string,
+                                    referenceNumber?: string, webhookSuccessUrl?: string, webhookFailureUrl?: string,
                                     webhookCancelUrl?: string, webhookDelay?: number): FormContainer {
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
@@ -465,8 +465,8 @@ export class FormBuilder {
         if (typeof phoneNumber !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_PHONE_NUMBER, phoneNumber));
         }
-        if (typeof reference !== 'undefined') {
-            nameValuePairs.push(new Pair(FormBuilder.SPH_REFERENCE, reference));
+        if (typeof referenceNumber !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
         }
 
         nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
