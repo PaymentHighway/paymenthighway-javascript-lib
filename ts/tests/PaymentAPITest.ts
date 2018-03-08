@@ -11,7 +11,7 @@ import {TransactionStatusResponse} from '../src/model/response/TransactionStatus
 import {Response} from '../src/model/response/Response';
 import {OrderSearchResponse} from '../src/model/response/OrderSearchResponse';
 import {MasterpassTransactionRequest} from '../src/model/request/MasterpassTransactionRequest';
-import {PaymentToken} from '../src/model/request/applepay/PaymentToken';
+import {PaymentData} from '../src/model/request/applepay/PaymentData';
 import {ApplePayTransaction, ApplePayTransactionRequest} from '../src/model/request/ApplePayTransactionRequest';
 
 let api: PaymentAPI;
@@ -240,7 +240,7 @@ describe('PaymentAPI', () => {
         let amount = 100;
         let currency = 'EUR';
 
-        let paymentToken: PaymentToken = JSON.parse('{ "data": "ABCD", "header": { "ephemeralPublicKey": "XYZ", "publicKeyHash": "13579", "transactionId": "24680" }, "signature": "ABCDXYZ0000", "version": "EC_v1" }');
+        let paymentToken: PaymentData = JSON.parse('{ "data": "ABCD", "header": { "ephemeralPublicKey": "XYZ", "publicKeyHash": "13579", "transactionId": "24680" }, "signature": "ABCDXYZ0000", "version": "EC_v1" }');
         assert.strictEqual(paymentToken.data, 'ABCD', 'Data was not equal to ABCD');
 
         let withStaticBuilder = ApplePayTransactionRequest.Builder(paymentToken, amount, currency).build();
@@ -259,7 +259,7 @@ describe('PaymentAPI', () => {
         let currency = 'EUR';
 
         // Syntax is valid, but content will fail
-        let paymentToken: PaymentToken = JSON.parse('{ "data": "ABCD", "header": { "ephemeralPublicKey": "XYZ=", "publicKeyHash": "13579ABC", "transactionId": "0002040608" }, "signature": "ABCD13579ABC", "version": "EC_v1" }');
+        let paymentToken: PaymentData = JSON.parse('{ "data": "ABCD", "header": { "ephemeralPublicKey": "XYZ=", "publicKeyHash": "13579ABC", "transactionId": "0002040608" }, "signature": "ABCD13579ABC", "version": "EC_v1" }');
 
         return api.initTransaction()
             .then((response) => {

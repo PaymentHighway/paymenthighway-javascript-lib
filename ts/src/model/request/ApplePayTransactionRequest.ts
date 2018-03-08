@@ -1,8 +1,8 @@
 import {Customer} from './Customer';
-import {PaymentToken} from './applepay/PaymentToken';
+import {PaymentData} from './applepay/PaymentData';
 
 export class ApplePayTransactionRequest {
-    constructor(public payment_data: PaymentToken,
+    constructor(public payment_data: PaymentData,
                 public amount: number,
                 public currency: string,
                 public commit?: boolean,
@@ -10,21 +10,21 @@ export class ApplePayTransactionRequest {
                 public customer?: Customer) {
     }
 
-    public static Builder(payment_data: PaymentToken, amount: number, currency: string) {
+    public static Builder(payment_data: PaymentData, amount: number, currency: string) {
         return new ApplePayTransaction.RequestBuilder(payment_data, amount, currency);
     }
 }
 
 export namespace ApplePayTransaction {
     export class RequestBuilder {
-        private payment_data: PaymentToken;
+        private payment_data: PaymentData;
         private amount: number;
         private currency: string;
         private commit?: boolean;
         private order?: string;
         private customer?: Customer;
 
-        constructor(payment_data: PaymentToken, amount: number, currency: string) {
+        constructor(payment_data: PaymentData, amount: number, currency: string) {
             this.payment_data = payment_data;
             this.amount = amount;
             this.currency = currency;
