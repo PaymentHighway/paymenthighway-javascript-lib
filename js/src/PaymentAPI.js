@@ -124,6 +124,17 @@ class PaymentAPI {
         return this.makeRequest('GET', transactionResultUrl);
     }
     /**
+     * Payment Highway Transaction Result Request
+     * Used to find out whether or not an uncommitted transaction succeeded, without actually committing (capturing) it.
+     *
+     * @param transactionId
+     * @returns {PromiseLike<BankTransactionResultResponse>}
+     */
+    bankTransactionResult(transactionId) {
+        const transactionResultUrl = '/transaction/' + transactionId + '/bank/result';
+        return this.makeRequest('GET', transactionResultUrl);
+    }
+    /**
      * Payment Highway Daily Report Request
      *
      * @param date

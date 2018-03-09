@@ -12,6 +12,7 @@ import { DebitResponse } from './model/response/DebitResponse';
 import { Response } from './model/response/Response';
 import { UserProfileResponse } from './model/response/UserProfileResponse';
 import { MasterpassTransactionRequest } from './model/request/MasterpassTransactionRequest';
+import { BankTransactionResultResponse } from './model/response/BankTransactionResultResponse';
 /**
  * Payment Highway Payment API Service.
  */
@@ -102,6 +103,14 @@ export declare class PaymentAPI {
      * @returns {PromiseLike<TransactionResultResponse>}
      */
     transactionResult(transactionId: string): PromiseLike<TransactionResultResponse>;
+    /**
+     * Payment Highway Transaction Result Request
+     * Used to find out whether or not an uncommitted transaction succeeded, without actually committing (capturing) it.
+     *
+     * @param transactionId
+     * @returns {PromiseLike<BankTransactionResultResponse>}
+     */
+    bankTransactionResult(transactionId: string): PromiseLike<BankTransactionResultResponse>;
     /**
      * Payment Highway Daily Report Request
      *
