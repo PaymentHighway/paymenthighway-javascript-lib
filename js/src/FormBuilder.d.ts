@@ -43,7 +43,7 @@ export declare class FormBuilder {
     private static SPH_SHOW_PAYMENT_METHOD_SELECTOR;
     private static SPH_REQUEST_SHIPPING_ADDRESS;
     private static SPH_PHONE_NUMBER;
-    private static SPH_REFERENCE;
+    private static SPH_REFERENCE_NUMBER;
     private static LANGUAGE;
     private static DESCRIPTION;
     private static SIGNATURE;
@@ -210,15 +210,15 @@ export declare class FormBuilder {
      * @param amount                The amount to pay in euro cents. Siirto supports only euros.
      * @param orderId               A generated order ID, may for example be always unique or used multiple times for recurring transactions.
      * @param description           Description of the payment shown in the form.
+     * @param referenceNumber       Reference number
      * @param phoneNumber           User phone number with country code. Max AN 15. Optional
-     * @param reference             Reference
      * @param webhookSuccessUrl     The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay          Delay for webhook in seconds. Between 0-900
      * @return FormContainer
      */
-    generateSiirtoParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, orderId: string, description: string, phoneNumber?: string, reference?: string, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number): FormContainer;
+    generateSiirtoParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, orderId: string, description: string, referenceNumber: string, phoneNumber?: string, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number): FormContainer;
     /**
      *
      * @param webhookSuccessUrl

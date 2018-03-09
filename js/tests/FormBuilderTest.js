@@ -284,24 +284,25 @@ describe('Form builder', () => {
         });
     });
     it('Test siirto form with mandatory parameters', (done) => {
-        const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description);
-        testNameValuePairs(formContainer.nameValuePairs, 14);
+        const referenceNumber = '1313';
+        const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber);
+        testNameValuePairs(formContainer.nameValuePairs, 15);
         FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            chai_1.assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/masterpass/, 'redirect location doesn\'t match ' + response.header);
+            chai_1.assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/siirto/, 'redirect location doesn\'t match ' + response.header);
             done();
         });
     });
     it('Test siirto form with optional parameters', (done) => {
         const phoneNumber = '+358441234567';
         const referenceNumber = '1313';
-        const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, phoneNumber, referenceNumber);
+        const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber, phoneNumber);
         testNameValuePairs(formContainer.nameValuePairs, 16);
         FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            chai_1.assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/masterpass/, 'redirect location doesn\'t match ' + response.header);
+            chai_1.assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/siirto/, 'redirect location doesn\'t match ' + response.header);
             done();
         });
     });
