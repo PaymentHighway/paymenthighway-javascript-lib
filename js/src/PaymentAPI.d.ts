@@ -12,6 +12,8 @@ import { DebitResponse } from './model/response/DebitResponse';
 import { Response } from './model/response/Response';
 import { UserProfileResponse } from './model/response/UserProfileResponse';
 import { MasterpassTransactionRequest } from './model/request/MasterpassTransactionRequest';
+import { RevertSiirtoTransactionRequest } from './model/request/RevertSiirtoTransactionRequest';
+import { SiirtoTransactionResultResponse } from './model/response/SiirtoTransactionResultResponse';
 /**
  * Payment Highway Payment API Service.
  */
@@ -55,6 +57,14 @@ export declare class PaymentAPI {
      * @returns {PromiseLike<Response>}
      */
     revertTransaction(transactionId: string, request: RevertTransactionRequest): PromiseLike<Response>;
+    /**
+     * Payment Highway Revert Siirto Transaction with amount
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<Response>}
+     */
+    revertSiirtoTransaction(transactionId: string, request: RevertSiirtoTransactionRequest): PromiseLike<Response>;
     /**
      * Payment Highway Transaction Commit Request
      * Used to commit (capture) the transaction.
@@ -102,6 +112,14 @@ export declare class PaymentAPI {
      * @returns {PromiseLike<TransactionResultResponse>}
      */
     transactionResult(transactionId: string): PromiseLike<TransactionResultResponse>;
+    /**
+     * Payment Highway Siirto Transaction Result Request
+     * Used to find out whether or not an Siirto transaction succeeded.
+     *
+     * @param transactionId
+     * @returns {PromiseLike<SiirtoTransactionResultResponse>}
+     */
+    siirtoTransactionResult(transactionId: string): PromiseLike<SiirtoTransactionResultResponse>;
     /**
      * Payment Highway Daily Report Request
      *
