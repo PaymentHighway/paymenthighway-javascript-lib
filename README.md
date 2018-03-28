@@ -1,6 +1,8 @@
 # Payment Highway JavaScript API Library
 
 [![][Build Status img]][Build Status]
+![node](https://img.shields.io/node/v/paymenthighway.svg)
+
 
 This is an example implementation of the communication with the Payment Highway API using JavaScript/TypeScript. 
 The Form API and Payment API implement the basic functionality of the Payment Highway.
@@ -321,3 +323,4 @@ Fork these docs and send a pull request with improvements.
 
 [Build Status]:https://travis-ci.org/PaymentHighway/paymenthighway-javascript-lib.svg
 [Build Status img]:https://travis-ci.org/PaymentHighway/paymenthighway-javascript-lib.svg?branch=master
+
