@@ -11,9 +11,6 @@ This code is provided as-is, use it as inspiration, reference or drop it directl
 
 For full documentation on the PaymentHighway API visit our developer website: https://paymenthighway.fi/dev/
 
-## Requirements
-* Node.js >= 4.5.0
-
 ## Installation
 ```
 npm install paymenthighway
