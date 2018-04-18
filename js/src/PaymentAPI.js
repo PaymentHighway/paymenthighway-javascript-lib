@@ -168,7 +168,7 @@ class PaymentAPI {
         return this.makeRequest('POST', '/app/mobilepay', request);
     }
     mobilePaySessionStatus(sessionToken) {
-        return this.makeRequest('GET', '/app/mobilepay');
+        return this.makeRequest('GET', '/app/mobilepay/' + sessionToken);
     }
     /**
      * Create name value pairs

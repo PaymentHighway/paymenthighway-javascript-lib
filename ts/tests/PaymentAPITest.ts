@@ -300,10 +300,10 @@ describe('PaymentAPI', () => {
             .build()
 
         return api.initMobilePaySession(request).then((initResponse) => {
-            api.mobilePaySessionStatus(initResponse.session_token).then((response) => {
+            return api.mobilePaySessionStatus(initResponse.session_token).then((response) => {
                 assert.equal(response.status, 'in_progress');
                 assert.equal(response.valid_until, initResponse.valid_until, 'Both init and status check should have same valid until value.');
-                assert.isNull(response.transaction_id);
+                assert.isUndefined(response.transaction_id); // transaction id is available only when session is finished
             });
         })
     });

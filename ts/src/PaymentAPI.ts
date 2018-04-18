@@ -209,7 +209,7 @@ export class PaymentAPI {
     }
 
     public mobilePaySessionStatus(sessionToken: string): PromiseLike<MobilePayStatusResponse> {
-        return this.makeRequest('GET', '/app/mobilepay');
+        return this.makeRequest('GET', '/app/mobilepay/' + sessionToken);
     }
 
     /**

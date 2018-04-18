@@ -260,10 +260,10 @@ describe('PaymentAPI', () => {
             .setWebhookFailureUrl('https://myserver.com/failure')
             .build();
         return api.initMobilePaySession(request).then((initResponse) => {
-            api.mobilePaySessionStatus(initResponse.session_token).then((response) => {
+            return api.mobilePaySessionStatus(initResponse.session_token).then((response) => {
                 chai_1.assert.equal(response.status, 'in_progress');
                 chai_1.assert.equal(response.valid_until, initResponse.valid_until, 'Both init and status check should have same valid until value.');
-                chai_1.assert.isNull(response.transaction_id);
+                chai_1.assert.isUndefined(response.transaction_id); // transaction id is available only when session is finished
             });
         });
     });
