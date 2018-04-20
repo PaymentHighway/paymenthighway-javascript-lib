@@ -12,6 +12,7 @@ import { DebitResponse } from './model/response/DebitResponse';
 import { Response } from './model/response/Response';
 import { UserProfileResponse } from './model/response/UserProfileResponse';
 import { MasterpassTransactionRequest } from './model/request/MasterpassTransactionRequest';
+import { ApplePayTransactionRequest } from './model/request/ApplePayTransactionRequest';
 import { RevertSiirtoTransactionRequest } from './model/request/RevertSiirtoTransactionRequest';
 import { SiirtoTransactionResultResponse } from './model/response/SiirtoTransactionResultResponse';
 /**
@@ -49,6 +50,14 @@ export declare class PaymentAPI {
      * @returns {PromiseLike<DebitResponse>}
      */
     debitMasterpassTransaction(transactionId: string, request: MasterpassTransactionRequest): PromiseLike<DebitResponse>;
+    /**
+     * Payment Highway Debit Apple Pay Transaction
+     *
+     * @param {string} transactionId
+     * @param {ApplePayTransactionRequest} request
+     * @returns {PromiseLike<DebitResponse>}
+     */
+    debitApplePayTransaction(transactionId: string, request: ApplePayTransactionRequest): PromiseLike<DebitResponse>;
     /**
      * Payment Highway Revert Transaction with amount
      *
