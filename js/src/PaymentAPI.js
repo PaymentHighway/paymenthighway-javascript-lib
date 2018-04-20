@@ -48,6 +48,17 @@ class PaymentAPI {
         return this.makeRequest('POST', debitUri, request);
     }
     /**
+     * Payment Highway Debit Apple Pay Transaction
+     *
+     * @param {string} transactionId
+     * @param {ApplePayTransactionRequest} request
+     * @returns {PromiseLike<DebitResponse>}
+     */
+    debitApplePayTransaction(transactionId, request) {
+        const debitUri = '/transaction/' + transactionId + '/debit_applepay';
+        return this.makeRequest('POST', debitUri, request);
+    }
+    /**
      * Payment Highway Revert Transaction with amount
      *
      * @param transactionId

@@ -1,14 +1,15 @@
 # Payment Highway JavaScript API Library
 
+[![][Build Status img]][Build Status]
+![node](https://img.shields.io/node/v/paymenthighway.svg)
+
+
 This is an example implementation of the communication with the Payment Highway API using JavaScript/TypeScript. 
 The Form API and Payment API implement the basic functionality of the Payment Highway.
 
 This code is provided as-is, use it as inspiration, reference or drop it directly into your own project and use it.
 
 For full documentation on the PaymentHighway API visit our developer website: https://paymenthighway.fi/dev/
-
-## Requirements
-* Node.js >= 4.5.0
 
 ## Installation
 ```
@@ -315,3 +316,8 @@ PaymentHighwayAPI.initTransaction()
 
 Please tell us how we can make the API better. If you have a specific feature request or if you found a bug, please use GitHub issues. 
 Fork these docs and send a pull request with improvements.
+
+
+[Build Status]:https://travis-ci.org/PaymentHighway/paymenthighway-javascript-lib.svg
+[Build Status img]:https://travis-ci.org/PaymentHighway/paymenthighway-javascript-lib.svg?branch=master
+

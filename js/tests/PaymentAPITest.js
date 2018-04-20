@@ -9,6 +9,7 @@ const TransactionRequest_1 = require("../src/model/request/TransactionRequest");
 const CommitTransactionRequest_1 = require("../src/model/request/CommitTransactionRequest");
 const RevertTransactionRequest_1 = require("../src/model/request/RevertTransactionRequest");
 const MasterpassTransactionRequest_1 = require("../src/model/request/MasterpassTransactionRequest");
+const ApplePayTransactionRequest_1 = require("../src/model/request/ApplePayTransactionRequest");
 let api;
 let validCard;
 let testCard;
@@ -56,7 +57,8 @@ describe('PaymentAPI', () => {
         });
     });
     it('Test debit transaction', (done) => {
-        createDebitTransaction().then(() => {
+        createDebitTransaction().then((body) => {
+            chai_1.assert.isNotNull(body.id, 'Transaction id not received');
             done();
         });
     });
@@ -204,6 +206,33 @@ describe('PaymentAPI', () => {
             .then((debitResponse) => {
             checkResult(debitResponse);
             done();
+        });
+    });
+    it('Test Apple Pay request builders', () => {
+        let amount = 100;
+        let currency = 'EUR';
+        let paymentToken = JSON.parse('{ "data": "ABCD", "header": { "ephemeralPublicKey": "XYZ", "publicKeyHash": "13579", "transactionId": "24680" }, "signature": "ABCDXYZ0000", "version": "EC_v1" }');
+        chai_1.assert.strictEqual(paymentToken.data, 'ABCD', 'Data was not equal to ABCD');
+        let withStaticBuilder = ApplePayTransactionRequest_1.ApplePayTransactionRequest.Builder(paymentToken, amount, currency).build();
+        let withRequestBuilder = new ApplePayTransactionRequest_1.ApplePayTransaction.RequestBuilder(paymentToken, amount, currency).build();
+        chai_1.assert.deepEqual(withStaticBuilder, withRequestBuilder, 'results differ from builder');
+        let requestWithCommit = ApplePayTransactionRequest_1.ApplePayTransactionRequest.Builder(paymentToken, amount, currency).setCommit(true).build();
+        chai_1.assert.notDeepEqual(withStaticBuilder, requestWithCommit, 'requests should differ if commit is added');
+        chai_1.assert(withStaticBuilder.amount === 100);
+    });
+    it('Test Apple Pay validators', () => {
+        let amount = 100;
+        let currency = 'EUR';
+        // Syntax is valid, but content will fail
+        let paymentToken = JSON.parse('{ "data": "ABCD", "header": { "ephemeralPublicKey": "XYZ=", "publicKeyHash": "13579ABC", "transactionId": "0002040608" }, "signature": "ABCD13579ABC", "version": "EC_v1" }');
+        return api.initTransaction()
+            .then((response) => {
+            const request = ApplePayTransactionRequest_1.ApplePayTransactionRequest.Builder(paymentToken, amount, currency).build();
+            return api.debitApplePayTransaction(response.id, request);
+        })
+            .then((debitResponse) => {
+            chai_1.assert(debitResponse.result.code === 900, 'Authorization should fail (code 900), got ' + debitResponse.result.code);
+            chai_1.assert.equal(debitResponse.result.message, 'ERROR', 'Authorization should fail with ERROR, validation should succeed');
         });
     });
 });
