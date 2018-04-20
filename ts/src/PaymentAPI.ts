@@ -18,6 +18,7 @@ import {DebitResponse} from './model/response/DebitResponse';
 import {Response} from './model/response/Response';
 import {UserProfileResponse} from './model/response/UserProfileResponse';
 import {MasterpassTransactionRequest} from './model/request/MasterpassTransactionRequest';
+import {ApplePayTransactionRequest} from './model/request/ApplePayTransactionRequest';
 
 /**
  * Payment Highway Payment API Service.
@@ -70,7 +71,20 @@ export class PaymentAPI {
      */
     public debitMasterpassTransaction(transactionId: string, request: MasterpassTransactionRequest): PromiseLike<DebitResponse> {
         const debitUri = '/transaction/' + transactionId + '/debit_masterpass';
-        return this.makeRequest('POST', debitUri, request);    }
+        return this.makeRequest('POST', debitUri, request);
+    }
+
+    /**
+     * Payment Highway Debit Apple Pay Transaction
+     *
+     * @param {string} transactionId
+     * @param {ApplePayTransactionRequest} request
+     * @returns {PromiseLike<DebitResponse>}
+     */
+    public debitApplePayTransaction(transactionId: string, request: ApplePayTransactionRequest): PromiseLike<DebitResponse> {
+        const debitUri = '/transaction/' + transactionId + '/debit_applepay';
+        return this.makeRequest('POST', debitUri, request);
+    }
 
     /**
      * Payment Highway Revert Transaction with amount
@@ -249,5 +263,4 @@ export class PaymentAPI {
         return requestPromise(options);
 
     }
-
 }
