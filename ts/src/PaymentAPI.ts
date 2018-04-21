@@ -19,6 +19,9 @@ import {Response} from './model/response/Response';
 import {UserProfileResponse} from './model/response/UserProfileResponse';
 import {MasterpassTransactionRequest} from './model/request/MasterpassTransactionRequest';
 import {ApplePayTransactionRequest} from './model/request/ApplePayTransactionRequest';
+import {MobilePayInitRequest} from './model/request/MobilePayInitRequest';
+import {MobilePayInitResponse} from './model/response/MobilePayInitResponse';
+import {MobilePayStatusResponse} from './model/response/MobilePayStatusResponse';
 
 /**
  * Payment Highway Payment API Service.
@@ -193,6 +196,20 @@ export class PaymentAPI {
         }
         const reportUri = '/report/reconciliation/' + date + '?use-date-processed=' + useDateProcessed;
         return this.makeRequest('GET', reportUri);
+    }
+
+    /**
+     * Init MobilePay session for app payment flow.
+     *
+     * @param {MobilePayInitRequest} request
+     * @returns {PromiseLike<MobilePayInitResponse>}
+     */
+    public initMobilePaySession(request: MobilePayInitRequest): PromiseLike<MobilePayInitResponse> {
+        return this.makeRequest('POST', '/app/mobilepay', request);
+    }
+
+    public mobilePaySessionStatus(sessionToken: string): PromiseLike<MobilePayStatusResponse> {
+        return this.makeRequest('GET', '/app/mobilepay/' + sessionToken);
     }
 
     /**
