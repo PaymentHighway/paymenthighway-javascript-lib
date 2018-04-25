@@ -159,6 +159,18 @@ class PaymentAPI {
         return this.makeRequest('GET', reportUri);
     }
     /**
+     * Init MobilePay session for app payment flow.
+     *
+     * @param {MobilePayInitRequest} request
+     * @returns {PromiseLike<MobilePayInitResponse>}
+     */
+    initMobilePaySession(request) {
+        return this.makeRequest('POST', '/app/mobilepay', request);
+    }
+    mobilePaySessionStatus(sessionToken) {
+        return this.makeRequest('GET', '/app/mobilepay/' + sessionToken);
+    }
+    /**
      * Create name value pairs
      *
      * @return
