@@ -325,13 +325,18 @@ describe('Form builder', () => {
         testNameValuePairs(formContainer.nameValuePairs, 17);
         testWebhookNameValuePairs(formContainer.nameValuePairs, true);
     });
-    it('Test pivo mandatory parameters', () => {
+    xit('Test pivo mandatory parameters', (done) => {
         const formContainer = formBuilder.generatePivoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description);
         testNameValuePairs(formContainer.nameValuePairs, 14);
         const actionUrl = '/form/view/pivo';
-        chai_1.assert(formContainer.actionUrl === actionUrl, 'action url should be ' + actionUrl + 'got ' + formContainer.actionUrl);
+        FormConnection_1.FormConnection.postForm(formContainer)
+            .then((response) => {
+            chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+            chai_1.assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'redirect location doesn\'t match ' + response.header);
+            done();
+        });
     });
-    it('Test pivo optional parameters', () => {
+    xit('Test pivo optional parameters', (done) => {
         const phoneNumber = '+358444160589';
         const reference = '1313';
         const appUrl = 'myapp://url';
@@ -340,6 +345,12 @@ describe('Form builder', () => {
         assertNameValuePair(formContainer.nameValuePairs, 'sph-phone-number', phoneNumber);
         assertNameValuePair(formContainer.nameValuePairs, 'sph-reference', reference);
         assertNameValuePair(formContainer.nameValuePairs, 'sph-app-url', appUrl);
+        FormConnection_1.FormConnection.postForm(formContainer)
+            .then((response) => {
+            chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+            chai_1.assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'redirect location doesn\'t match ' + response.header);
+            done();
+        });
     });
     it('Test pivo app url', () => {
         const formContainer = formBuilder.generatePivoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, '+358444160589', undefined, 'myapp://url');
