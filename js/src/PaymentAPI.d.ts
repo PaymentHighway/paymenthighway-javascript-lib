@@ -16,6 +16,8 @@ import { ApplePayTransactionRequest } from './model/request/ApplePayTransactionR
 import { MobilePayInitRequest } from './model/request/MobilePayInitRequest';
 import { MobilePayInitResponse } from './model/response/MobilePayInitResponse';
 import { MobilePayStatusResponse } from './model/response/MobilePayStatusResponse';
+import { RevertPivoTransactionRequest } from './model/request/RevertPivoTransactionRequest';
+import { PivoTransactionResultResponse } from './model/response/PivoTransactionResultResponse';
 /**
  * Payment Highway Payment API Service.
  */
@@ -68,6 +70,14 @@ export declare class PaymentAPI {
      */
     revertTransaction(transactionId: string, request: RevertTransactionRequest): PromiseLike<Response>;
     /**
+     * Payment Highway Revert Pivo Transaction with amount
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<Response>}
+     */
+    revertPivoTransaction(transactionId: string, request: RevertPivoTransactionRequest): PromiseLike<Response>;
+    /**
      * Payment Highway Transaction Commit Request
      * Used to commit (capture) the transaction.
      * In order to find out the result of the transaction without committing it, use Transaction Result request instead.
@@ -114,6 +124,14 @@ export declare class PaymentAPI {
      * @returns {PromiseLike<TransactionResultResponse>}
      */
     transactionResult(transactionId: string): PromiseLike<TransactionResultResponse>;
+    /**
+     * Payment Highway Pivo Transaction Result Request
+     * Used to find out whether or not an Pivo transaction succeeded.
+     *
+     * @param transactionId
+     * @returns {PromiseLike<PivoTransactionResultResponse>}
+     */
+    PivoTransactionResult(transactionId: string): PromiseLike<PivoTransactionResultResponse>;
     /**
      * Payment Highway Daily Report Request
      *
