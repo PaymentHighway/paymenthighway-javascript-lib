@@ -318,6 +318,6 @@ Please tell us how we can make the API better. If you have a specific feature re
 Fork these docs and send a pull request with improvements.
 
 
-[Build Status]:https://travis-ci.org/PaymentHighway/paymenthighway-javascript-lib.svg
+[Build Status]:https://travis-ci.org/PaymentHighway/paymenthighway-javascript-lib
 [Build Status img]:https://travis-ci.org/PaymentHighway/paymenthighway-javascript-lib.svg?branch=master
 
