@@ -338,12 +338,12 @@ describe('Form builder', () => {
     });
     xit('Test pivo optional parameters', (done) => {
         const phoneNumber = '+358444160589';
-        const reference = '1313';
+        const referenceNumber = '1313';
         const appUrl = 'myapp://url';
-        const formContainer = formBuilder.generatePivoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, phoneNumber, reference, appUrl);
+        const formContainer = formBuilder.generatePivoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber, phoneNumber, appUrl);
         testNameValuePairs(formContainer.nameValuePairs, 17);
         assertNameValuePair(formContainer.nameValuePairs, 'sph-phone-number', phoneNumber);
-        assertNameValuePair(formContainer.nameValuePairs, 'sph-reference', reference);
+        assertNameValuePair(formContainer.nameValuePairs, 'sph-reference-number', referenceNumber);
         assertNameValuePair(formContainer.nameValuePairs, 'sph-app-url', appUrl);
         FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {

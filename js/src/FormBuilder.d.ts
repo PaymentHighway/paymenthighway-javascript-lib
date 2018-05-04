@@ -44,7 +44,7 @@ export declare class FormBuilder {
     private static SPH_REQUEST_SHIPPING_ADDRESS;
     private static SPH_PHONE_NUMBER;
     private static SPH_APP_URL;
-    private static SPH_REFERENCE;
+    private static SPH_REFERENCE_NUMBER;
     private static LANGUAGE;
     private static DESCRIPTION;
     private static SIGNATURE;
@@ -212,7 +212,7 @@ export declare class FormBuilder {
      * @param orderId                A generated order ID, may for example be always unique or used multiple times for recurring transactions.
      * @param description            Description of the payment shown in the form.
      * @param phoneNumber            User phone number with country code. Max AN 15. Optional.
-     * @param reference              Reference for payment. Optional.
+     * @param referenceNumber        Reference number for payment. Optional.
      * @param appUrl                 When used, Pivo tries to open application with this url. Optional.
      * @param skipFormNotifications  Skip notifications displayed on the Payment Highway form. May be null.
      * @param exitIframeOnResult     Exit from iframe after a result. May be null.
@@ -222,7 +222,7 @@ export declare class FormBuilder {
      * @param webhookDelay           Delay for webhook in seconds. Between 0-900
      * @return FormContainer
      */
-    generatePivoParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, orderId: string, description: string, phoneNumber?: string, reference?: string, appUrl?: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number): FormContainer;
+    generatePivoParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, orderId: string, description: string, referenceNumber?: string, phoneNumber?: string, appUrl?: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number): FormContainer;
     /**
      *
      * @param webhookSuccessUrl
