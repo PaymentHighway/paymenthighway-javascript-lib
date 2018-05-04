@@ -9,6 +9,7 @@ __export(require("./src/security/SecureSigner"));
 __export(require("./src/model/request/Card"));
 __export(require("./src/model/request/CommitTransactionRequest"));
 __export(require("./src/model/request/RevertTransactionRequest"));
+__export(require("./src/model/request/RevertPivoTransactionRequest"));
 __export(require("./src/model/request/TransactionRequest"));
 __export(require("./src/model/Token"));
 //# sourceMappingURL=index.js.map
