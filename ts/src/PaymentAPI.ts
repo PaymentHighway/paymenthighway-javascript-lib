@@ -28,7 +28,7 @@ import {MobilePayStatusResponse} from './model/response/MobilePayStatusResponse'
  */
 export class PaymentAPI {
 
-    private static API_VERSION: string = '20171127';
+    private static API_VERSION: string = '20180426';
 
     // Payment API headers
     public static USER_AGENT: string = 'PaymentHighway Javascript Library';
