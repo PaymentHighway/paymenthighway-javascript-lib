@@ -1,14 +1,14 @@
 import {use, assert} from 'chai';
-import {FormBuilder} from '../src/FormBuilder';
+import {FormBuilder} from '..';
 import {Method} from '../src/util/Method';
 import {Pair} from '../src/util/Pair';
 import {FormConnection} from './helpers/FormConnection';
-import {PaymentAPI} from '../src/PaymentAPI';
+import {PaymentAPI} from '..';
 import * as URI from 'urijs';
-import {SecureSigner} from '../src/security/SecureSigner';
+import {SecureSigner} from '..';
 import {Dictionary} from 'lodash';
-import {TransactionRequest} from '../src/model/request/TransactionRequest';
-import {Token} from '../src/model/Token';
+import {TransactionRequest} from '..';
+import {Token} from '..';
 import {TransactionResponse} from '../src/model/response/TransactionResponse';
 
 use(require('chai-string'));
