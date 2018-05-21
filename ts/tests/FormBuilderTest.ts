@@ -85,7 +85,7 @@ describe('Form builder', () => {
             .then((response) => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
 
-                puppeteer.launch().then((browser) => {
+                puppeteer.launch({args: ['--no-sandbox']}).then((browser) => {
                     browser.newPage().then((page) => {
                         page.setRequestInterception(true).then(() => {
                             page.on('request', (request) => {
