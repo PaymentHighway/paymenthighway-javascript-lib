@@ -1,13 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
-const FormBuilder_1 = require("../src/FormBuilder");
+const __1 = require("..");
 const FormConnection_1 = require("./helpers/FormConnection");
-const PaymentAPI_1 = require("../src/PaymentAPI");
+const __2 = require("..");
 const URI = require("urijs");
-const SecureSigner_1 = require("../src/security/SecureSigner");
-const TransactionRequest_1 = require("../src/model/request/TransactionRequest");
-const Token_1 = require("../src/model/Token");
+const __3 = require("..");
+const __4 = require("..");
+const __5 = require("..");
+const puppeteer = require("puppeteer");
 chai_1.use(require('chai-string'));
 const method = 'POST';
 const signatureKeyId = 'testKey';
@@ -32,11 +33,9 @@ const webhookDelay = 0;
 let formBuilder;
 let ss;
 let cardToken;
-let Browser;
 beforeEach(() => {
-    Browser = require('zombie');
-    ss = new SecureSigner_1.SecureSigner(signatureKeyId, signatureSecret);
-    formBuilder = new FormBuilder_1.FormBuilder(method, signatureKeyId, signatureSecret, account, merchant, baseUrl);
+    ss = new __3.SecureSigner(signatureKeyId, signatureSecret);
+    formBuilder = new __1.FormBuilder(method, signatureKeyId, signatureSecret, account, merchant, baseUrl);
 });
 function testRedirectResponse(response, locationEndsWith) {
     chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
@@ -59,7 +58,7 @@ function testWebhookNameValuePairs(nameValuePairs, skipDelayTest) {
 }
 describe('Form builder', () => {
     it('Should have instance of FormBuilder', () => {
-        chai_1.assert.instanceOf(formBuilder, FormBuilder_1.FormBuilder, 'Was not instance of FormBuilder');
+        chai_1.assert.instanceOf(formBuilder, __1.FormBuilder, 'Was not instance of FormBuilder');
     });
     it('Should have right parameters', () => {
         const formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language);
@@ -69,30 +68,41 @@ describe('Form builder', () => {
     });
     it('Test tokenize', (done) => {
         const formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language);
-        const paymentAPI = new PaymentAPI_1.PaymentAPI(baseUrl, signatureKeyId, signatureSecret, sphAccount, sphMerchant);
+        const paymentAPI = new __2.PaymentAPI(baseUrl, signatureKeyId, signatureSecret, sphAccount, sphMerchant);
         FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            const browser = new Browser();
-            browser.visit(baseUrl + response.headers.location, () => {
-                browser.fill('input[name=card_number_formatted]', '4153 0139 9970 0024')
-                    .fill('input[name=expiration_month]', '11')
-                    .fill('input[name=expiration_year]', '2023')
-                    .fill('input[name=expiry]', '11 / 23')
-                    .fill('input[name=cvv]', '024')
-                    .pressButton(' OK', () => {
-                    const uri = URI.parse(browser.resources[0].response.url);
-                    const parameters = URI.parseQuery(uri.query);
-                    chai_1.assert.isTrue(ss.validateFormRedirect(parameters), 'Validate redirect should return true');
-                    paymentAPI.tokenization(parameters['sph-tokenization-id'])
-                        .then((tokenResponse) => {
-                        chai_1.assert(tokenResponse.card.expire_year === '2023', 'Expire year should be 2023');
-                        chai_1.assert(tokenResponse.card.expire_month === '11', 'Expire month should be 11');
-                        chai_1.assert(tokenResponse.card.type === 'Visa', 'Card type should be Visa');
-                        chai_1.assert(tokenResponse.card.cvc_required === 'no', 'Should not require CVC');
-                        cardToken = tokenResponse.card_token;
-                        done();
+            puppeteer.launch().then((browser) => {
+                browser.newPage().then((page) => {
+                    page.setRequestInterception(true).then(() => {
+                        page.on('request', (request) => {
+                            if (!request.url().startsWith('https://example.com')) {
+                                request.continue();
+                            }
+                            else {
+                                const uri = URI.parse(request.url());
+                                const parameters = URI.parseQuery(uri.query);
+                                chai_1.assert.isTrue(ss.validateFormRedirect(parameters), 'Validate redirect should return true');
+                                paymentAPI.tokenization(parameters['sph-tokenization-id'])
+                                    .then((tokenResponse) => {
+                                    chai_1.assert(tokenResponse.card.expire_year === '2023', 'Expire year should be 2023');
+                                    chai_1.assert(tokenResponse.card.expire_month === '11', 'Expire month should be 11');
+                                    chai_1.assert(tokenResponse.card.type === 'Visa', 'Card type should be Visa');
+                                    chai_1.assert(tokenResponse.card.cvc_required === 'no', 'Should not require CVC');
+                                    cardToken = tokenResponse.card_token;
+                                    request.abort();
+                                })
+                                    .then(() => browser.close())
+                                    .then(() => done());
+                            }
+                        });
                     });
+                    page.goto(baseUrl + response.headers.location)
+                        .then(() => page.type('input[name=card_number_formatted]', '4153 0139 9970 0024'))
+                        .then(() => page.type('input[name=expiry]', '11 / 23'))
+                        .then(() => page.type('input[name=cvv]', '024'))
+                        .then(() => page.screenshot({ path: 'example.png' }))
+                        .then(() => page.click('button[type=submit]'));
                 });
             });
         });
@@ -250,12 +260,12 @@ describe('Form builder', () => {
         });
     });
     it('Test token debit', (done) => {
-        const paymentAPI = new PaymentAPI_1.PaymentAPI(baseUrl, signatureKeyId, signatureSecret, sphAccount, sphMerchant);
+        const paymentAPI = new __2.PaymentAPI(baseUrl, signatureKeyId, signatureSecret, sphAccount, sphMerchant);
         let initResponse;
-        const testCardToken = new Token_1.Token(cardToken);
+        const testCardToken = new __5.Token(cardToken);
         paymentAPI.initTransaction().then((response) => {
             initResponse = response;
-            const transactionRequest = new TransactionRequest_1.TransactionRequest(testCardToken, 9999, 'USD', orderId);
+            const transactionRequest = new __4.TransactionRequest(testCardToken, 9999, 'USD', orderId);
             return paymentAPI.debitTransaction(initResponse.id, transactionRequest);
         }).then((debitResponse) => {
             chai_1.assert(debitResponse.result.code === 100, 'Request should succeed with code 100, complete response was: ' + JSON.stringify(debitResponse));
