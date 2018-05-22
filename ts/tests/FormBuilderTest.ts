@@ -1,15 +1,16 @@
 import {use, assert} from 'chai';
-import {FormBuilder} from '../src/FormBuilder';
+import {FormBuilder} from '..';
 import {Method} from '../src/util/Method';
 import {Pair} from '../src/util/Pair';
 import {FormConnection} from './helpers/FormConnection';
-import {PaymentAPI} from '../src/PaymentAPI';
+import {PaymentAPI} from '..';
 import * as URI from 'urijs';
-import {SecureSigner} from '../src/security/SecureSigner';
+import {SecureSigner} from '..';
 import {Dictionary} from 'lodash';
-import {TransactionRequest} from '../src/model/request/TransactionRequest';
-import {Token} from '../src/model/Token';
+import {TransactionRequest} from '..';
+import {Token} from '..';
 import {TransactionResponse} from '../src/model/response/TransactionResponse';
+import * as puppeteer from 'puppeteer';
 
 use(require('chai-string'));
 
@@ -37,10 +38,8 @@ const webhookDelay = 0;
 let formBuilder: FormBuilder;
 let ss: any;
 let cardToken: string;
-let Browser: any;
 
 beforeEach(() => {
-    Browser = require('zombie');
     ss = new SecureSigner(signatureKeyId, signatureSecret);
     formBuilder = new FormBuilder(method, signatureKeyId, signatureSecret, account, merchant, baseUrl);
 });
@@ -85,27 +84,38 @@ describe('Form builder', () => {
         FormConnection.postForm(formContainer)
             .then((response) => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                const browser = new Browser();
-                browser.visit(baseUrl + response.headers.location, () => {
-                    browser.fill('input[name=card_number_formatted]', '4153 0139 9970 0024')
-                        .fill('input[name=expiration_month]', '11')
-                        .fill('input[name=expiration_year]', '2023')
-                        .fill('input[name=expiry]', '11 / 23')
-                        .fill('input[name=cvv]', '024')
-                        .pressButton(' OK', () => {
-                            const uri = URI.parse(browser.resources[0].response.url);
-                            const parameters = <Dictionary<string>> URI.parseQuery(uri.query);
-                            assert.isTrue(ss.validateFormRedirect(parameters), 'Validate redirect should return true');
-                            paymentAPI.tokenization(parameters['sph-tokenization-id'])
-                                .then((tokenResponse) => {
-                                    assert(tokenResponse.card.expire_year === '2023', 'Expire year should be 2023');
-                                    assert(tokenResponse.card.expire_month === '11', 'Expire month should be 11');
-                                    assert(tokenResponse.card.type === 'Visa', 'Card type should be Visa');
-                                    assert(tokenResponse.card.cvc_required === 'no', 'Should not require CVC');
-                                    cardToken = tokenResponse.card_token;
-                                    done();
-                                });
+
+                puppeteer.launch({args: ['--no-sandbox']}).then((browser) => {
+                    browser.newPage().then((page) => {
+                        page.setRequestInterception(true).then(() => {
+                            page.on('request', (request) => {
+                                if (!request.url().startsWith('https://example.com')) {
+                                    request.continue();
+                                } else {
+                                    const uri = URI.parse(request.url());
+                                    const parameters = <Dictionary<string>> URI.parseQuery(uri.query);
+                                    assert.isTrue(ss.validateFormRedirect(parameters), 'Validate redirect should return true');
+                                    paymentAPI.tokenization(parameters['sph-tokenization-id'])
+                                        .then((tokenResponse) => {
+                                            assert(tokenResponse.card.expire_year === '2023', 'Expire year should be 2023');
+                                            assert(tokenResponse.card.expire_month === '11', 'Expire month should be 11');
+                                            assert(tokenResponse.card.type === 'Visa', 'Card type should be Visa');
+                                            assert(tokenResponse.card.cvc_required === 'no', 'Should not require CVC');
+                                            cardToken = tokenResponse.card_token;
+                                            request.abort();
+                                        })
+                                        .then(() => browser.close())
+                                        .then(() => done());
+                                }
+                            });
                         });
+                        page.goto(baseUrl + response.headers.location)
+                            .then(() => page.type('input[name=card_number_formatted]', '4153 0139 9970 0024'))
+                            .then(() => page.type('input[name=expiry]', '11 / 23'))
+                            .then(() => page.type('input[name=cvv]', '024'))
+                            .then(() => page.screenshot({path: 'example.png'}))
+                            .then(() => page.click('button[type=submit]'))
+                    });
                 });
             });
     });
