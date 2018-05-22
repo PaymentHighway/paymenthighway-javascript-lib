@@ -11,6 +11,7 @@ const RevertTransactionRequest_1 = require("../src/model/request/RevertTransacti
 const MasterpassTransactionRequest_1 = require("../src/model/request/MasterpassTransactionRequest");
 const ApplePayTransactionRequest_1 = require("../src/model/request/ApplePayTransactionRequest");
 const MobilePayInitRequest_1 = require("../src/model/request/MobilePayInitRequest");
+const Splitting_1 = require("../src/model/Splitting");
 let api;
 let validCard;
 let testCard;
@@ -25,14 +26,11 @@ beforeEach(() => {
         orderId: PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId()
     };
 });
-function createDebitTransaction(orderId, commit) {
+function createDebitTransaction(orderId, commit, splitting) {
     let initResponse;
     return api.initTransaction().then((response) => {
         initResponse = response;
-        let transactionRequest = new TransactionRequest_1.TransactionRequest(testCard, 9999, 'EUR', orderId);
-        if (typeof commit !== 'undefined') {
-            transactionRequest.commit = commit;
-        }
+        let transactionRequest = new TransactionRequest_1.TransactionRequest(testCard, 9999, 'EUR', orderId, undefined, commit, splitting);
         return api.debitTransaction(initResponse.id, transactionRequest);
     }).then((debitResponse) => {
         checkResult(debitResponse);
@@ -135,6 +133,23 @@ describe('PaymentAPI', () => {
             chai_1.assert(statusResponse.transaction.current_amount === 49, 'Current amount should be 49, it was ' + statusResponse.transaction.current_amount + printResult(statusResponse));
             chai_1.assert(statusResponse.transaction.id === transactionId, 'Transaction id should be same with init response and revert response' + printResult(statusResponse));
             chai_1.assert(statusResponse.transaction.card.cvc_required === 'not_tested', 'Test card should return cvc_required = not_tested' + printResult(statusResponse));
+            done();
+        });
+    });
+    it('Test splitting in transaction status', (done) => {
+        let transactionId;
+        let subMerchantId = '12345';
+        let amountToSubMerchant = 9000;
+        let splitting = new Splitting_1.Splitting(subMerchantId, amountToSubMerchant);
+        createDebitTransaction(undefined, undefined, splitting)
+            .then((initResponse) => {
+            transactionId = initResponse.id;
+            return api.transactionStatus(transactionId);
+        })
+            .then((statusResponse) => {
+            checkResult(statusResponse);
+            chai_1.assert(statusResponse.transaction.splitting.merchant_id === subMerchantId, 'Status response should contain matching splitting merchant ID');
+            chai_1.assert(statusResponse.transaction.splitting.amount === amountToSubMerchant, 'Status response should contain matching splitting amount');
             done();
         });
     });

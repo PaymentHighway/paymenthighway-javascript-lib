@@ -3,6 +3,7 @@ import {Status} from './Status';
 import {Acquirer} from './Acquirer';
 import {Revert} from './Revert';
 import {Customer} from './Customer';
+import {Splitting} from "../Splitting";
 
 export interface TransactionStatus {
     id: string;
@@ -25,4 +26,5 @@ export interface TransactionStatus {
     committed: boolean;
     committed_amount?: string;
     recurring: boolean;
+    splitting: Splitting;
 }
