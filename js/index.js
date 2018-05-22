@@ -7,6 +7,7 @@ __export(require("./src/FormBuilder"));
 __export(require("./src/FormContainer"));
 __export(require("./src/PaymentAPI"));
 __export(require("./src/PaymentHighwayUtility"));
+__export(require("./src/model/Splitting"));
 __export(require("./src/model/Token"));
 __export(require("./src/model/request/ApplePayTransactionRequest"));
 __export(require("./src/model/request/Card"));
