@@ -14,6 +14,7 @@ import {MasterpassTransactionRequest} from '../src/model/request/MasterpassTrans
 import {PaymentData} from '../src/model/request/applepay/PaymentData';
 import {ApplePayTransaction, ApplePayTransactionRequest} from '../src/model/request/ApplePayTransactionRequest';
 import {MobilePayInitRequest} from '../src/model/request/MobilePayInitRequest';
+import {Splitting} from "../src/model/Splitting";
 
 let api: PaymentAPI;
 let validCard: any;
@@ -31,15 +32,13 @@ beforeEach(() => {
     };
 });
 
-function createDebitTransaction(orderId?: string, commit?: boolean): PromiseLike<TransactionResponse> {
+function createDebitTransaction(orderId?: string, commit?: boolean, splitting?: Splitting): PromiseLike<TransactionResponse> {
     let initResponse: TransactionResponse;
 
     return api.initTransaction().then((response) => {
         initResponse = response;
-        let transactionRequest = new TransactionRequest(testCard, 9999, 'EUR', orderId);
-        if (typeof commit !== 'undefined') {
-            transactionRequest.commit = commit;
-        }
+        let transactionRequest = new TransactionRequest(testCard, 9999, 'EUR', orderId, undefined, commit, splitting);
+
         return api.debitTransaction(initResponse.id, transactionRequest);
     }).then((debitResponse) => {
         checkResult(debitResponse);
@@ -155,6 +154,27 @@ describe('PaymentAPI', () => {
                 assert(statusResponse.transaction.card.cvc_required === 'not_tested', 'Test card should return cvc_required = not_tested' + printResult(statusResponse));
                 done();
             });
+    });
+
+    it('Test splitting in transaction status', (done) => {
+      let transactionId: string;
+
+      let subMerchantId = '12345';
+      let amountToSubMerchant = 9000;
+
+      let splitting = new Splitting(subMerchantId, amountToSubMerchant);
+
+      createDebitTransaction(undefined, undefined, splitting)
+        .then((initResponse) => {
+          transactionId = initResponse.id;
+          return api.transactionStatus(transactionId);
+        })
+        .then((statusResponse: TransactionStatusResponse) => {
+          checkResult(statusResponse);
+          assert(statusResponse.transaction.splitting.merchant_id === subMerchantId, 'Status response should contain matching splitting merchant ID');
+          assert(statusResponse.transaction.splitting.amount === amountToSubMerchant, 'Status response should contain matching splitting amount');
+          done();
+        });
     });
 
     it('Test order search', (done) => {

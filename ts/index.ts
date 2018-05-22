@@ -2,6 +2,7 @@ export * from './src/FormBuilder';
 export * from './src/FormContainer';
 export * from './src/PaymentAPI';
 export * from './src/PaymentHighwayUtility';
+export * from './src/model/Splitting';
 export * from './src/model/Token';
 export * from './src/model/request/ApplePayTransactionRequest';
 export * from './src/model/request/Card';
