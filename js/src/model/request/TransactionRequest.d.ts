@@ -1,6 +1,7 @@
 import { Card } from './Card';
 import { Token } from '../Token';
 import { Customer } from '../response/Customer';
+import { Splitting } from '../Splitting';
 export declare class TransactionRequest {
     card: Card;
     amount: number;
@@ -9,5 +10,6 @@ export declare class TransactionRequest {
     order: string;
     customer: Customer;
     commit: boolean;
-    constructor(cardOrToken: Card | Token, amount: number, currency: string, order?: string, customer?: Customer, commit?: boolean);
+    splitting: Splitting;
+    constructor(cardOrToken: Card | Token, amount: number, currency: string, order?: string, customer?: Customer, commit?: boolean, splitting?: Splitting);
 }

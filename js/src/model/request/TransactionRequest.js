@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Card_1 = require("./Card");
 class TransactionRequest {
-    constructor(cardOrToken, amount, currency, order, customer, commit) {
+    constructor(cardOrToken, amount, currency, order, customer, commit, splitting) {
         if (cardOrToken instanceof Card_1.Card) {
             this.card = cardOrToken;
         }
@@ -14,6 +14,7 @@ class TransactionRequest {
         this.order = order;
         this.customer = customer;
         this.commit = commit;
+        this.splitting = splitting;
     }
 }
 exports.TransactionRequest = TransactionRequest;
