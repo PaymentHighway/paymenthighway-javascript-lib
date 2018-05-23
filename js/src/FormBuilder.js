@@ -328,53 +328,40 @@ class FormBuilder {
         return new FormContainer_1.FormContainer(this.method, this.baseUrl, masterpassUri, nameValuePairs, requestId);
     }
     /**
-     * Get parameters for Pivo request.
+     * Get parameters for Siirto request.
      *
-     * @param successUrl             The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
-     * @param failureUrl             The URL the user is redirected after a failure such as an authentication or connectivity error.
-     * @param cancelUrl              The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
-     * @param language               The language the form is displayed in.
-     * @param amount                 The amount to pay in euro cents. Pivo supports only euros.
-     * @param orderId                A generated order ID, may for example be always unique or used multiple times for recurring transactions.
-     * @param description            Description of the payment shown in the form.
-     * @param phoneNumber            User phone number with country code. Max AN 15. Optional.
-     * @param referenceNumber        Reference number for payment. Optional.
-     * @param appUrl                 When used, Pivo tries to open application with this url. Optional.
-     * @param skipFormNotifications  Skip notifications displayed on the Payment Highway form. May be null.
-     * @param exitIframeOnResult     Exit from iframe after a result. May be null.
-     * @param webhookSuccessUrl      The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
-     * @param webhookFailureUrl      The URL the PH server makes request after a failure such as an authentication or connectivity error.
-     * @param webhookCancelUrl       The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
-     * @param webhookDelay           Delay for webhook in seconds. Between 0-900
+     * @param successUrl            The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
+     * @param failureUrl            The URL the user is redirected after a failure such as an authentication or connectivity error.
+     * @param cancelUrl             The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
+     * @param language              The language the form is displayed in.
+     * @param amount                The amount to pay in euro cents. Siirto supports only euros.
+     * @param orderId               A generated order ID, may for example be always unique or used multiple times for recurring transactions.
+     * @param description           Description of the payment shown in the form.
+     * @param referenceNumber       Reference number
+     * @param phoneNumber           User phone number with country code. Max AN 15. Optional
+     * @param webhookSuccessUrl     The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
+     * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
+     * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param webhookDelay          Delay for webhook in seconds. Between 0-900
      * @return FormContainer
      */
-    generatePivoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber, phoneNumber, appUrl, skipFormNotifications, exitIframeOnResult, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay) {
+    generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber, phoneNumber, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay) {
         const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
+        // Siirto supports only euros
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_CURRENCY, 'EUR'));
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_ORDER, orderId));
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.DESCRIPTION, description));
-        if (typeof skipFormNotifications !== 'undefined') {
-            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SKIP_FORM_NOTIFICATIONS, skipFormNotifications.toString()));
-        }
-        if (typeof exitIframeOnResult !== 'undefined') {
-            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
-        }
         if (typeof phoneNumber !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_PHONE_NUMBER, phoneNumber));
         }
-        if (typeof referenceNumber !== 'undefined') {
-            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
-        }
-        if (typeof appUrl !== 'undefined') {
-            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_APP_URL, appUrl));
-        }
         nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
-        const pivoUri = '/form/view/pivo';
-        const signature = this.createSignature(pivoUri, nameValuePairs);
+        const siirtoUri = '/form/view/siirto';
+        const signature = this.createSignature(siirtoUri, nameValuePairs);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SIGNATURE, signature));
-        return new FormContainer_1.FormContainer(this.method, this.baseUrl, pivoUri, nameValuePairs, requestId);
+        return new FormContainer_1.FormContainer(this.method, this.baseUrl, siirtoUri, nameValuePairs, requestId);
     }
     /**
      *
@@ -432,7 +419,7 @@ class FormBuilder {
         return this.secureSigner.createSignature(this.method, uri, nameValuePairs, '');
     }
 }
-FormBuilder.FORM_API_VERSION = '20160630';
+FormBuilder.FORM_API_VERSION = '20170704';
 FormBuilder.SPH_API_VERSION = 'sph-api-version';
 FormBuilder.SPH_ACCEPT_CVC_REQUIRED = 'sph-accept-cvc-required';
 FormBuilder.SPH_ACCOUNT = 'sph-account';
@@ -462,7 +449,6 @@ FormBuilder.SPH_WEBHOOK_DELAY = 'sph-webhook-delay';
 FormBuilder.SPH_SHOW_PAYMENT_METHOD_SELECTOR = 'sph-show-payment-method-selector';
 FormBuilder.SPH_REQUEST_SHIPPING_ADDRESS = 'sph-request-shipping-address';
 FormBuilder.SPH_PHONE_NUMBER = 'sph-phone-number';
-FormBuilder.SPH_APP_URL = 'sph-app-url';
 FormBuilder.SPH_REFERENCE_NUMBER = 'sph-reference-number';
 FormBuilder.LANGUAGE = 'language';
 FormBuilder.DESCRIPTION = 'description';

@@ -22,6 +22,8 @@ import {ApplePayTransactionRequest} from './model/request/ApplePayTransactionReq
 import {MobilePayInitRequest} from './model/request/MobilePayInitRequest';
 import {MobilePayInitResponse} from './model/response/MobilePayInitResponse';
 import {MobilePayStatusResponse} from './model/response/MobilePayStatusResponse';
+import {RevertSiirtoTransactionRequest} from './model/request/RevertSiirtoTransactionRequest';
+import {SiirtoTransactionResultResponse} from './model/response/SiirtoTransactionResultResponse';
 import {RevertPivoTransactionRequest} from './model/request/RevertPivoTransactionRequest';
 import {PivoTransactionResultResponse} from './model/response/PivoTransactionResultResponse';
 
@@ -100,6 +102,18 @@ export class PaymentAPI {
      */
     public revertTransaction(transactionId: string, request: RevertTransactionRequest): PromiseLike<Response> {
         const revertUri = '/transaction/' + transactionId + '/revert';
+        return this.makeRequest('POST', revertUri, request);
+    }
+
+    /**
+     * Payment Highway Revert Siirto Transaction with amount
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<Response>}
+     */
+    public revertSiirtoTransaction(transactionId: string, request: RevertSiirtoTransactionRequest): PromiseLike<Response> {
+        const revertUri = '/transaction/' + transactionId + '/siirto/revert';
         return this.makeRequest('POST', revertUri, request);
     }
 
@@ -183,6 +197,18 @@ export class PaymentAPI {
      */
     public transactionResult(transactionId: string): PromiseLike<TransactionResultResponse> {
         const transactionResultUrl = '/transaction/' + transactionId + '/result';
+        return this.makeRequest('GET', transactionResultUrl);
+    }
+
+    /**
+     * Payment Highway Siirto Transaction Result Request
+     * Used to find out whether or not an Siirto transaction succeeded.
+     *
+     * @param transactionId
+     * @returns {PromiseLike<SiirtoTransactionResultResponse>}
+     */
+    public siirtoTransactionResult(transactionId: string): PromiseLike<SiirtoTransactionResultResponse> {
+        const transactionResultUrl = '/transaction/' + transactionId + '/siirto/result';
         return this.makeRequest('GET', transactionResultUrl);
     }
 

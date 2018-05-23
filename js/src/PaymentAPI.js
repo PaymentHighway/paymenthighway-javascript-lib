@@ -70,14 +70,14 @@ class PaymentAPI {
         return this.makeRequest('POST', revertUri, request);
     }
     /**
-     * Payment Highway Revert Pivo Transaction with amount
+     * Payment Highway Revert Siirto Transaction with amount
      *
      * @param transactionId
      * @param request
      * @returns {PromiseLike<Response>}
      */
-    revertPivoTransaction(transactionId, request) {
-        const revertUri = '/transaction/' + transactionId + '/pivo/revert';
+    revertSiirtoTransaction(transactionId, request) {
+        const revertUri = '/transaction/' + transactionId + '/siirto/revert';
         return this.makeRequest('POST', revertUri, request);
     }
     /**
@@ -146,14 +146,14 @@ class PaymentAPI {
         return this.makeRequest('GET', transactionResultUrl);
     }
     /**
-     * Payment Highway Pivo Transaction Result Request
-     * Used to find out whether or not an Pivo transaction succeeded.
+     * Payment Highway Siirto Transaction Result Request
+     * Used to find out whether or not an Siirto transaction succeeded.
      *
      * @param transactionId
-     * @returns {PromiseLike<PivoTransactionResultResponse>}
+     * @returns {PromiseLike<SiirtoTransactionResultResponse>}
      */
-    PivoTransactionResult(transactionId) {
-        const transactionResultUrl = '/transaction/' + transactionId + '/pivo/result';
+    siirtoTransactionResult(transactionId) {
+        const transactionResultUrl = '/transaction/' + transactionId + '/siirto/result';
         return this.makeRequest('GET', transactionResultUrl);
     }
     /**
