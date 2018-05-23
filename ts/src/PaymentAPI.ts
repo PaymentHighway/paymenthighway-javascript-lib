@@ -219,7 +219,7 @@ export class PaymentAPI {
      * @param transactionId
      * @returns {PromiseLike<PivoTransactionResultResponse>}
      */
-    public PivoTransactionResult(transactionId: string): PromiseLike<PivoTransactionResultResponse> {
+    public pivoTransactionResult(transactionId: string): PromiseLike<PivoTransactionResultResponse> {
         const transactionResultUrl = '/transaction/' + transactionId + '/pivo/result';
         return this.makeRequest('GET', transactionResultUrl);
     }
