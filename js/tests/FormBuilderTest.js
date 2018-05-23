@@ -293,6 +293,29 @@ describe('Form builder', () => {
             done();
         });
     });
+    xit('Test siirto form with mandatory parameters', (done) => {
+        const referenceNumber = '1313';
+        const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber);
+        testNameValuePairs(formContainer.nameValuePairs, 15);
+        FormConnection_1.FormConnection.postForm(formContainer)
+            .then((response) => {
+            chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+            chai_1.assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/siirto/, 'redirect location doesn\'t match ' + response.header);
+            done();
+        });
+    });
+    xit('Test siirto form with optional parameters', (done) => {
+        const phoneNumber = '+358441234567';
+        const referenceNumber = '1313';
+        const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber, phoneNumber);
+        testNameValuePairs(formContainer.nameValuePairs, 16);
+        FormConnection_1.FormConnection.postForm(formContainer)
+            .then((response) => {
+            chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+            chai_1.assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/siirto/, 'redirect location doesn\'t match ' + response.header);
+            done();
+        });
+    });
     it('Test add card webhook parameters', () => {
         const formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language, undefined, undefined, undefined, undefined, undefined, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay);
         testNameValuePairs(formContainer.nameValuePairs, 14);

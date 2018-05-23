@@ -22,6 +22,8 @@ import {ApplePayTransactionRequest} from './model/request/ApplePayTransactionReq
 import {MobilePayInitRequest} from './model/request/MobilePayInitRequest';
 import {MobilePayInitResponse} from './model/response/MobilePayInitResponse';
 import {MobilePayStatusResponse} from './model/response/MobilePayStatusResponse';
+import {RevertSiirtoTransactionRequest} from './model/request/RevertSiirtoTransactionRequest';
+import {SiirtoTransactionResultResponse} from './model/response/SiirtoTransactionResultResponse';
 
 /**
  * Payment Highway Payment API Service.
@@ -102,6 +104,18 @@ export class PaymentAPI {
     }
 
     /**
+     * Payment Highway Revert Siirto Transaction with amount
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<Response>}
+     */
+    public revertSiirtoTransaction(transactionId: string, request: RevertSiirtoTransactionRequest): PromiseLike<Response> {
+        const revertUri = '/transaction/' + transactionId + '/siirto/revert';
+        return this.makeRequest('POST', revertUri, request);
+    }
+
+    /**
      * Payment Highway Transaction Commit Request
      * Used to commit (capture) the transaction.
      * In order to find out the result of the transaction without committing it, use Transaction Result request instead.
@@ -169,6 +183,18 @@ export class PaymentAPI {
      */
     public transactionResult(transactionId: string): PromiseLike<TransactionResultResponse> {
         const transactionResultUrl = '/transaction/' + transactionId + '/result';
+        return this.makeRequest('GET', transactionResultUrl);
+    }
+
+    /**
+     * Payment Highway Siirto Transaction Result Request
+     * Used to find out whether or not an Siirto transaction succeeded.
+     *
+     * @param transactionId
+     * @returns {PromiseLike<SiirtoTransactionResultResponse>}
+     */
+    public siirtoTransactionResult(transactionId: string): PromiseLike<SiirtoTransactionResultResponse> {
+        const transactionResultUrl = '/transaction/' + transactionId + '/siirto/result';
         return this.makeRequest('GET', transactionResultUrl);
     }
 

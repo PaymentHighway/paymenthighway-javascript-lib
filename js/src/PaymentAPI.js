@@ -70,6 +70,17 @@ class PaymentAPI {
         return this.makeRequest('POST', revertUri, request);
     }
     /**
+     * Payment Highway Revert Siirto Transaction with amount
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<Response>}
+     */
+    revertSiirtoTransaction(transactionId, request) {
+        const revertUri = '/transaction/' + transactionId + '/siirto/revert';
+        return this.makeRequest('POST', revertUri, request);
+    }
+    /**
      * Payment Highway Transaction Commit Request
      * Used to commit (capture) the transaction.
      * In order to find out the result of the transaction without committing it, use Transaction Result request instead.
@@ -132,6 +143,17 @@ class PaymentAPI {
      */
     transactionResult(transactionId) {
         const transactionResultUrl = '/transaction/' + transactionId + '/result';
+        return this.makeRequest('GET', transactionResultUrl);
+    }
+    /**
+     * Payment Highway Siirto Transaction Result Request
+     * Used to find out whether or not an Siirto transaction succeeded.
+     *
+     * @param transactionId
+     * @returns {PromiseLike<SiirtoTransactionResultResponse>}
+     */
+    siirtoTransactionResult(transactionId) {
+        const transactionResultUrl = '/transaction/' + transactionId + '/siirto/result';
         return this.makeRequest('GET', transactionResultUrl);
     }
     /**
