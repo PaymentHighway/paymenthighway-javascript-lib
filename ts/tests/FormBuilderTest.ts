@@ -348,7 +348,7 @@ describe('Form builder', () => {
             });
     });
 
-    xit('Test siirto form with mandatory parameters', (done) => {
+    it('Test siirto form with mandatory parameters', (done) => {
         const referenceNumber = '1313';
         const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber);
         testNameValuePairs(formContainer.nameValuePairs, 15);
@@ -360,7 +360,7 @@ describe('Form builder', () => {
             });
     });
 
-    xit('Test siirto form with optional parameters', (done) => {
+    it('Test siirto form with optional parameters', (done) => {
         const phoneNumber = '+358441234567';
         const referenceNumber = '1313';
         const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber, phoneNumber);
