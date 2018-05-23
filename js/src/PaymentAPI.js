@@ -81,6 +81,17 @@ class PaymentAPI {
         return this.makeRequest('POST', revertUri, request);
     }
     /**
+     * Payment Highway Revert Pivo Transaction with amount
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<Response>}
+     */
+    revertPivoTransaction(transactionId, request) {
+        const revertUri = '/transaction/' + transactionId + '/pivo/revert';
+        return this.makeRequest('POST', revertUri, request);
+    }
+    /**
      * Payment Highway Transaction Commit Request
      * Used to commit (capture) the transaction.
      * In order to find out the result of the transaction without committing it, use Transaction Result request instead.
@@ -154,6 +165,17 @@ class PaymentAPI {
      */
     siirtoTransactionResult(transactionId) {
         const transactionResultUrl = '/transaction/' + transactionId + '/siirto/result';
+        return this.makeRequest('GET', transactionResultUrl);
+    }
+    /**
+     * Payment Highway Pivo Transaction Result Request
+     * Used to find out whether or not an Pivo transaction succeeded.
+     *
+     * @param transactionId
+     * @returns {PromiseLike<PivoTransactionResultResponse>}
+     */
+    pivoTransactionResult(transactionId) {
+        const transactionResultUrl = '/transaction/' + transactionId + '/pivo/result';
         return this.makeRequest('GET', transactionResultUrl);
     }
     /**

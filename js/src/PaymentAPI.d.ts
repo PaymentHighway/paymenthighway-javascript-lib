@@ -18,6 +18,8 @@ import { MobilePayInitResponse } from './model/response/MobilePayInitResponse';
 import { MobilePayStatusResponse } from './model/response/MobilePayStatusResponse';
 import { RevertSiirtoTransactionRequest } from './model/request/RevertSiirtoTransactionRequest';
 import { SiirtoTransactionResultResponse } from './model/response/SiirtoTransactionResultResponse';
+import { RevertPivoTransactionRequest } from './model/request/RevertPivoTransactionRequest';
+import { PivoTransactionResultResponse } from './model/response/PivoTransactionResultResponse';
 /**
  * Payment Highway Payment API Service.
  */
@@ -78,6 +80,14 @@ export declare class PaymentAPI {
      */
     revertSiirtoTransaction(transactionId: string, request: RevertSiirtoTransactionRequest): PromiseLike<Response>;
     /**
+     * Payment Highway Revert Pivo Transaction with amount
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<Response>}
+     */
+    revertPivoTransaction(transactionId: string, request: RevertPivoTransactionRequest): PromiseLike<Response>;
+    /**
      * Payment Highway Transaction Commit Request
      * Used to commit (capture) the transaction.
      * In order to find out the result of the transaction without committing it, use Transaction Result request instead.
@@ -132,6 +142,14 @@ export declare class PaymentAPI {
      * @returns {PromiseLike<SiirtoTransactionResultResponse>}
      */
     siirtoTransactionResult(transactionId: string): PromiseLike<SiirtoTransactionResultResponse>;
+    /**
+     * Payment Highway Pivo Transaction Result Request
+     * Used to find out whether or not an Pivo transaction succeeded.
+     *
+     * @param transactionId
+     * @returns {PromiseLike<PivoTransactionResultResponse>}
+     */
+    pivoTransactionResult(transactionId: string): PromiseLike<PivoTransactionResultResponse>;
     /**
      * Payment Highway Daily Report Request
      *
