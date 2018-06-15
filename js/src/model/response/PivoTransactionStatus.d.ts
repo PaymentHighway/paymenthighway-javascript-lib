@@ -17,5 +17,5 @@ export interface PivoTransactionStatus {
     paymentType: string;
     archiveId: string;
     modified: string;
-    refunds: PivoRefund;
+    refunds: PivoRefund[];
 }
