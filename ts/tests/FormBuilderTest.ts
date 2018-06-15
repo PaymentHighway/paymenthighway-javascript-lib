@@ -442,7 +442,7 @@ describe('Form builder', () => {
         testWebhookNameValuePairs(formContainer.nameValuePairs, true);
     });
 
-    xit('Test pivo mandatory parameters', (done) => {
+    it('Test pivo mandatory parameters', (done) => {
         const formContainer = formBuilder.generatePivoParameters(
             successUrl, failureUrl, cancelUrl, language, amount, orderId, description);
 
@@ -456,7 +456,7 @@ describe('Form builder', () => {
             });
     });
 
-    xit('Test pivo optional parameters', (done) => {
+    it('Test pivo optional parameters', (done) => {
         const phoneNumber = '+358444160589';
         const referenceNumber = '1313';
         const appUrl = 'myapp://url';
