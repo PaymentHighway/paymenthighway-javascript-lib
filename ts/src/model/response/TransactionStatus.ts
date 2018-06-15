@@ -3,7 +3,7 @@ import {Status} from './Status';
 import {Acquirer} from './Acquirer';
 import {Revert} from './Revert';
 import {Customer} from './Customer';
-import {Splitting} from "../Splitting";
+import {Splitting} from '../Splitting';
 
 export interface TransactionStatus {
     id: string;
