@@ -115,6 +115,16 @@ class PaymentAPI {
         return this.makeRequest('GET', statusUri);
     }
     /**
+     * Payment Highway Pivo Transaction Status Request
+     *
+     * @param transactionId
+     * @returns {PromiseLike<PivoTransactionStatusResponse>}
+     */
+    pivoTransactionStatus(transactionId) {
+        const statusUri = '/transaction/pivo/' + transactionId;
+        return this.makeRequest('GET', statusUri);
+    }
+    /**
      * Payment Highway Order Status Request
      *
      * @param orderId   The ID of the order whose transactions should be searched for

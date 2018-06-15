@@ -20,6 +20,7 @@ import { RevertSiirtoTransactionRequest } from './model/request/RevertSiirtoTran
 import { SiirtoTransactionResultResponse } from './model/response/SiirtoTransactionResultResponse';
 import { RevertPivoTransactionRequest } from './model/request/RevertPivoTransactionRequest';
 import { PivoTransactionResultResponse } from './model/response/PivoTransactionResultResponse';
+import { PivoTransactionStatusResponse } from './model/response/PivoTransactionStatusResponse';
 /**
  * Payment Highway Payment API Service.
  */
@@ -104,6 +105,13 @@ export declare class PaymentAPI {
      * @returns {PromiseLike<TransactionStatusResponse>}
      */
     transactionStatus(transactionId: string): PromiseLike<TransactionStatusResponse>;
+    /**
+     * Payment Highway Pivo Transaction Status Request
+     *
+     * @param transactionId
+     * @returns {PromiseLike<PivoTransactionStatusResponse>}
+     */
+    pivoTransactionStatus(transactionId: string): PromiseLike<PivoTransactionStatusResponse>;
     /**
      * Payment Highway Order Status Request
      *
