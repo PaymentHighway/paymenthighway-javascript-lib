@@ -33,7 +33,7 @@ import {PivoTransactionStatusResponse} from './model/response/PivoTransactionSta
  */
 export class PaymentAPI {
 
-    private static API_VERSION: string = '20180426';
+    private static API_VERSION: string = '20180608';
 
     // Payment API headers
     public static USER_AGENT: string = 'PaymentHighway Javascript Library';
