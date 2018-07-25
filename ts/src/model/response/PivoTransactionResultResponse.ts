@@ -2,7 +2,7 @@ import {Result} from './Result';
 import {Customer} from './Customer';
 
 export interface PivoTransactionResultResponse {
-    status: string;
+    state: string;
     customer?: Customer;
     amount: number;
     current_amount: number;

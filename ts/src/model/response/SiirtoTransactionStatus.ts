@@ -1,8 +1,8 @@
 import {Status} from './Status';
 import {Customer} from './Customer';
-import {PivoRefund} from './PivoRefund';
+import {SiirtoRefund} from './SiirtoRefund';
 
-export interface PivoTransactionStatus {
+export interface SiirtoTransactionStatus {
     id: string;
     type: string;
     amount: string;
@@ -11,12 +11,9 @@ export interface PivoTransactionStatus {
     timestamp: string;
     status: Status;
     reference_number: string;
+    message: string;
     customer: Customer;
+    recipient: string;
     order: string;
-    pivo_payment_id: string;
-    phone: string;
-    payment_type: string;
-    archive_id: string;
-    modified: string;
-    refunds: PivoRefund[];
+    refunds: SiirtoRefund[];
 }

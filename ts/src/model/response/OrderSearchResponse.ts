@@ -1,8 +1,10 @@
 import {Response} from './Response';
 import {TransactionStatus} from './TransactionStatus';
 import {PivoTransactionStatus} from './PivoTransactionStatus';
+import {SiirtoTransactionStatus} from './SiirtoTransactionStatus';
 
 export interface OrderSearchResponse extends Response {
     transactions: TransactionStatus[];
-    pivoTransactions: PivoTransactionStatus[];
+    pivo_transactions: PivoTransactionStatus[];
+    siirto_transactions: SiirtoTransactionStatus[];
 }
