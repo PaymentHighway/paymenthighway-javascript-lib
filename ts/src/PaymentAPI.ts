@@ -27,6 +27,7 @@ import {SiirtoTransactionResultResponse} from './model/response/SiirtoTransactio
 import {RevertPivoTransactionRequest} from './model/request/RevertPivoTransactionRequest';
 import {PivoTransactionResultResponse} from './model/response/PivoTransactionResultResponse';
 import {PivoTransactionStatusResponse} from './model/response/PivoTransactionStatusResponse';
+import {SiirtoTransactionStatusResponse} from './model/response/SiirtoTransactionStatusResponse';
 
 /**
  * Payment Highway Payment API Service.
@@ -163,6 +164,17 @@ export class PaymentAPI {
      */
     public pivoTransactionStatus(transactionId: string): PromiseLike<PivoTransactionStatusResponse> {
         const statusUri = '/transaction/pivo/' + transactionId;
+        return this.makeRequest('GET', statusUri);
+    }
+
+    /**
+     * Payment Highway Siirto Transaction Status Request
+     *
+     * @param transactionId
+     * @returns {PromiseLike<SiirtoTransactionStatusResponse>}
+     */
+    public siirtoTransactionStatus(transactionId: string): PromiseLike<SiirtoTransactionStatusResponse> {
+        const statusUri = '/transaction/siirto/' + transactionId;
         return this.makeRequest('GET', statusUri);
     }
 
