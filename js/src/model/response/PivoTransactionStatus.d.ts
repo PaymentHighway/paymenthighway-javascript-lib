@@ -5,17 +5,17 @@ export interface PivoTransactionStatus {
     id: string;
     type: string;
     amount: string;
-    currentAmount: string;
+    current_amount: string;
     currency: string;
     timestamp: string;
     status: Status;
-    referenceNumber: string;
+    reference_number: string;
     customer: Customer;
     order: string;
-    pivoPaymentId: string;
+    pivo_payment_id: string;
     phone: string;
-    paymentType: string;
-    archiveId: string;
+    payment_type: string;
+    archive_id: string;
     modified: string;
     refunds: PivoRefund[];
 }
