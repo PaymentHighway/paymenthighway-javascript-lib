@@ -252,7 +252,7 @@ return paymentAPI.commitTransaction(transactionId, request); // Returns PromiseL
 
 #### Tokenize (get the actual card token by using token id)
 ```javascript
-return paymentAPI.tokenization("tokenizationId");
+return paymentAPI.tokenization(tokenizationId);
 ```
 * returns PromiseLike<[TokenizationResponse](/ts/src/model/response/TokenizationResponse.ts)>
 
@@ -270,15 +270,21 @@ return paymentAPI.initTransaction()
 ```
 * returns PromiseLike<[TransactionResultResponse](/ts/src/model/response/TransactionResultResponse.ts)>
 
-#### Revert
+#### Partial Revert 
 ```javascript
-return paymentAPI.revertTransaction("transactionId", "amount");
+return paymentAPI.revertTransaction(transactionId, new RevertTransactionRequest(amount));
+```
+* retruns PromiseLike<[TransactionResponse](/ts/src/model/response/TransactionResponse.ts)>
+
+#### Revert whole transaction
+```javascript
+return paymentAPI.revertTransaction(transactionId, new RevertTransactionRequest());
 ```
 * retruns PromiseLike<[TransactionResponse](/ts/src/model/response/TransactionResponse.ts)>
 
 #### Transaction Status
 ```javascript
-return paymentAPI.transactionStatus("transactionId");
+return paymentAPI.transactionStatus(transactionId);
 ```
 * returns PromiseLike<[TransactionStatusResponse](/ts/src/model/response/TransactionStatusResponse.ts)>
 
