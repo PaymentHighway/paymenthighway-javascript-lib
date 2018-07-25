@@ -14,7 +14,7 @@ import {MasterpassTransactionRequest} from '../src/model/request/MasterpassTrans
 import {PaymentData} from '../src/model/request/applepay/PaymentData';
 import {ApplePayTransaction, ApplePayTransactionRequest} from '../src/model/request/ApplePayTransactionRequest';
 import {MobilePayInitRequest} from '../src/model/request/MobilePayInitRequest';
-import {Splitting} from "../src/model/Splitting";
+import {Splitting} from '../src/model/Splitting';
 
 let api: PaymentAPI;
 let validCard: any;
@@ -254,7 +254,7 @@ describe('PaymentAPI', () => {
                 checkResult(debitResponse);
 
                 done();
-            })
+            });
     });
 
     it('Test Apple Pay request builders', () => {
@@ -290,7 +290,7 @@ describe('PaymentAPI', () => {
             .then((debitResponse) => {
                 assert(debitResponse.result.code === 900, 'Authorization should fail (code 900), got ' + debitResponse.result.code);
                 assert.equal(debitResponse.result.message, 'ERROR', 'Authorization should fail with ERROR, validation should succeed');
-            })
+            });
     });
 
     it( 'Test MobilePay app flow init @external', () => {
@@ -300,14 +300,14 @@ describe('PaymentAPI', () => {
             .setWebhookSuccessUrl('https://myserver.com/success')
             .setWebhookCancelUrl('https://myserver.com/cancel')
             .setWebhookFailureUrl('https://myserver.com/failure')
-            .build()
+            .build();
 
         return api.initMobilePaySession(request).then((response) => {
            assert.isNotNull(response.uri);
            assert.isNotNull(response.session_token);
            assert.isNotNull(response.valid_until);
            assert.containIgnoreCase(response.uri, response.session_token, 'Returned app URI should contain session token.');
-        })
+        });
     });
 
     it('Test MobilePay app flow session status @external', () => {
@@ -317,7 +317,7 @@ describe('PaymentAPI', () => {
             .setWebhookSuccessUrl('https://myserver.com/success')
             .setWebhookCancelUrl('https://myserver.com/cancel')
             .setWebhookFailureUrl('https://myserver.com/failure')
-            .build()
+            .build();
 
         return api.initMobilePaySession(request).then((initResponse) => {
             return api.mobilePaySessionStatus(initResponse.session_token).then((response) => {
@@ -325,6 +325,6 @@ describe('PaymentAPI', () => {
                 assert.equal(response.valid_until, initResponse.valid_until, 'Both init and status check should have same valid until value.');
                 assert.isUndefined(response.transaction_id); // transaction id is available only when session is finished
             });
-        })
+        });
     });
 });

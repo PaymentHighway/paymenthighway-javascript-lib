@@ -59,7 +59,7 @@ class PaymentAPI {
         return this.makeRequest('POST', debitUri, request);
     }
     /**
-     * Payment Highway Revert Transaction with amount
+     * Payment Highway Revert Transaction
      *
      * @param transactionId
      * @param request
@@ -70,7 +70,7 @@ class PaymentAPI {
         return this.makeRequest('POST', revertUri, request);
     }
     /**
-     * Payment Highway Revert Siirto Transaction with amount
+     * Payment Highway Revert Siirto Transaction
      *
      * @param transactionId
      * @param request
@@ -81,7 +81,7 @@ class PaymentAPI {
         return this.makeRequest('POST', revertUri, request);
     }
     /**
-     * Payment Highway Revert Pivo Transaction with amount
+     * Payment Highway Revert Pivo Transaction
      *
      * @param transactionId
      * @param request

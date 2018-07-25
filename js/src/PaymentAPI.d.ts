@@ -66,7 +66,7 @@ export declare class PaymentAPI {
      */
     debitApplePayTransaction(transactionId: string, request: ApplePayTransactionRequest): PromiseLike<DebitResponse>;
     /**
-     * Payment Highway Revert Transaction with amount
+     * Payment Highway Revert Transaction
      *
      * @param transactionId
      * @param request
@@ -74,7 +74,7 @@ export declare class PaymentAPI {
      */
     revertTransaction(transactionId: string, request: RevertTransactionRequest): PromiseLike<Response>;
     /**
-     * Payment Highway Revert Siirto Transaction with amount
+     * Payment Highway Revert Siirto Transaction
      *
      * @param transactionId
      * @param request
@@ -82,7 +82,7 @@ export declare class PaymentAPI {
      */
     revertSiirtoTransaction(transactionId: string, request: RevertSiirtoTransactionRequest): PromiseLike<Response>;
     /**
-     * Payment Highway Revert Pivo Transaction with amount
+     * Payment Highway Revert Pivo Transaction
      *
      * @param transactionId
      * @param request
