@@ -11,7 +11,7 @@ import {FormContainer} from './FormContainer';
  * Creates a request id, timestamp and signature based on request parameters.
  */
 export class FormBuilder {
-    private static FORM_API_VERSION: string = '20180608';
+    private static FORM_API_VERSION: string = '20180725';
 
     private static SPH_API_VERSION: string = 'sph-api-version';
     private static SPH_ACCEPT_CVC_REQUIRED: string = 'sph-accept-cvc-required';
