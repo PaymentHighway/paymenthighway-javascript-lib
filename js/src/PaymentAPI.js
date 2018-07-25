@@ -125,6 +125,16 @@ class PaymentAPI {
         return this.makeRequest('GET', statusUri);
     }
     /**
+     * Payment Highway Siirto Transaction Status Request
+     *
+     * @param transactionId
+     * @returns {PromiseLike<SiirtoTransactionStatusResponse>}
+     */
+    siirtoTransactionStatus(transactionId) {
+        const statusUri = '/transaction/siirto/' + transactionId;
+        return this.makeRequest('GET', statusUri);
+    }
+    /**
      * Payment Highway Order Status Request
      *
      * @param orderId   The ID of the order whose transactions should be searched for
