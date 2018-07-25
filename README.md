@@ -272,19 +272,19 @@ return paymentAPI.initTransaction()
 
 #### Partial Revert 
 ```javascript
-return paymentAPI.revertTransaction("transactionId", new RevertTransactionRequest(amount));
+return paymentAPI.revertTransaction(transactionId, new RevertTransactionRequest(amount));
 ```
 * retruns PromiseLike<[TransactionResponse](/ts/src/model/response/TransactionResponse.ts)>
 
 #### Revert whole transaction
 ```javascript
-return paymentAPI.revertTransaction("transactionId", new RevertTransactionRequest());
+return paymentAPI.revertTransaction(transactionId, new RevertTransactionRequest());
 ```
 * retruns PromiseLike<[TransactionResponse](/ts/src/model/response/TransactionResponse.ts)>
 
 #### Transaction Status
 ```javascript
-return paymentAPI.transactionStatus("transactionId");
+return paymentAPI.transactionStatus(transactionId);
 ```
 * returns PromiseLike<[TransactionStatusResponse](/ts/src/model/response/TransactionStatusResponse.ts)>
 
