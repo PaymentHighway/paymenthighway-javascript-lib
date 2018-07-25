@@ -252,7 +252,7 @@ return paymentAPI.commitTransaction(transactionId, request); // Returns PromiseL
 
 #### Tokenize (get the actual card token by using token id)
 ```javascript
-return paymentAPI.tokenization("tokenizationId");
+return paymentAPI.tokenization(tokenizationId);
 ```
 * returns PromiseLike<[TokenizationResponse](/ts/src/model/response/TokenizationResponse.ts)>
 
