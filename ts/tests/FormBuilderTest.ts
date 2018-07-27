@@ -66,6 +66,14 @@ function testWebhookNameValuePairs(nameValuePairs: Pair<string, string>[], skipD
     }
 }
 
+function assertNameValuePair(nameValuePairs: Pair<string, string>[], key: string, value: string): void {
+    const element = nameValuePairs.find((pair) => {
+        return pair.first === key;
+    });
+
+    assert(element.second === value);
+}
+
 describe('Form builder', () => {
     it('Should have instance of FormBuilder', () => {
         assert.instanceOf(formBuilder, FormBuilder, 'Was not instance of FormBuilder');
@@ -340,7 +348,7 @@ describe('Form builder', () => {
             });
     });
 
-    xit('Test siirto form with mandatory parameters', (done) => {
+    it('Test siirto form with mandatory parameters', (done) => {
         const referenceNumber = '1313';
         const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber);
         testNameValuePairs(formContainer.nameValuePairs, 15);
@@ -352,7 +360,7 @@ describe('Form builder', () => {
             });
     });
 
-    xit('Test siirto form with optional parameters', (done) => {
+    it('Test siirto form with optional parameters', (done) => {
         const phoneNumber = '+358441234567';
         const referenceNumber = '1313';
         const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber, phoneNumber);
@@ -434,4 +442,47 @@ describe('Form builder', () => {
         testWebhookNameValuePairs(formContainer.nameValuePairs, true);
     });
 
+    it('Test pivo mandatory parameters', (done) => {
+        const formContainer = formBuilder.generatePivoParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, orderId, description);
+
+        testNameValuePairs(formContainer.nameValuePairs, 14);
+        const actionUrl = '/form/view/pivo';
+        FormConnection.postForm(formContainer)
+            .then((response) => {
+                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+                assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'redirect location doesn\'t match ' + response.header);
+                done();
+            });
+    });
+
+    it('Test pivo optional parameters', (done) => {
+        const phoneNumber = '+358444160589';
+        const referenceNumber = '1313';
+        const appUrl = 'myapp://url';
+
+        const formContainer = formBuilder.generatePivoParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber, phoneNumber,
+            appUrl);
+
+        testNameValuePairs(formContainer.nameValuePairs, 17);
+        assertNameValuePair(formContainer.nameValuePairs, 'sph-phone-number', phoneNumber);
+        assertNameValuePair(formContainer.nameValuePairs, 'sph-reference-number', referenceNumber);
+        assertNameValuePair(formContainer.nameValuePairs, 'sph-app-url', appUrl);
+        FormConnection.postForm(formContainer)
+            .then((response) => {
+                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+                assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'redirect location doesn\'t match ' + response.header);
+                done();
+            });
+    });
+
+    it('Test pivo app url', () => {
+        const formContainer = formBuilder.generatePivoParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, orderId, description, '+358444160589', undefined, 'myapp://url');
+
+        testNameValuePairs(formContainer.nameValuePairs, 16);
+        const actionUrl = '/form/view/pivo';
+        assert(formContainer.actionUrl === actionUrl, 'action url should be ' + actionUrl + 'got ' + formContainer.actionUrl);
+    });
 });

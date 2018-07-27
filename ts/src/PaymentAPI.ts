@@ -24,13 +24,17 @@ import {MobilePayInitResponse} from './model/response/MobilePayInitResponse';
 import {MobilePayStatusResponse} from './model/response/MobilePayStatusResponse';
 import {RevertSiirtoTransactionRequest} from './model/request/RevertSiirtoTransactionRequest';
 import {SiirtoTransactionResultResponse} from './model/response/SiirtoTransactionResultResponse';
+import {RevertPivoTransactionRequest} from './model/request/RevertPivoTransactionRequest';
+import {PivoTransactionResultResponse} from './model/response/PivoTransactionResultResponse';
+import {PivoTransactionStatusResponse} from './model/response/PivoTransactionStatusResponse';
+import {SiirtoTransactionStatusResponse} from './model/response/SiirtoTransactionStatusResponse';
 
 /**
  * Payment Highway Payment API Service.
  */
 export class PaymentAPI {
 
-    private static API_VERSION: string = '20180426';
+    private static API_VERSION: string = '20180725';
 
     // Payment API headers
     public static USER_AGENT: string = 'PaymentHighway Javascript Library';
@@ -92,7 +96,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Revert Transaction with amount
+     * Payment Highway Revert Transaction
      *
      * @param transactionId
      * @param request
@@ -104,7 +108,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Revert Siirto Transaction with amount
+     * Payment Highway Revert Siirto Transaction
      *
      * @param transactionId
      * @param request
@@ -112,6 +116,18 @@ export class PaymentAPI {
      */
     public revertSiirtoTransaction(transactionId: string, request: RevertSiirtoTransactionRequest): PromiseLike<Response> {
         const revertUri = '/transaction/' + transactionId + '/siirto/revert';
+        return this.makeRequest('POST', revertUri, request);
+    }
+
+    /**
+     * Payment Highway Revert Pivo Transaction
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<Response>}
+     */
+    public revertPivoTransaction(transactionId: string, request: RevertPivoTransactionRequest): PromiseLike<Response> {
+        const revertUri = '/transaction/' + transactionId + '/pivo/revert';
         return this.makeRequest('POST', revertUri, request);
     }
 
@@ -137,6 +153,28 @@ export class PaymentAPI {
      */
     public transactionStatus(transactionId: string): PromiseLike<TransactionStatusResponse> {
         const statusUri = '/transaction/' + transactionId;
+        return this.makeRequest('GET', statusUri);
+    }
+
+    /**
+     * Payment Highway Pivo Transaction Status Request
+     *
+     * @param transactionId
+     * @returns {PromiseLike<PivoTransactionStatusResponse>}
+     */
+    public pivoTransactionStatus(transactionId: string): PromiseLike<PivoTransactionStatusResponse> {
+        const statusUri = '/transaction/pivo/' + transactionId;
+        return this.makeRequest('GET', statusUri);
+    }
+
+    /**
+     * Payment Highway Siirto Transaction Status Request
+     *
+     * @param transactionId
+     * @returns {PromiseLike<SiirtoTransactionStatusResponse>}
+     */
+    public siirtoTransactionStatus(transactionId: string): PromiseLike<SiirtoTransactionStatusResponse> {
+        const statusUri = '/transaction/siirto/' + transactionId;
         return this.makeRequest('GET', statusUri);
     }
 
@@ -195,6 +233,18 @@ export class PaymentAPI {
      */
     public siirtoTransactionResult(transactionId: string): PromiseLike<SiirtoTransactionResultResponse> {
         const transactionResultUrl = '/transaction/' + transactionId + '/siirto/result';
+        return this.makeRequest('GET', transactionResultUrl);
+    }
+
+    /**
+     * Payment Highway Pivo Transaction Result Request
+     * Used to find out whether or not an Pivo transaction succeeded.
+     *
+     * @param transactionId
+     * @returns {PromiseLike<PivoTransactionResultResponse>}
+     */
+    public pivoTransactionResult(transactionId: string): PromiseLike<PivoTransactionResultResponse> {
+        const transactionResultUrl = '/transaction/' + transactionId + '/pivo/result';
         return this.makeRequest('GET', transactionResultUrl);
     }
 

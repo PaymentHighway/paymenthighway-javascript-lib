@@ -6,5 +6,5 @@ export interface Revert {
     amount: string;
     timestamp: string;
     modified: string;
-    filingCode?: string;
+    filing_code?: string;
 }

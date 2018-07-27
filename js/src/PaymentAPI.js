@@ -59,7 +59,7 @@ class PaymentAPI {
         return this.makeRequest('POST', debitUri, request);
     }
     /**
-     * Payment Highway Revert Transaction with amount
+     * Payment Highway Revert Transaction
      *
      * @param transactionId
      * @param request
@@ -70,7 +70,7 @@ class PaymentAPI {
         return this.makeRequest('POST', revertUri, request);
     }
     /**
-     * Payment Highway Revert Siirto Transaction with amount
+     * Payment Highway Revert Siirto Transaction
      *
      * @param transactionId
      * @param request
@@ -78,6 +78,17 @@ class PaymentAPI {
      */
     revertSiirtoTransaction(transactionId, request) {
         const revertUri = '/transaction/' + transactionId + '/siirto/revert';
+        return this.makeRequest('POST', revertUri, request);
+    }
+    /**
+     * Payment Highway Revert Pivo Transaction
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<Response>}
+     */
+    revertPivoTransaction(transactionId, request) {
+        const revertUri = '/transaction/' + transactionId + '/pivo/revert';
         return this.makeRequest('POST', revertUri, request);
     }
     /**
@@ -101,6 +112,26 @@ class PaymentAPI {
      */
     transactionStatus(transactionId) {
         const statusUri = '/transaction/' + transactionId;
+        return this.makeRequest('GET', statusUri);
+    }
+    /**
+     * Payment Highway Pivo Transaction Status Request
+     *
+     * @param transactionId
+     * @returns {PromiseLike<PivoTransactionStatusResponse>}
+     */
+    pivoTransactionStatus(transactionId) {
+        const statusUri = '/transaction/pivo/' + transactionId;
+        return this.makeRequest('GET', statusUri);
+    }
+    /**
+     * Payment Highway Siirto Transaction Status Request
+     *
+     * @param transactionId
+     * @returns {PromiseLike<SiirtoTransactionStatusResponse>}
+     */
+    siirtoTransactionStatus(transactionId) {
+        const statusUri = '/transaction/siirto/' + transactionId;
         return this.makeRequest('GET', statusUri);
     }
     /**
@@ -154,6 +185,17 @@ class PaymentAPI {
      */
     siirtoTransactionResult(transactionId) {
         const transactionResultUrl = '/transaction/' + transactionId + '/siirto/result';
+        return this.makeRequest('GET', transactionResultUrl);
+    }
+    /**
+     * Payment Highway Pivo Transaction Result Request
+     * Used to find out whether or not an Pivo transaction succeeded.
+     *
+     * @param transactionId
+     * @returns {PromiseLike<PivoTransactionResultResponse>}
+     */
+    pivoTransactionResult(transactionId) {
+        const transactionResultUrl = '/transaction/' + transactionId + '/pivo/result';
         return this.makeRequest('GET', transactionResultUrl);
     }
     /**
@@ -257,7 +299,7 @@ class PaymentAPI {
         return requestPromise(options);
     }
 }
-PaymentAPI.API_VERSION = '20180426';
+PaymentAPI.API_VERSION = '20180725';
 // Payment API headers
 PaymentAPI.USER_AGENT = 'PaymentHighway Javascript Library';
 exports.PaymentAPI = PaymentAPI;
