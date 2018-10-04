@@ -281,15 +281,13 @@ describe('Form builder', () => {
             });
     });
 
-    it('Test mobilepay form with optional parameters', (done) => {
+    it('Test mobilepay form with optional parameters', () => {
         const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language,
-            amount, currency, orderId, description, true, 'https://foo.bar', '+35844123465', 'Jaskan kello', 'submerchantId', 'submerchantName');
+            amount, currency, orderId, description, true, 'https://foo.bar', '+35844123465', 'Jaskan kello', '12345678', 'submerchantName');
         testNameValuePairs(formContainer.nameValuePairs, 20);
-        FormConnection.postForm(formContainer)
-            .then((response) => {
-                assert(response.statusCode === 200, 'Response status code should be 200, got ' + response.statusCode);
-                done();
-            });
+        return FormConnection.postForm(formContainer).then((response) => {
+            assert(response.statusCode === 200, 'Response status code should be 200, got ' + response.statusCode);
+        });
     });
 
     it('Test 3ds PayWithTokenAndCvc parameters', (done) => {
