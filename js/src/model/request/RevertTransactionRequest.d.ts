@@ -3,6 +3,6 @@
  * entire amount will be reverted
  */
 export declare class RevertTransactionRequest {
-    amount: number;
+    amount?: number;
     constructor(amount?: number);
 }

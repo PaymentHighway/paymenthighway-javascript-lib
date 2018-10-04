@@ -4,6 +4,6 @@
  */
 export declare class RevertSiirtoTransactionRequest {
     reference_number: string;
-    amount: number;
+    amount?: number;
     constructor(reference_number: string, amount?: number);
 }

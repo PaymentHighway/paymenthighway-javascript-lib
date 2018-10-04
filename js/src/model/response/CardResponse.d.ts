@@ -8,4 +8,6 @@ export interface CardResponse {
     funding: string;
     category: string;
     country_code?: string;
+    card_fingerprint?: string;
+    pan_fingerprint?: string;
 }

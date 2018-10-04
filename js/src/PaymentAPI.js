@@ -299,7 +299,7 @@ class PaymentAPI {
         return requestPromise(options);
     }
 }
-PaymentAPI.API_VERSION = '20180725';
+PaymentAPI.API_VERSION = '20180927';
 // Payment API headers
 PaymentAPI.USER_AGENT = 'PaymentHighway Javascript Library';
 exports.PaymentAPI = PaymentAPI;

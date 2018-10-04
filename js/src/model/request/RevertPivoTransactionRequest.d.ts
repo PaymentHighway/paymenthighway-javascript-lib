@@ -3,7 +3,7 @@
  * entire amount will be reverted.
  */
 export declare class RevertPivoTransactionRequest {
-    reference_number: string;
-    amount: number;
+    reference_number?: string;
+    amount?: number;
     constructor(reference_number?: string, amount?: number);
 }
