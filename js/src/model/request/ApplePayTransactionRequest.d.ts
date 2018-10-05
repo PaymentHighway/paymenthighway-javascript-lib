@@ -4,9 +4,9 @@ export declare class ApplePayTransactionRequest {
     payment_data: PaymentData;
     amount: number;
     currency: string;
-    commit?: boolean;
-    order?: string;
-    customer?: Customer;
+    commit: boolean;
+    order: string;
+    customer: Customer;
     constructor(payment_data: PaymentData, amount: number, currency: string, commit?: boolean, order?: string, customer?: Customer);
     static Builder(payment_data: PaymentData, amount: number, currency: string): ApplePayTransaction.RequestBuilder;
 }

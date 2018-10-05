@@ -30,7 +30,7 @@ export declare class SecureSigner {
      * @param body
      * @return String signature
      */
-    private sign;
+    private sign(method, uri, keyValues, body);
     /**
      * Signature is formed from parameters that start with "sph-" Therefore we
      * remove other parameters from the signature param set.
@@ -38,7 +38,7 @@ export declare class SecureSigner {
      * @param keyValues
      * @returns string
      */
-    private createKeyValString;
+    private createKeyValString(keyValues);
     /**
      * Validates the response by checking the provided signature against the calculated one.
      *
@@ -55,5 +55,5 @@ export declare class SecureSigner {
      * @return boolean
      */
     validateFormRedirect(keyValues: Dictionary<string>): boolean;
-    private parseKeyValues;
+    private parseKeyValues(keyValues);
 }

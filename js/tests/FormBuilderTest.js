@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const __1 = require("..");
@@ -98,48 +90,45 @@ describe('Form builder', () => {
                         .then(() => page.screenshot({ path: 'example.png' }))
                         .then(() => page.setRequestInterception(true))
                         .then(() => {
-                        return new Promise((resolve, reject) => {
-                            page
-                                .on('request', (request) => __awaiter(this, void 0, void 0, function* () {
-                                if (!request.url().startsWith('https://example.com')) {
-                                    request.continue();
-                                }
-                                else {
-                                    const uri = URI.parse(request.url());
-                                    const parameters = URI.parseQuery(uri.query);
-                                    chai_1.assert.isTrue(ss.validateFormRedirect(parameters), 'Validate redirect should return true');
-                                    return yield paymentAPI
-                                        .tokenization(parameters['sph-tokenization-id'])
-                                        .then((tokenResponse) => {
-                                        chai_1.assert(tokenResponse.card.expire_year === '2023', 'Expire year should be 2023');
-                                        chai_1.assert(tokenResponse.card.expire_month === '11', 'Expire month should be 11');
-                                        chai_1.assert(tokenResponse.card.type === 'Visa', 'Card type should be Visa');
-                                        chai_1.assert(tokenResponse.card.cvc_required === 'no', 'Should not require CVC');
-                                        cardToken = tokenResponse.card_token;
-                                    })
-                                        .then(() => {
-                                        // Do not respond before token is received
-                                        return request.respond({
-                                            status: 200,
-                                            contentType: 'text/plain',
-                                            body: ''
-                                        });
-                                    })
-                                        .then(() => resolve(browser.close()), error => {
-                                        reject(error);
-                                        return browser.close();
-                                    });
-                                }
-                            }))
-                                .click('button[type=submit]')
-                                .then(() => null, error => {
-                                reject(error);
-                                return browser.close();
-                            });
+                        // required for page.click and returning non 404
+                        page.on('request', (request) => {
+                            if (!request.url().startsWith('https://example.com')) {
+                                return request.continue();
+                            }
+                            else {
+                                return request.respond({
+                                    status: 200,
+                                    contentType: 'text/plain',
+                                    body: ''
+                                });
+                            }
                         });
+                        return Promise
+                            .all([
+                            page.waitForResponse(response => {
+                                return response.status() === 200; // will continue after redirects
+                            }).then(response => {
+                                chai_1.assert.isTrue(response.request().url().startsWith('https://example.com'), 'Final response url was not example.com');
+                                const uri = URI.parse(response.request().url());
+                                const parameters = URI.parseQuery(uri.query);
+                                chai_1.assert.isTrue(ss.validateFormRedirect(parameters), 'Validate redirect should return true');
+                                return paymentAPI
+                                    .tokenization(parameters['sph-tokenization-id'])
+                                    .then((tokenResponse) => {
+                                    chai_1.assert(tokenResponse.card.expire_year === '2023', 'Expire year should be 2023');
+                                    chai_1.assert(tokenResponse.card.expire_month === '11', 'Expire month should be 11');
+                                    chai_1.assert(tokenResponse.card.type === 'Visa', 'Card type should be Visa');
+                                    chai_1.assert(tokenResponse.card.cvc_required === 'no', 'Should not require CVC');
+                                    cardToken = tokenResponse.card_token;
+                                });
+                            }),
+                            page.click('button[type=submit]')
+                        ]);
                     });
                 }).then(() => {
                     return browser.close();
+                }, error => {
+                    return browser.close().then(() => chai_1.assert.ifError(error));
                 });
             });
         })
