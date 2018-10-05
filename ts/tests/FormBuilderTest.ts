@@ -11,7 +11,6 @@ import {TransactionRequest} from '..';
 import {Token} from '..';
 import {TransactionResponse} from '../src/model/response/TransactionResponse';
 import * as puppeteer from 'puppeteer';
-import * as BluebirdPromise from 'bluebird';
 
 use(require('chai-string'));
 
@@ -107,48 +106,51 @@ describe('Form builder', () => {
                                 .then(() => page.screenshot({path: 'example.png'}))
                                 .then(() => page.setRequestInterception(true))
                                 .then(() => {
-                                    return new Promise<void>((resolve, reject) => {
-                                        page
-                                            .on('request', async (request) => {
-                                                if (!request.url().startsWith('https://example.com')) {
-                                                    request.continue();
-                                                } else {
-                                                    const uri = URI.parse(request.url());
-                                                    const parameters = <Dictionary<string>> URI.parseQuery(uri.query);
-                                                    assert.isTrue(ss.validateFormRedirect(parameters), 'Validate redirect should return true');
-                                                    return await paymentAPI
-                                                        .tokenization(parameters['sph-tokenization-id'])
-                                                        .then((tokenResponse) => {
-                                                            assert(tokenResponse.card.expire_year === '2023', 'Expire year should be 2023');
-                                                            assert(tokenResponse.card.expire_month === '11', 'Expire month should be 11');
-                                                            assert(tokenResponse.card.type === 'Visa', 'Card type should be Visa');
-                                                            assert(tokenResponse.card.cvc_required === 'no', 'Should not require CVC');
-
-                                                            cardToken = tokenResponse.card_token;
-                                                        })
-                                                        .then(() => {
-                                                            // Do not respond before token is received
-                                                            return request.respond({
-                                                                status: 200,
-                                                                contentType: 'text/plain',
-                                                                body: ''
-                                                            });
-                                                        })
-                                                        .then(() => resolve(browser.close()), error => {
-                                                            reject(error);
-                                                            return browser.close();
-                                                        });
-                                                }
-                                            })
-                                            .click('button[type=submit]')
-                                            .then(() => null, error => {
-                                                reject(error);
-                                                return browser.close();
+                                    // required for page.click and returning non 404
+                                    page.on('request', (request) => {
+                                        if (!request.url().startsWith('https://example.com')) {
+                                            return request.continue();
+                                        } else {
+                                            return request.respond({
+                                                status: 200,
+                                                contentType: 'text/plain',
+                                                body: ''
                                             });
+                                        }
                                     });
+
+                                    return Promise
+                                        .all([
+                                            page.waitForResponse(response => {
+                                                return response.status() === 200; // will continue after redirects
+                                            }).then(response => {
+                                                assert.isTrue(
+                                                    response.request().url().startsWith('https://example.com'),
+                                                    'Final response url was not example.com'
+                                                );
+
+                                                const uri = URI.parse(response.request().url());
+                                                const parameters = <Dictionary<string>> URI.parseQuery(uri.query);
+                                                assert.isTrue(ss.validateFormRedirect(parameters), 'Validate redirect should return true');
+                                                return paymentAPI
+                                                    .tokenization(parameters['sph-tokenization-id'])
+                                                    .then((tokenResponse) => {
+                                                        assert(tokenResponse.card.expire_year === '2023', 'Expire year should be 2023');
+                                                        assert(tokenResponse.card.expire_month === '11', 'Expire month should be 11');
+                                                        assert(tokenResponse.card.type === 'Visa', 'Card type should be Visa');
+                                                        assert(tokenResponse.card.cvc_required === 'no', 'Should not require CVC');
+
+                                                        cardToken = tokenResponse.card_token;
+                                                    });
+
+                                            }),
+                                            page.click('button[type=submit]')
+                                        ]);
                                 });
                         }).then(() => {
                             return browser.close();
+                        }, error => {
+                            return browser.close().then(() => assert.ifError(error) );
                         });
                     });
             })
