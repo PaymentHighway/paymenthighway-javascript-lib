@@ -34,7 +34,7 @@ import {SiirtoTransactionStatusResponse} from './model/response/SiirtoTransactio
  */
 export class PaymentAPI {
 
-    private static API_VERSION: string = '20180725';
+    private static API_VERSION: string = '20180927';
 
     // Payment API headers
     public static USER_AGENT: string = 'PaymentHighway Javascript Library';

@@ -60,25 +60,23 @@ describe('PaymentAPI', () => {
         assert.instanceOf(api, PaymentAPI, 'Was not instance of PaymentAPI');
     });
 
-    it('Test init transaction', (done) => {
-        api.initTransaction().then((body) => {
+    it('Test init transaction', () => {
+        return api.initTransaction().then((body) => {
             checkResult(body);
             assert.isNotNull(body.id, 'Transaction init should return id');
-            done();
         });
     });
 
-    it('Test debit transaction', (done) => {
-        createDebitTransaction().then((body) => {
+    it('Test debit transaction', () => {
+        return createDebitTransaction().then((body) => {
             assert.isNotNull(body.id, 'Transaction id not received');
-            done();
         });
     });
 
-    it('Test commit transaction', (done) => {
+    it('Test commit transaction', () => {
         const commitRequest = new CommitTransactionRequest(9999, 'EUR');
         let transactionId: string;
-        createDebitTransaction('12345ABC', false)
+        return createDebitTransaction('12345ABC', false)
             .then((initResponse) => {
                 transactionId = initResponse.id;
                 return api.commitTransaction(transactionId, commitRequest);
@@ -88,39 +86,39 @@ describe('PaymentAPI', () => {
                 assert(commitResponse.card.type === 'Visa', 'Card type should be "Visa"' + printResult(commitResponse));
                 assert(commitResponse.card.cvc_required === 'not_tested', 'Test card should return cvc_required = not_tested' + printResult(commitResponse));
                 assert(commitResponse.recurring === false, 'Transaction should have recurring as false.' + printResult(commitResponse));
+
+                assert(true === /^[0-9a-f]{64}$/.test(commitResponse.card.card_fingerprint), 'Card fingerprint didn\'t contain 64 hex chars');
+                assert(true === /^[0-9a-f]{64}$/.test(commitResponse.card.pan_fingerprint), 'Pan fingerprint didn\'t contain 64 hex chars');
+
                 return api.transactionResult(transactionId);
             })
             .then((resultResponse) => {
                 assert(resultResponse.recurring === false, 'Transaction result should have recurring false.' + printResult(resultResponse));
                 checkResult(resultResponse);
-                done();
             });
     });
 
-    it('Test uncommitted transaction', (done) => {
+    it('Test uncommitted transaction', () => {
         let transactionId: string;
-        createDebitTransaction('12345DEF', false)
+        return createDebitTransaction('12345DEF', false)
             .then((initResponse) => {
                 transactionId = initResponse.id;
-
-                done();
             });
     });
 
-    it('Test revert transaction', (done) => {
-        createDebitTransaction()
+    it('Test revert transaction', () => {
+        return createDebitTransaction()
             .then((initResponse) => {
                 return api.revertTransaction(initResponse.id, new RevertTransactionRequest(9999));
             })
             .then((revertResponse) => {
                 checkResult(revertResponse);
-                done();
             });
     });
 
-    it('Test revert whole transaction', (done) => {
+    it('Test revert whole transaction', () => {
         let transactionId: string;
-        createDebitTransaction()
+        return createDebitTransaction()
             .then((initResponse) => {
                 transactionId = initResponse.id;
                 return api.revertTransaction(transactionId, new RevertTransactionRequest());
@@ -133,13 +131,12 @@ describe('PaymentAPI', () => {
                 checkResult(statusResponse);
                 assert(statusResponse.transaction.current_amount === 0, 'Transaction current amount should be 0' + printResult(statusResponse));
                 assert(statusResponse.transaction.id === transactionId, 'Transaction id should be same with init response and revert response' + printResult(statusResponse));
-                done();
             });
     });
 
-    it('Test transaction status', (done) => {
+    it('Test transaction status', () => {
         let transactionId: string;
-        createDebitTransaction()
+        return createDebitTransaction()
             .then((initResponse) => {
                 transactionId = initResponse.id;
                 return api.revertTransaction(transactionId, new RevertTransactionRequest(9950));
@@ -152,11 +149,10 @@ describe('PaymentAPI', () => {
                 assert(statusResponse.transaction.current_amount === 49, 'Current amount should be 49, it was ' + statusResponse.transaction.current_amount + printResult(statusResponse));
                 assert(statusResponse.transaction.id === transactionId, 'Transaction id should be same with init response and revert response' + printResult(statusResponse));
                 assert(statusResponse.transaction.card.cvc_required === 'not_tested', 'Test card should return cvc_required = not_tested' + printResult(statusResponse));
-                done();
             });
     });
 
-    it('Test splitting in transaction status', (done) => {
+    it('Test splitting in transaction status', () => {
       let transactionId: string;
 
       let subMerchantId = '12345';
@@ -164,7 +160,7 @@ describe('PaymentAPI', () => {
 
       let splitting = new Splitting(subMerchantId, amountToSubMerchant);
 
-      createDebitTransaction(undefined, undefined, splitting)
+      return createDebitTransaction(undefined, undefined, splitting)
         .then((initResponse) => {
           transactionId = initResponse.id;
           return api.transactionStatus(transactionId);
@@ -173,14 +169,13 @@ describe('PaymentAPI', () => {
           checkResult(statusResponse);
           assert(statusResponse.transaction.splitting.merchant_id === subMerchantId, 'Status response should contain matching splitting merchant ID');
           assert(statusResponse.transaction.splitting.amount === amountToSubMerchant, 'Status response should contain matching splitting amount');
-          done();
         });
     });
 
-    it('Test order search', (done) => {
+    it('Test order search', () => {
         let transactionId: string;
         const orderId = PaymentHighwayUtility.createRequestId();
-        createDebitTransaction(orderId)
+        return createDebitTransaction(orderId)
             .then((initResponse) => {
                 transactionId = initResponse.id;
                 return api.searchOrders(orderId);
@@ -190,24 +185,22 @@ describe('PaymentAPI', () => {
                 assert(searchResponse.transactions[0].current_amount === 9999, 'Current amount for tested order should be 9999, it was: ' + searchResponse.transactions[0].current_amount + printResult(searchResponse));
                 assert(searchResponse.transactions[0].id === transactionId, 'Transaction id should be same with init response and search response' + printResult(searchResponse));
                 assert(searchResponse.transactions[0].recurring === false, 'Transaction should have recurring false' + printResult(searchResponse));
-                done();
             });
     });
 
-    it('Test daily batch report', (done) => {
+    it('Test daily batch report', () => {
         const date = moment().add(1, 'days').format('YYYYMMDD');
-        api.fetchDailyReport(date)
+        return api.fetchDailyReport(date)
             .then((reportResponse) => {
                 checkResult(reportResponse);
-                done();
             });
     });
 
-    it('Test rejected debit response', (done) => {
+    it('Test rejected debit response', () => {
         const testCardTokenizeOkPaymentFails = new Card('4153013999700156', '2023', '11', '156');
         const orderId = PaymentHighwayUtility.createRequestId();
         let transactionResponse: TransactionResponse;
-        api.initTransaction()
+        return api.initTransaction()
             .then((response) => {
                 transactionResponse = response;
                 const transactionRequest = new TransactionRequest(testCardTokenizeOkPaymentFails, 9999, 'EUR', orderId);
@@ -224,14 +217,13 @@ describe('PaymentAPI', () => {
             })
             .then((statusResponse) => {
                 assert(statusResponse.transaction.committed === false, 'Committed should be false, got' + statusResponse.transaction.committed);
-                done();
             });
     });
 
-    it('Test Masterpass transaction', (done) => {
+    it('Test Masterpass transaction', () => {
         const preGeneratedMasterpassTransaction = '327c6f29-9b46-40b9-b85b-85e908015d92';
 
-        api.userProfile(preGeneratedMasterpassTransaction)
+        return api.userProfile(preGeneratedMasterpassTransaction)
             .then((userProfileResponse) => {
                 checkResult(userProfileResponse);
 
@@ -252,8 +244,6 @@ describe('PaymentAPI', () => {
             })
             .then((debitResponse) => {
                 checkResult(debitResponse);
-
-                done();
             });
     });
 

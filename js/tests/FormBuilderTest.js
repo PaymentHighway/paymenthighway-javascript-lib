@@ -62,7 +62,12 @@ function assertNameValuePair(nameValuePairs, key, value) {
     });
     chai_1.assert(element.second === value);
 }
+const hubHostname = URI.parse(baseUrl).hostname;
+let hubServerRegexp;
 describe('Form builder', () => {
+    before(() => {
+        hubServerRegexp = new RegExp('^https:\\/\\/(([^.]+).cloudfront.net|' + hubHostname + ').*');
+    });
     it('Should have instance of FormBuilder', () => {
         chai_1.assert.instanceOf(formBuilder, __1.FormBuilder, 'Was not instance of FormBuilder');
     });
@@ -72,72 +77,111 @@ describe('Form builder', () => {
         chai_1.assert(formContainer.getAction() === baseUrl + '/form/view/add_card', 'Action url should be ' + baseUrl + '/form/view/add_card' +
             ' got ' + formContainer.getAction());
     });
+    const abortWhenNonHubUrl = (request) => {
+        if (hubServerRegexp.test(request.url())) {
+            return request.continue();
+        }
+        else {
+            return request.abort();
+        }
+    };
+    const emptyOkWhenNonHubUrl = (request) => {
+        if (hubServerRegexp.test(request.url())) {
+            return request.continue();
+        }
+        else {
+            return request.respond({
+                status: 200,
+                contentType: 'text/plain',
+                body: ''
+            });
+        }
+    };
     it('Test tokenize', (done) => {
         const formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language);
         const paymentAPI = new __2.PaymentAPI(baseUrl, signatureKeyId, signatureSecret, sphAccount, sphMerchant);
         FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            puppeteer.launch({ args: ['--no-sandbox'] }).then((browser) => {
-                browser.newPage().then((page) => {
-                    page.setRequestInterception(true).then(() => {
-                        page.on('request', (request) => {
-                            if (!request.url().startsWith('https://example.com')) {
-                                request.continue();
-                            }
-                            else {
-                                const uri = URI.parse(request.url());
-                                const parameters = URI.parseQuery(uri.query);
-                                chai_1.assert.isTrue(ss.validateFormRedirect(parameters), 'Validate redirect should return true');
-                                paymentAPI.tokenization(parameters['sph-tokenization-id'])
-                                    .then((tokenResponse) => {
-                                    chai_1.assert(tokenResponse.card.expire_year === '2023', 'Expire year should be 2023');
-                                    chai_1.assert(tokenResponse.card.expire_month === '11', 'Expire month should be 11');
-                                    chai_1.assert(tokenResponse.card.type === 'Visa', 'Card type should be Visa');
-                                    chai_1.assert(tokenResponse.card.cvc_required === 'no', 'Should not require CVC');
-                                    cardToken = tokenResponse.card_token;
-                                    request.abort();
-                                })
-                                    .then(() => browser.close())
-                                    .then(() => done());
-                            }
+            return puppeteer
+                .launch({ args: ['--no-sandbox'] })
+                .then((browser) => {
+                return browser.newPage().then((page) => {
+                    return page.setRequestInterception(true)
+                        .then(() => page.on('request', abortWhenNonHubUrl))
+                        .then(() => Promise.all([
+                        page.waitForNavigation({ waitUntil: 'networkidle0' }),
+                        page.goto(baseUrl + response.headers.location, { waitUntil: 'load' })
+                    ]))
+                        .then(() => Promise.all([
+                        page.type('input[name=card_number_formatted]', '4153 0139 9970 0024')
+                            .then(() => page.type('input[name=expiry]', '11 / 23'))
+                            .then(() => page.type('input[name=cvv]', '024')),
+                        // Waiting card logo!!!
+                        page.waitForResponse('https://d1kc0e613bxbjg.cloudfront.net/images/form/visa_pos_fc.png')
+                    ]))
+                        .then(() => page.screenshot({ path: 'example.png' }))
+                        .then(() => page.removeListener('request', abortWhenNonHubUrl)
+                        // required for page.click and returning non 404
+                        .on('request', emptyOkWhenNonHubUrl))
+                        .then(() => {
+                        return Promise
+                            .all([
+                            page.waitForRequest(request => {
+                                return request.url().startsWith('https://example.com');
+                            }),
+                            page.click('button[type=submit]')
+                        ]).then(([request, _]) => {
+                            chai_1.assert.isTrue(request.url().startsWith(successUrl), 'Final request url didn\'t start with ' + successUrl);
+                            const uri = URI.parse(request.url());
+                            const parameters = URI.parseQuery(uri.query);
+                            chai_1.assert.isTrue(ss.validateFormRedirect(parameters), 'Validate redirect should return true');
+                            return paymentAPI
+                                .tokenization(parameters['sph-tokenization-id'])
+                                .then((tokenResponse) => {
+                                chai_1.assert(tokenResponse.card.expire_year === '2023', 'Expire year should be 2023');
+                                chai_1.assert(tokenResponse.card.expire_month === '11', 'Expire month should be 11');
+                                chai_1.assert(tokenResponse.card.type === 'Visa', 'Card type should be Visa');
+                                chai_1.assert(tokenResponse.card.cvc_required === 'no', 'Should not require CVC');
+                                cardToken = tokenResponse.card_token;
+                                return cardToken;
+                            });
                         });
                     });
-                    page.goto(baseUrl + response.headers.location)
-                        .then(() => page.type('input[name=card_number_formatted]', '4153 0139 9970 0024'))
-                        .then(() => page.type('input[name=expiry]', '11 / 23'))
-                        .then(() => page.type('input[name=cvv]', '024'))
-                        .then(() => page.screenshot({ path: 'example.png' }))
-                        .then(() => page.click('button[type=submit]'));
+                }).then(result => {
+                    return browser.close().then(() => result);
+                }, error => {
+                    return browser.close().then(() => chai_1.assert.ifError(error));
                 });
             });
+        })
+            .then(() => { done(); }, error => {
+            done(error);
         });
     });
-    it('Test with acceptCvcRequired set to false.', (done) => {
+    it('Test with acceptCvcRequired set to false.', () => {
         const acceptCvcRequired = false;
         const formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language, acceptCvcRequired);
         const signature = formContainer.nameValuePairs.find((x) => x.first === 'signature');
         chai_1.assert.isNotNull(signature, 'Form signature should not be null');
         chai_1.assert.startsWith(signature.second, 'SPH1', 'Signature should start with "SPH1"');
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             testRedirectResponse(response, '/tokenize');
-            done();
         });
     });
-    it('Test with acceptCvcRequired set to true.', (done) => {
+    it('Test with acceptCvcRequired set to true.', () => {
         const acceptCvcRequired = false;
         const formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language, acceptCvcRequired);
         const signature = formContainer.nameValuePairs.find((x) => x.first === 'signature');
         chai_1.assert.isNotNull(signature, 'Form signature should not be null');
         chai_1.assert.startsWith(signature.second, 'SPH1', 'Signature should start with "SPH1"');
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             testRedirectResponse(response, '/tokenize');
-            done();
         });
     });
-    it('Test add card with all parameters', (done) => {
+    it('Test add card with all parameters', () => {
         const acceptCvcRequired = true;
         const skipFormNotifications = true;
         const exitIframeOnResult = true;
@@ -145,13 +189,12 @@ describe('Form builder', () => {
         const use3ds = true;
         const formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language, acceptCvcRequired, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
         testNameValuePairs(formContainer.nameValuePairs, 15);
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             testRedirectResponse(response, '/tokenize');
-            done();
         });
     });
-    it('Test add card with only 3ds', (done) => {
+    it('Test add card with only 3ds', () => {
         const acceptCvcRequired = undefined;
         const skipFormNotifications = undefined;
         const exitIframeOnResult = undefined;
@@ -160,23 +203,21 @@ describe('Form builder', () => {
         const formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language, acceptCvcRequired, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
         testNameValuePairs(formContainer.nameValuePairs, 11);
         chai_1.assert(formContainer.nameValuePairs.find((x) => x.first === 'sph-use-three-d-secure').second === 'true', 'sph-use-three-d-secure should be true');
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             testRedirectResponse(response, '/tokenize');
-            done();
         });
     });
-    it('Test mandatory payment parameters ', (done) => {
+    it('Test mandatory payment parameters ', () => {
         const formContainer = formBuilder.generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
         testNameValuePairs(formContainer.nameValuePairs, 14);
         chai_1.assert(formContainer.nameValuePairs.find((x) => x.first === 'description').second === description, 'Description should be same than given description');
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             testRedirectResponse(response, '/payment');
-            done();
         });
     });
-    it('Test optional payment parameters', (done) => {
+    it('Test optional payment parameters', () => {
         const skipFormNotifications = true;
         const exitIframeOnResult = true;
         const exitIframeOn3ds = true;
@@ -184,142 +225,132 @@ describe('Form builder', () => {
         const showPaymentMethodSelector = true;
         const formContainer = formBuilder.generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, undefined, undefined, undefined, undefined, showPaymentMethodSelector);
         testNameValuePairs(formContainer.nameValuePairs, 19);
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             testRedirectResponse(response, '/select_payment_method');
-            done();
         });
     });
-    it('Test mandatory PayWithTokenAndCvc parameters', (done) => {
+    it('Test mandatory PayWithTokenAndCvc parameters', () => {
+        chai_1.assert(cardToken !== undefined, 'Token isn\'t resolved yet');
         const formContainer = formBuilder.generatePayWithTokenAndCvcParameters(cardToken, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
         testNameValuePairs(formContainer.nameValuePairs, 15);
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             testRedirectResponse(response, '/payment_with_token_and_cvc');
-            done();
         });
     });
-    it('Test optional PayWithTokenAndCvc parameters', (done) => {
+    it('Test optional PayWithTokenAndCvc parameters', () => {
+        chai_1.assert(cardToken !== undefined, 'Token isn\'t resolved yet');
         const skipFormNotifications = true;
         const exitIframeOnResult = true;
         const exitIframeOn3ds = true;
         const use3ds = true;
         const formContainer = formBuilder.generatePayWithTokenAndCvcParameters(cardToken, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
         testNameValuePairs(formContainer.nameValuePairs, 19);
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             testRedirectResponse(response, '/payment_with_token_and_cvc');
-            done();
         });
     });
-    it('Test add card and payment parameters with mandatory parameters', (done) => {
+    it('Test add card and payment parameters with mandatory parameters', () => {
         const formContainer = formBuilder.generateAddCardAndPaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
         testNameValuePairs(formContainer.nameValuePairs, 14);
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             testRedirectResponse(response, '/payment');
-            done();
         });
     });
-    it('Test add card and payment parameters with optional parameters', (done) => {
+    it('Test add card and payment parameters with optional parameters', () => {
         const skipFormNotifications = true;
         const exitIframeOnResult = true;
         const exitIframeOn3ds = true;
         const use3ds = true;
         const formContainer = formBuilder.generateAddCardAndPaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
         testNameValuePairs(formContainer.nameValuePairs, 18);
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             testRedirectResponse(response, '/payment');
-            done();
         });
     });
-    it('Test mobilepay form with mandatory parameters', (done) => {
+    it('Test mobilepay form with mandatory parameters', () => {
         const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
         testNameValuePairs(formContainer.nameValuePairs, 14);
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 200, 'Response status code should be 200, got ' + response.statusCode);
-            done();
         });
     });
-    it('Test mobilepay form with optional parameters', (done) => {
-        const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, true, 'https://foo.bar', '+35844123465', 'Jaskan kello', 'submerchantId', 'submerchantName');
+    it('Test mobilepay form with optional parameters', () => {
+        const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, true, 'https://foo.bar', '+35844123465', 'Jaskan kello', '12345678', 'submerchantName');
         testNameValuePairs(formContainer.nameValuePairs, 20);
-        FormConnection_1.FormConnection.postForm(formContainer)
-            .then((response) => {
+        return FormConnection_1.FormConnection.postForm(formContainer).then((response) => {
             chai_1.assert(response.statusCode === 200, 'Response status code should be 200, got ' + response.statusCode);
-            done();
         });
     });
-    it('Test 3ds PayWithTokenAndCvc parameters', (done) => {
+    it('Test 3ds PayWithTokenAndCvc parameters', () => {
+        chai_1.assert(cardToken !== undefined, 'Token isn\'t resolved yet');
         const skipFormNotifications = false;
         const exitIframeOnResult = undefined;
         const exitIframeOn3ds = false;
         const use3ds = true;
         const formContainer = formBuilder.generatePayWithTokenAndCvcParameters(cardToken, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds);
         testNameValuePairs(formContainer.nameValuePairs, 18);
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             testRedirectResponse(response, '/payment_with_token_and_cvc');
-            done();
         });
     });
-    it('Test token debit', (done) => {
+    it('Test token debit', () => {
+        chai_1.assert(cardToken !== undefined, 'Token isn\'t resolved yet');
         const paymentAPI = new __2.PaymentAPI(baseUrl, signatureKeyId, signatureSecret, sphAccount, sphMerchant);
         let initResponse;
         const testCardToken = new __5.Token(cardToken);
-        paymentAPI.initTransaction().then((response) => {
+        return paymentAPI.initTransaction().then((response) => {
             initResponse = response;
             const transactionRequest = new __4.TransactionRequest(testCardToken, 9999, 'USD', orderId);
             return paymentAPI.debitTransaction(initResponse.id, transactionRequest);
         }).then((debitResponse) => {
             chai_1.assert(debitResponse.result.code === 100, 'Request should succeed with code 100, complete response was: ' + JSON.stringify(debitResponse));
             chai_1.assert(debitResponse.result.message === 'OK', 'Request should succeed with message "OK", complete response was: ' + JSON.stringify(debitResponse));
-            done();
         });
     });
-    it('Test masterpass form with mandatory parameters', (done) => {
+    it('Test masterpass form with mandatory parameters', () => {
         const formContainer = formBuilder.generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
         testNameValuePairs(formContainer.nameValuePairs, 14);
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
             chai_1.assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/masterpass/, 'redirect location doesn\'t match ' + response.header);
-            done();
         });
     });
-    it('Test masterpass form with optional parameters', (done) => {
+    it('Test masterpass form with optional parameters', () => {
         const formContainer = formBuilder.generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true);
         testNameValuePairs(formContainer.nameValuePairs, 16);
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
             chai_1.assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/masterpass/, 'redirect location doesn\'t match ' + response.header);
-            done();
         });
     });
-    it('Test siirto form with mandatory parameters', (done) => {
+    it('Test siirto form with mandatory parameters', () => {
         const referenceNumber = '1313';
         const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber);
         testNameValuePairs(formContainer.nameValuePairs, 15);
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
             chai_1.assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/siirto/, 'redirect location doesn\'t match ' + response.header);
-            done();
         });
     });
-    it('Test siirto form with optional parameters', (done) => {
+    it('Test siirto form with optional parameters', () => {
         const phoneNumber = '+358441234567';
         const referenceNumber = '1313';
         const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber, phoneNumber);
         testNameValuePairs(formContainer.nameValuePairs, 16);
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
             chai_1.assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/siirto/, 'redirect location doesn\'t match ' + response.header);
-            done();
         });
     });
     it('Test add card webhook parameters', () => {
@@ -358,18 +389,16 @@ describe('Form builder', () => {
         testNameValuePairs(formContainer.nameValuePairs, 17);
         testWebhookNameValuePairs(formContainer.nameValuePairs, true);
     });
-    it('Test pivo mandatory parameters', (done) => {
+    it('Test pivo mandatory parameters', () => {
         const formContainer = formBuilder.generatePivoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description);
         testNameValuePairs(formContainer.nameValuePairs, 14);
-        const actionUrl = '/form/view/pivo';
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
             chai_1.assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'redirect location doesn\'t match ' + response.header);
-            done();
         });
     });
-    it('Test pivo optional parameters', (done) => {
+    it('Test pivo optional parameters', () => {
         const phoneNumber = '+358444160589';
         const referenceNumber = '1313';
         const appUrl = 'myapp://url';
@@ -378,11 +407,10 @@ describe('Form builder', () => {
         assertNameValuePair(formContainer.nameValuePairs, 'sph-phone-number', phoneNumber);
         assertNameValuePair(formContainer.nameValuePairs, 'sph-reference-number', referenceNumber);
         assertNameValuePair(formContainer.nameValuePairs, 'sph-app-url', appUrl);
-        FormConnection_1.FormConnection.postForm(formContainer)
+        return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
             chai_1.assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'redirect location doesn\'t match ' + response.header);
-            done();
         });
     });
     it('Test pivo app url', () => {

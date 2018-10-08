@@ -6,11 +6,11 @@ export declare class MobilePayInitRequest {
     webhook_success_url: string;
     webhook_cancel_url: string;
     webhook_failure_url: string;
-    language: string;
-    sub_merchant_name: string;
-    sub_merchant_id: string;
-    shop_name: string;
-    shop_logo_url: string;
+    language?: string;
+    sub_merchant_name?: string;
+    sub_merchant_id?: string;
+    shop_name?: string;
+    shop_logo_url?: string;
     constructor(amount: number, currency: string, order: string, return_uri: string, webhook_success_url: string, webhook_cancel_url: string, webhook_failure_url: string, language?: string, sub_merchant_name?: string, sub_merchant_id?: string, shop_name?: string, shop_logo_url?: string);
     static Builder(amount: number, currency: string): MobilePayInit.RequestBuilder;
 }
