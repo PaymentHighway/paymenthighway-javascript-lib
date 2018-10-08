@@ -1,7 +1,7 @@
 import * as requestPromise from 'request-promise';
 import {RequestPromise} from 'request-promise';
-import {PaymentAPI} from '../../src/PaymentAPI';
-import {FormContainer} from '../../src/FormContainer';
+import {PaymentAPI} from '../..';
+import {FormContainer} from '../..';
 import {Pair} from '../../src/util/Pair';
 
 export class FormConnection {

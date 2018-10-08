@@ -1,1 +1,0 @@
-{"version":3,"file":"MasterpassTransactionRequest.js","sourceRoot":"","sources":["../../../../ts/src/model/request/MasterpassTransactionRequest.ts"],"names":[],"mappings":";;AAAA;IAKI,YAAY,MAAc,EAAE,QAAgB,EAAE,MAAgB;QAC1D,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;QACrB,IAAI,CAAC,QAAQ,GAAG,QAAQ,CAAC;QACzB,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;IACzB,CAAC;CACJ;AAVD,oEAUC"}

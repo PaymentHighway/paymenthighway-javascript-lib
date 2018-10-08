@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const requestPromise = require("request-promise");
-const PaymentAPI_1 = require("../../src/PaymentAPI");
+const __1 = require("../..");
 class FormConnection {
     static postForm(container) {
         const options = {
@@ -14,7 +14,7 @@ class FormConnection {
                 return prev;
             }, {}),
             headers: {
-                'User-Agent': PaymentAPI_1.PaymentAPI.USER_AGENT
+                'User-Agent': __1.PaymentAPI.USER_AGENT
             }
         };
         return requestPromise(options);
