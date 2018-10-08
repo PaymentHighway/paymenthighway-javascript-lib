@@ -250,7 +250,7 @@ export declare class FormBuilder {
      * @param webhookDelay
      * @returns {Array}
      */
-    private static createWebhookNameValuePairs;
+    private static createWebhookNameValuePairs(webhookSuccessUrl?, webhookFailureUrl?, webhookCancelUrl?, webhookDelay?);
     /**
      *
      * @param successUrl
@@ -260,12 +260,12 @@ export declare class FormBuilder {
      * @param requestId
      * @returns {Pair[]}
      */
-    private createCommonNameValuePairs;
+    private createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
     /**
      *
      * @param uri
      * @param nameValuePairs
      * @returns {string}
      */
-    private createSignature;
+    private createSignature(uri, nameValuePairs);
 }
