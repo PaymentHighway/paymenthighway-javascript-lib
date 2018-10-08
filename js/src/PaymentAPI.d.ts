@@ -194,7 +194,7 @@ export declare class PaymentAPI {
      *
      * @return
      */
-    private createNameValuePairs();
+    private createNameValuePairs;
     /**
      *
      * @param method
@@ -202,7 +202,7 @@ export declare class PaymentAPI {
      * @param requestBody
      * @returns {PromiseLike<TransactionResponse>}
      */
-    private makeRequest(method, paymentUri, requestBody?);
+    private makeRequest;
     /**
      *
      * @param method
@@ -211,5 +211,5 @@ export declare class PaymentAPI {
      * @param requestBody
      * @returns {requestPromise.RequestPromise}
      */
-    private executeRequest(method, path, nameValuePairs, requestBody?);
+    private executeRequest;
 }
