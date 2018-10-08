@@ -6,6 +6,11 @@ node_js:
   - "node"
 addons:
   chrome: stable
+install:
+  - npm install
+  # Manually downgrading for node 6
+  - npm install puppeteer@1.6.2
+  - npm install @types/puppeteer@1.6.4
 cache:
   directories:
     - node_modules
