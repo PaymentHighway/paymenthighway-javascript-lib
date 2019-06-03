@@ -15,6 +15,7 @@ import {PaymentData} from '../src/model/request/applepay/PaymentData';
 import {ApplePayTransaction, ApplePayTransactionRequest} from '../src/model/request/ApplePayTransactionRequest';
 import {MobilePayInitRequest} from '../src/model/request/MobilePayInitRequest';
 import {Splitting} from '../src/model/Splitting';
+import {PivoInitRequest} from '../src/model/request/PivoInitRequest';
 
 let api: PaymentAPI;
 let validCard: any;
@@ -315,6 +316,22 @@ describe('PaymentAPI', () => {
                 assert.equal(response.valid_until, initResponse.valid_until, 'Both init and status check should have same valid until value.');
                 assert.isUndefined(response.transaction_id); // transaction id is available only when session is finished
             });
+        });
+    });
+
+    it('Test Pivo app switch init', () => {
+        const request = PivoInitRequest.Builder(100)
+            .setOrder('Test_order')
+            .setAppUrl('app://url')
+            .setReferenceNumber('1313')
+            .setWebhookSuccessUrl('https://www.exaple.com/success')
+            .setWebhookCancelUrl('https://www.example.com/cancel')
+            .setWebhookFailureUrl('https://www.example.com/failure')
+            .setLanguage('FI')
+            .build();
+
+        return api.initPivoSession(request).then( (response) => {
+            assert.startsWith(response.uri, 'pivo://api/', 'Pivo app uri should start with "pivo://api/"');
         });
     });
 });
