@@ -15,6 +15,7 @@ __export(require("./src/model/request/CommitTransactionRequest"));
 __export(require("./src/model/request/Customer"));
 __export(require("./src/model/request/MasterpassTransactionRequest"));
 __export(require("./src/model/request/MobilePayInitRequest"));
+__export(require("./src/model/request/PivoInitRequest"));
 __export(require("./src/model/request/RevertPivoTransactionRequest"));
 __export(require("./src/model/request/RevertSiirtoTransactionRequest"));
 __export(require("./src/model/request/RevertTransactionRequest"));

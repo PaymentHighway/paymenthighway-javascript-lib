@@ -22,6 +22,8 @@ import { RevertPivoTransactionRequest } from './model/request/RevertPivoTransact
 import { PivoTransactionResultResponse } from './model/response/PivoTransactionResultResponse';
 import { PivoTransactionStatusResponse } from './model/response/PivoTransactionStatusResponse';
 import { SiirtoTransactionStatusResponse } from './model/response/SiirtoTransactionStatusResponse';
+import { PivoInitRequest } from './model/request/PivoInitRequest';
+import { PivoInitResponse } from './model/response/PivoInitResponse';
 /**
  * Payment Highway Payment API Service.
  */
@@ -189,6 +191,7 @@ export declare class PaymentAPI {
      */
     initMobilePaySession(request: MobilePayInitRequest): PromiseLike<MobilePayInitResponse>;
     mobilePaySessionStatus(sessionToken: string): PromiseLike<MobilePayStatusResponse>;
+    initPivoSession(request: PivoInitRequest): PromiseLike<PivoInitResponse>;
     /**
      * Create name value pairs
      *

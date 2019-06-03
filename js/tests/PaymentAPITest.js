@@ -12,11 +12,12 @@ const MasterpassTransactionRequest_1 = require("../src/model/request/MasterpassT
 const ApplePayTransactionRequest_1 = require("../src/model/request/ApplePayTransactionRequest");
 const MobilePayInitRequest_1 = require("../src/model/request/MobilePayInitRequest");
 const Splitting_1 = require("../src/model/Splitting");
+const PivoInitRequest_1 = require("../src/model/request/PivoInitRequest");
 let api;
 let validCard;
 let testCard;
 beforeEach(() => {
-    api = new PaymentAPI_1.PaymentAPI('https://v1-hub-staging.sph-test-solinor.com/', 'testKey', 'testSecret', 'test', 'test_merchantId');
+    api = new PaymentAPI_1.PaymentAPI('http://localhost:9001/', 'testKey', 'testSecret', 'test', 'test_merchantId');
     testCard = new Card_1.Card('4153013999700024', '2023', '11', '024');
     validCard = {
         card: testCard,
@@ -270,6 +271,20 @@ describe('PaymentAPI', () => {
                 chai_1.assert.equal(response.valid_until, initResponse.valid_until, 'Both init and status check should have same valid until value.');
                 chai_1.assert.isUndefined(response.transaction_id); // transaction id is available only when session is finished
             });
+        });
+    });
+    it('Test Pivo app switch init', () => {
+        const request = PivoInitRequest_1.PivoInitRequest.Builder(100)
+            .setOrder('Test_order')
+            .setAppUrl('app://url')
+            .setReferenceNumber('1313')
+            .setWebhookSuccessUrl('https://www.exaple.com/success')
+            .setWebhookCancelUrl('https://www.example.com/cancel')
+            .setWebhookFailureUrl('https://www.example.com/failure')
+            .setLanguage('FI')
+            .build();
+        return api.initPivoSession(request).then((response) => {
+            chai_1.assert.startsWith(response.uri, 'pivo://api/', 'Pivo app uri should start with "pivo://api/"');
         });
     });
 });
