@@ -17,7 +17,7 @@ let api;
 let validCard;
 let testCard;
 beforeEach(() => {
-    api = new PaymentAPI_1.PaymentAPI('http://localhost:9001/', 'testKey', 'testSecret', 'test', 'test_merchantId');
+    api = new PaymentAPI_1.PaymentAPI('https://v1-hub-staging.sph-test-solinor.com/', 'testKey', 'testSecret', 'test', 'test_merchantId');
     testCard = new Card_1.Card('4153013999700024', '2023', '11', '024');
     validCard = {
         card: testCard,
