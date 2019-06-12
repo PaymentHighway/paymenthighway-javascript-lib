@@ -330,7 +330,7 @@ describe('PaymentAPI', () => {
             .setLanguage('FI')
             .build();
 
-        return api.initPivoSession(request).then( (response) => {
+        return api.initPivoTransaction(request).then( (response) => {
             assert.startsWith(response.uri, 'pivo://api/', 'Pivo app uri should start with "pivo://api/"');
         });
     });

@@ -290,7 +290,7 @@ export class PaymentAPI {
         return this.makeRequest('GET', '/app/mobilepay/' + sessionToken);
     }
 
-    public initPivoSession(request: PivoInitRequest): PromiseLike<PivoInitResponse> {
+    public initPivoTransaction(request: PivoInitRequest): PromiseLike<PivoInitResponse> {
         return this.makeRequest('POST', '/app/pivo', request);
     }
 
