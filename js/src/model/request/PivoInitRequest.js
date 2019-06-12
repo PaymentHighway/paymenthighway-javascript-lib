@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class PivoInitRequest {
-    constructor(amount, currency, order, app_url, reference_number, webhook_success_url, webhook_cancel_url, webhook_failure_url, language, phone_number) {
+    constructor(amount, currency, order, description, app_url, reference_number, webhook_success_url, webhook_cancel_url, webhook_failure_url, language, phone_number) {
         this.amount = amount;
         this.currency = currency;
         this.order = order;
+        this.description = description;
         this.app_url = app_url;
         this.reference_number = reference_number;
         this.webhook_success_url = webhook_success_url;
@@ -27,6 +28,10 @@ var PivoInit;
         }
         setOrder(order) {
             this.order = order;
+            return this;
+        }
+        setDescription(description) {
+            this.description = description;
             return this;
         }
         setAppUrl(url) {
@@ -58,7 +63,7 @@ var PivoInit;
             return this;
         }
         build() {
-            return new PivoInitRequest(this.amount, this.currency, this.order, this.app_url, this.reference_number, this.webhook_success_url, this.webhook_cancel_url, this.webhook_failure_url, this.language, this.phone_number);
+            return new PivoInitRequest(this.amount, this.currency, this.order, this.description, this.app_url, this.reference_number, this.webhook_success_url, this.webhook_cancel_url, this.webhook_failure_url, this.language, this.phone_number);
         }
     }
     PivoInit.RequestBuilder = RequestBuilder;

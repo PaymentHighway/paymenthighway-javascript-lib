@@ -2,6 +2,7 @@ export declare class PivoInitRequest {
     amount: number;
     currency: string;
     order: string;
+    description?: string;
     app_url?: string;
     reference_number?: string;
     webhook_success_url?: string;
@@ -9,7 +10,7 @@ export declare class PivoInitRequest {
     webhook_failure_url?: string;
     language?: string;
     phone_number?: string;
-    constructor(amount: number, currency: string, order: string, app_url?: string, reference_number?: string, webhook_success_url?: string, webhook_cancel_url?: string, webhook_failure_url?: string, language?: string, phone_number?: string);
+    constructor(amount: number, currency: string, order: string, description?: string, app_url?: string, reference_number?: string, webhook_success_url?: string, webhook_cancel_url?: string, webhook_failure_url?: string, language?: string, phone_number?: string);
     static Builder(amount: number, currency?: string): PivoInit.RequestBuilder;
 }
 export declare namespace PivoInit {
@@ -17,6 +18,7 @@ export declare namespace PivoInit {
         private readonly amount;
         private readonly currency;
         private order;
+        private description;
         private app_url;
         private reference_number;
         private language;
@@ -26,6 +28,7 @@ export declare namespace PivoInit {
         private phone_number;
         constructor(amount: number, currency: string);
         setOrder(order: string): this;
+        setDescription(description: string): this;
         setAppUrl(url: string): this;
         setReferenceNumber(ref: string): this;
         setPhoneNumber(phone_number: string): this;
