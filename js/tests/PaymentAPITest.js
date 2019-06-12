@@ -283,7 +283,7 @@ describe('PaymentAPI', () => {
             .setWebhookFailureUrl('https://www.example.com/failure')
             .setLanguage('FI')
             .build();
-        return api.initPivoSession(request).then((response) => {
+        return api.initPivoTransaction(request).then((response) => {
             chai_1.assert.startsWith(response.uri, 'pivo://api/', 'Pivo app uri should start with "pivo://api/"');
         });
     });

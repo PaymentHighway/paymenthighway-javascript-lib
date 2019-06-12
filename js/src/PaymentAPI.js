@@ -234,7 +234,7 @@ class PaymentAPI {
     mobilePaySessionStatus(sessionToken) {
         return this.makeRequest('GET', '/app/mobilepay/' + sessionToken);
     }
-    initPivoSession(request) {
+    initPivoTransaction(request) {
         return this.makeRequest('POST', '/app/pivo', request);
     }
     /**
