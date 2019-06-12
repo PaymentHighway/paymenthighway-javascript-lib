@@ -322,6 +322,7 @@ describe('PaymentAPI', () => {
     it('Test Pivo app switch init', () => {
         const request = PivoInitRequest.Builder(100)
             .setOrder('Test_order')
+            .setDescription('desc')
             .setAppUrl('app://url')
             .setReferenceNumber('1313')
             .setWebhookSuccessUrl('https://www.exaple.com/success')

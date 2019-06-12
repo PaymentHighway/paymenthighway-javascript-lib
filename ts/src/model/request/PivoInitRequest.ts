@@ -3,6 +3,7 @@ export class PivoInitRequest {
         public amount: number,
         public currency: string,
         public order: string,
+        public description?: string,
         public app_url?: string,
         public reference_number?: string,
         public webhook_success_url?: string,
@@ -23,6 +24,7 @@ export namespace PivoInit {
         private readonly amount: number;
         private readonly currency: string;
         private order: string;
+        private description: string;
         private app_url: string;
         private reference_number: string;
         private language: string;
@@ -38,6 +40,11 @@ export namespace PivoInit {
 
         public setOrder(order: string) {
             this.order = order;
+            return this;
+        }
+
+        public setDescription(description: string) {
+            this.description = description;
             return this;
         }
 
@@ -81,6 +88,7 @@ export namespace PivoInit {
                 this.amount,
                 this.currency,
                 this.order,
+                this.description,
                 this.app_url,
                 this.reference_number,
                 this.webhook_success_url,
