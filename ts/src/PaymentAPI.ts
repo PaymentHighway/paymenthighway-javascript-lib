@@ -28,13 +28,15 @@ import {RevertPivoTransactionRequest} from './model/request/RevertPivoTransactio
 import {PivoTransactionResultResponse} from './model/response/PivoTransactionResultResponse';
 import {PivoTransactionStatusResponse} from './model/response/PivoTransactionStatusResponse';
 import {SiirtoTransactionStatusResponse} from './model/response/SiirtoTransactionStatusResponse';
+import {AfterPayCommitTransactionRequest} from './model/request/AfterPayCommitTransactionRequest';
+import {AfterPayRevertTransactionRequest} from './model/request/AfterPayRevertTransactionRequest';
 
 /**
  * Payment Highway Payment API Service.
  */
 export class PaymentAPI {
 
-    private static API_VERSION: string = '20180927';
+    private static API_VERSION: string = '20190430';
 
     // Payment API headers
     public static USER_AGENT: string = 'PaymentHighway Javascript Library';
@@ -143,6 +145,55 @@ export class PaymentAPI {
     public commitTransaction(transactionId: string, request: CommitTransactionRequest): PromiseLike<TransactionResultResponse> {
         const commitUri = '/transaction/' + transactionId + '/commit';
         return this.makeRequest('POST', commitUri, request);
+    }
+
+    /**
+     * Commit AfterPay Transaction Request
+     * Used to commit (capture) the transaction.
+     * In order to find out the result of the transaction without committing it, use AfterPay Transaction Result request instead.
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<Response>}
+     */
+    public commitAfterPayTransaction(transactionId: string, request: AfterPayCommitTransactionRequest): PromiseLike<Response> {
+        const uri = '/transaction/' + transactionId + '/afterpay/commit';
+        return this.makeRequest('POST', uri, request);
+    }
+
+    /**
+     * AfterPay Transaction Result Request
+     * Used to find out whether or not an uncommitted transaction succeeded, without actually committing (capturing) it.
+     *
+     * @param transactionId
+     * @returns {PromiseLike<Response>}
+     */
+    public afterPayTransactionResult(transactionId: string): PromiseLike<Response> {
+        const uri = '/transaction/' + transactionId + '/afterpay/result';
+        return this.makeRequest('GET', uri);
+    }
+
+    /**
+     * Revert AfterPay Transaction
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<Response>}
+     */
+    public revertAfterPayTransaction(transactionId: string, request: AfterPayRevertTransactionRequest): PromiseLike<Response> {
+        const uri = '/transaction/' + transactionId + '/afterpay/revert';
+        return this.makeRequest('POST', uri, request);
+    }
+
+    /**
+     * AfterPay Transaction Status Request
+     *
+     * @param transactionId
+     * @returns {PromiseLike<TransactionStatusResponse>}
+     */
+    public afterPayTransactionStatus(transactionId: string): PromiseLike<TransactionStatusResponse> {
+        const statusUri = '/transaction/' + transactionId + '/afterpay';
+        return this.makeRequest('GET', statusUri);
     }
 
     /**
