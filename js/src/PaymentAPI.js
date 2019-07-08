@@ -105,6 +105,51 @@ class PaymentAPI {
         return this.makeRequest('POST', commitUri, request);
     }
     /**
+     * Commit AfterPay Transaction Request
+     * Used to commit (capture) the transaction.
+     * In order to find out the result of the transaction without committing it, use AfterPay Transaction Result request instead.
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<Response>}
+     */
+    commitAfterPayTransaction(transactionId, request) {
+        const uri = '/transaction/' + transactionId + '/afterpay/commit';
+        return this.makeRequest('POST', uri, request);
+    }
+    /**
+     * AfterPay Transaction Result Request
+     * Used to find out whether or not an uncommitted transaction succeeded, without actually committing (capturing) it.
+     *
+     * @param transactionId
+     * @returns {PromiseLike<Response>}
+     */
+    afterPayTransactionResult(transactionId) {
+        const uri = '/transaction/' + transactionId + '/afterpay/result';
+        return this.makeRequest('GET', uri);
+    }
+    /**
+     * Revert AfterPay Transaction
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<Response>}
+     */
+    revertAfterPayTransaction(transactionId, request) {
+        const uri = '/transaction/' + transactionId + '/afterpay/revert';
+        return this.makeRequest('POST', uri, request);
+    }
+    /**
+     * AfterPay Transaction Status Request
+     *
+     * @param transactionId
+     * @returns {PromiseLike<TransactionStatusResponse>}
+     */
+    afterPayTransactionStatus(transactionId) {
+        const statusUri = '/transaction/' + transactionId + '/afterpay';
+        return this.makeRequest('GET', statusUri);
+    }
+    /**
      * Payment Highway Transaction Status Request
      *
      * @param transactionId
@@ -299,7 +344,7 @@ class PaymentAPI {
         return requestPromise(options);
     }
 }
-PaymentAPI.API_VERSION = '20180927';
+PaymentAPI.API_VERSION = '20190430';
 // Payment API headers
 PaymentAPI.USER_AGENT = 'PaymentHighway Javascript Library';
 exports.PaymentAPI = PaymentAPI;

@@ -45,6 +45,9 @@ export declare class FormBuilder {
     private static SPH_PHONE_NUMBER;
     private static SPH_REFERENCE_NUMBER;
     private static SPH_APP_URL;
+    private static SPH_ORDER_DESCRIPTION;
+    private static SPH_SOCIAL_SECURITY_NUMBER;
+    private static SPH_EMAIL_ADDRESS;
     private static LANGUAGE;
     private static DESCRIPTION;
     private static SIGNATURE;
@@ -242,6 +245,27 @@ export declare class FormBuilder {
      * @return FormContainer
      */
     generatePivoParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, orderId: string, description: string, referenceNumber?: string, phoneNumber?: string, appUrl?: string, exitIframeOnResult?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number): FormContainer;
+    /**
+     * Get parameters for AfterPay form request.
+     *
+     * @param successUrl             The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
+     * @param failureUrl             The URL the user is redirected after a failure such as an authentication or connectivity error.
+     * @param cancelUrl              The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
+     * @param language               The language the form is displayed in.
+     * @param amount                 The amount to pay in euro cents.
+     * @param orderId                A generated order ID, may for example be always unique or used multiple times for recurring transactions.
+     * @param description            Description of the payment shown in the form.
+     * @param orderDescription       Description of the purchase. Will be shown on the customer's invoice. Max length 255.
+     * @param socialSecurityNumber   The customer's social security number. If set, the value will be pre-filled on the form.
+     * @param emailAddress           The customer's email address. If set, the value will be pre-filled on the form.
+     * @param exitIframeOnResult     Exit from iframe after a result. May be null.
+     * @param webhookSuccessUrl      The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
+     * @param webhookFailureUrl      The URL the PH server makes request after a failure such as an authentication or connectivity error.
+     * @param webhookCancelUrl       The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param webhookDelay           Delay for webhook in seconds. Between 0-900
+     * @return FormContainer
+     */
+    generateAfterPayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, orderId: string, description: string, orderDescription: string, socialSecurityNumber?: string, emailAddress?: string, exitIframeOnResult?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number): FormContainer;
     /**
      *
      * @param webhookSuccessUrl

@@ -22,6 +22,8 @@ import { RevertPivoTransactionRequest } from './model/request/RevertPivoTransact
 import { PivoTransactionResultResponse } from './model/response/PivoTransactionResultResponse';
 import { PivoTransactionStatusResponse } from './model/response/PivoTransactionStatusResponse';
 import { SiirtoTransactionStatusResponse } from './model/response/SiirtoTransactionStatusResponse';
+import { AfterPayCommitTransactionRequest } from './model/request/AfterPayCommitTransactionRequest';
+import { AfterPayRevertTransactionRequest } from './model/request/AfterPayRevertTransactionRequest';
 /**
  * Payment Highway Payment API Service.
  */
@@ -99,6 +101,39 @@ export declare class PaymentAPI {
      * @returns {PromiseLike<TransactionResultResponse>}
      */
     commitTransaction(transactionId: string, request: CommitTransactionRequest): PromiseLike<TransactionResultResponse>;
+    /**
+     * Commit AfterPay Transaction Request
+     * Used to commit (capture) the transaction.
+     * In order to find out the result of the transaction without committing it, use AfterPay Transaction Result request instead.
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<Response>}
+     */
+    commitAfterPayTransaction(transactionId: string, request: AfterPayCommitTransactionRequest): PromiseLike<Response>;
+    /**
+     * AfterPay Transaction Result Request
+     * Used to find out whether or not an uncommitted transaction succeeded, without actually committing (capturing) it.
+     *
+     * @param transactionId
+     * @returns {PromiseLike<Response>}
+     */
+    afterPayTransactionResult(transactionId: string): PromiseLike<Response>;
+    /**
+     * Revert AfterPay Transaction
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<Response>}
+     */
+    revertAfterPayTransaction(transactionId: string, request: AfterPayRevertTransactionRequest): PromiseLike<Response>;
+    /**
+     * AfterPay Transaction Status Request
+     *
+     * @param transactionId
+     * @returns {PromiseLike<TransactionStatusResponse>}
+     */
+    afterPayTransactionStatus(transactionId: string): PromiseLike<TransactionStatusResponse>;
     /**
      * Payment Highway Transaction Status Request
      *
