@@ -413,6 +413,49 @@ class FormBuilder {
         return new FormContainer_1.FormContainer(this.method, this.baseUrl, pivoUri, nameValuePairs, requestId);
     }
     /**
+     * Get parameters for AfterPay form request.
+     *
+     * @param successUrl             The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
+     * @param failureUrl             The URL the user is redirected after a failure such as an authentication or connectivity error.
+     * @param cancelUrl              The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
+     * @param language               The language the form is displayed in.
+     * @param amount                 The amount to pay in euro cents.
+     * @param orderId                A generated order ID, may for example be always unique or used multiple times for recurring transactions.
+     * @param description            Description of the payment shown in the form.
+     * @param orderDescription       Description of the purchase. Will be shown on the customer's invoice. Max length 255.
+     * @param socialSecurityNumber   The customer's social security number. If set, the value will be pre-filled on the form.
+     * @param emailAddress           The customer's email address. If set, the value will be pre-filled on the form.
+     * @param exitIframeOnResult     Exit from iframe after a result. May be null.
+     * @param webhookSuccessUrl      The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
+     * @param webhookFailureUrl      The URL the PH server makes request after a failure such as an authentication or connectivity error.
+     * @param webhookCancelUrl       The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param webhookDelay           Delay for webhook in seconds. Between 0-900
+     * @return FormContainer
+     */
+    generateAfterPayParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, orderDescription, socialSecurityNumber, emailAddress, exitIframeOnResult, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay) {
+        const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
+        let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_CURRENCY, 'EUR'));
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_ORDER, orderId));
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.DESCRIPTION, description));
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_ORDER_DESCRIPTION, orderDescription));
+        if (typeof exitIframeOnResult !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
+        }
+        if (typeof socialSecurityNumber !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SOCIAL_SECURITY_NUMBER, socialSecurityNumber));
+        }
+        if (typeof emailAddress !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_EMAIL_ADDRESS, emailAddress));
+        }
+        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
+        const uri = '/form/view/afterpay';
+        const signature = this.createSignature(uri, nameValuePairs);
+        nameValuePairs.push(new Pair_1.Pair(FormBuilder.SIGNATURE, signature));
+        return new FormContainer_1.FormContainer(this.method, this.baseUrl, uri, nameValuePairs, requestId);
+    }
+    /**
      *
      * @param webhookSuccessUrl
      * @param webhookFailureUrl
@@ -500,6 +543,9 @@ FormBuilder.SPH_REQUEST_SHIPPING_ADDRESS = 'sph-request-shipping-address';
 FormBuilder.SPH_PHONE_NUMBER = 'sph-phone-number';
 FormBuilder.SPH_REFERENCE_NUMBER = 'sph-reference-number';
 FormBuilder.SPH_APP_URL = 'sph-app-url';
+FormBuilder.SPH_ORDER_DESCRIPTION = 'sph-order-description';
+FormBuilder.SPH_SOCIAL_SECURITY_NUMBER = 'sph-social-security-number';
+FormBuilder.SPH_EMAIL_ADDRESS = 'sph-email-address';
 FormBuilder.LANGUAGE = 'language';
 FormBuilder.DESCRIPTION = 'description';
 FormBuilder.SIGNATURE = 'signature';

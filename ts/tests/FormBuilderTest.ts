@@ -532,4 +532,39 @@ describe('Form builder', () => {
         const actionUrl = '/form/view/pivo';
         assert(formContainer.actionUrl === actionUrl, 'action url should be ' + actionUrl + 'got ' + formContainer.actionUrl);
     });
+
+    it('Test AfterPay mandatory parameters', () => {
+
+        const orderDescription = 'A walrus';
+
+        const formContainer = formBuilder.generateAfterPayParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, orderId, description, orderDescription);
+
+        testNameValuePairs(formContainer.nameValuePairs, 15);
+        return FormConnection.postForm(formContainer)
+            .then((response) => {
+                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+                assert.match(response.headers.location, /\/form\/[-a-f0-9]{36}\/afterpay/, 'redirect location doesn\'t match ' + response.header);
+            });
+    });
+
+    it('Test AfterPay with optional parameters', () => {
+
+        const orderDescription = 'A walrus';
+        const socialSecurityNumber = '010868-998U';
+        const emailAddress = 'test@testasdff.com';
+
+        const formContainer = formBuilder.generateAfterPayParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, orderId, description, orderDescription,
+            socialSecurityNumber, emailAddress, true, successUrl, failureUrl, cancelUrl, 0
+        );
+
+        testNameValuePairs(formContainer.nameValuePairs, 22);
+        return FormConnection.postForm(formContainer)
+            .then((response) => {
+                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+                assert.match(response.headers.location, /\/form\/[-a-f0-9]{36}\/afterpay/, 'redirect location doesn\'t match ' + response.header);
+            });
+    });
+
 });

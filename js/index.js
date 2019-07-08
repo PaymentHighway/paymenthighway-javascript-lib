@@ -9,6 +9,8 @@ __export(require("./src/PaymentAPI"));
 __export(require("./src/PaymentHighwayUtility"));
 __export(require("./src/model/Splitting"));
 __export(require("./src/model/Token"));
+__export(require("./src/model/request/AfterPayCommitTransactionRequest"));
+__export(require("./src/model/request/AfterPayRevertTransactionRequest"));
 __export(require("./src/model/request/ApplePayTransactionRequest"));
 __export(require("./src/model/request/Card"));
 __export(require("./src/model/request/CommitTransactionRequest"));
