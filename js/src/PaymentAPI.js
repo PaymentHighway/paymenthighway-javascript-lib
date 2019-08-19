@@ -37,6 +37,28 @@ class PaymentAPI {
         return this.makeRequest('POST', debitUri, request);
     }
     /**
+     * Payment Highway Charge Customer Initiated Transaction
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<DebitResponse>}
+     */
+    chargeCustomerInitiatedTransaction(transactionId, request) {
+        const chargeCitUri = '/transaction/' + transactionId + '/card/charge/customer_initiated';
+        return this.makeRequest('POST', chargeCitUri, request);
+    }
+    /**
+     * Payment Highway Charge Merchant Initiated Transaction
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<DebitResponse>}
+     */
+    chargeMerchantInitiatedTransaction(transactionId, request) {
+        const chargeMitUri = '/transaction/' + transactionId + '/card/charge/merchant_initiated';
+        return this.makeRequest('POST', chargeMitUri, request);
+    }
+    /**
      * Payment Highway Debit Masterpass Transaction
      *
      * @param {string} transactionId

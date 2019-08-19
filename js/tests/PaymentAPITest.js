@@ -1,4 +1,12 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const moment = require("moment");
@@ -12,11 +20,16 @@ const MasterpassTransactionRequest_1 = require("../src/model/request/MasterpassT
 const ApplePayTransactionRequest_1 = require("../src/model/request/ApplePayTransactionRequest");
 const MobilePayInitRequest_1 = require("../src/model/request/MobilePayInitRequest");
 const Splitting_1 = require("../src/model/Splitting");
+const ChargeMitRequest_1 = require("../src/model/request/ChargeMitRequest");
+const ChargeCitRequest_1 = require("../src/model/request/ChargeCitRequest");
+const StrongCustomerAuthentication_1 = require("../src/model/request/StrongCustomerAuthentication");
+const ScaReturnUrls_1 = require("../src/model/request/ScaReturnUrls");
 let api;
 let validCard;
 let testCard;
+let scaSoftDeclineCard;
 beforeEach(() => {
-    api = new PaymentAPI_1.PaymentAPI('https://v1-hub-staging.sph-test-solinor.com/', 'testKey', 'testSecret', 'test', 'test_merchantId');
+    api = new PaymentAPI_1.PaymentAPI('https://v1-hub-psd2.sph-test-solinor.com/', 'testKey', 'testSecret', 'test', 'test_merchantId');
     testCard = new Card_1.Card('4153013999700024', '2023', '11', '024');
     validCard = {
         card: testCard,
@@ -25,6 +38,7 @@ beforeEach(() => {
         blocking: true,
         orderId: PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId()
     };
+    scaSoftDeclineCard = new Card_1.Card('4153013999701162', '2023', '11', '162');
 });
 function createDebitTransaction(orderId, commit, splitting) {
     let initResponse;
@@ -59,6 +73,27 @@ describe('PaymentAPI', () => {
             chai_1.assert.isNotNull(body.id, 'Transaction id not received');
         });
     });
+    it('Test charge merchant initiated transaction', () => __awaiter(this, void 0, void 0, function* () {
+        const initResponse = yield api.initTransaction();
+        const chargeMitRequest = new ChargeMitRequest_1.ChargeMitRequest(testCard, 9999, 'EUR');
+        const chargeResponse = yield api.chargeMerchantInitiatedTransaction(initResponse.id, chargeMitRequest);
+        checkResult(chargeResponse);
+    }));
+    it('Test charge customer initiated transaction', () => __awaiter(this, void 0, void 0, function* () {
+        const initResponse = yield api.initTransaction();
+        const strongCustomerAuthentication = new StrongCustomerAuthentication_1.StrongCustomerAuthentication(new ScaReturnUrls_1.ScaReturnUrls("https://example.com/success", "https://example.com/cancel", "https://example.com/failure"));
+        const chargeCitRequest = new ChargeCitRequest_1.ChargeCitRequest(testCard, 9999, 'EUR', strongCustomerAuthentication);
+        const chargeResponse = yield api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
+        checkResult(chargeResponse);
+    }));
+    it('Test soft-decline of customer initiated transaction', () => __awaiter(this, void 0, void 0, function* () {
+        const initResponse = yield api.initTransaction();
+        const strongCustomerAuthentication = new StrongCustomerAuthentication_1.StrongCustomerAuthentication(new ScaReturnUrls_1.ScaReturnUrls("https://example.com/success", "https://example.com/cancel", "https://example.com/failure"));
+        const chargeCitRequest = new ChargeCitRequest_1.ChargeCitRequest(scaSoftDeclineCard, 100, 'EUR', strongCustomerAuthentication, undefined, undefined, undefined, undefined, true);
+        const chargeResponse = yield api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
+        chai_1.assert(chargeResponse.result.code === 400, 'Request should have been soft declined with code 400, complete response was: ' + JSON.stringify(chargeResponse));
+        chai_1.assert.isNotNull(chargeResponse.three_d_secure_url, '3D Secure url not received');
+    }));
     it('Test commit transaction', () => {
         const commitRequest = new CommitTransactionRequest_1.CommitTransactionRequest(9999, 'EUR');
         let transactionId;

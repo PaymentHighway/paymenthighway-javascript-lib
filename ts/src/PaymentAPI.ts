@@ -30,6 +30,8 @@ import {PivoTransactionStatusResponse} from './model/response/PivoTransactionSta
 import {SiirtoTransactionStatusResponse} from './model/response/SiirtoTransactionStatusResponse';
 import {AfterPayCommitTransactionRequest} from './model/request/AfterPayCommitTransactionRequest';
 import {AfterPayRevertTransactionRequest} from './model/request/AfterPayRevertTransactionRequest';
+import { ChargeCitRequest } from './model/request/ChargeCitRequest';
+import { ChargeMitRequest } from './model/request/ChargeMitRequest';
 
 /**
  * Payment Highway Payment API Service.
@@ -71,6 +73,30 @@ export class PaymentAPI {
     public debitTransaction(transactionId: string, request: TransactionRequest): PromiseLike<DebitResponse> {
         const debitUri = '/transaction/' + transactionId + '/debit';
         return this.makeRequest('POST', debitUri, request);
+    }
+    
+    /**
+     * Payment Highway Charge Customer Initiated Transaction
+     * 
+     * @param transactionId 
+     * @param request 
+     * @returns {PromiseLike<DebitResponse>}
+     */
+    public chargeCustomerInitiatedTransaction(transactionId: string, request: ChargeCitRequest): PromiseLike<DebitResponse> {
+        const chargeCitUri = '/transaction/' + transactionId + '/card/charge/customer_initiated';
+        return this.makeRequest('POST', chargeCitUri, request);
+    }
+
+    /**
+     * Payment Highway Charge Merchant Initiated Transaction
+     * 
+     * @param transactionId 
+     * @param request 
+     * @returns {PromiseLike<DebitResponse>}
+     */
+    public chargeMerchantInitiatedTransaction(transactionId: string, request: ChargeMitRequest): PromiseLike<DebitResponse> {
+        const chargeMitUri = '/transaction/' + transactionId + '/card/charge/merchant_initiated';
+        return this.makeRequest('POST', chargeMitUri, request);
     }
 
     /**

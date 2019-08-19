@@ -19,7 +19,7 @@ const signatureKeyId = 'testKey';
 const signatureSecret = 'testSecret';
 const account = 'test';
 const merchant = 'test_merchantId';
-const baseUrl = 'https://v1-hub-staging.sph-test-solinor.com';
+const baseUrl = 'https://v1-hub-psd2.sph-test-solinor.com';
 const successUrl = 'https://example.com/success';
 const failureUrl = 'https://example.com/failure';
 const cancelUrl = 'https://example.com/cancel';
@@ -139,7 +139,7 @@ describe('Form builder', () => {
                                         .then(() => page.type('input[name=expiry]', '11 / 23'))
                                         .then( () => page.type('input[name=cvv]', '024')),
                                     // Waiting card logo!!!
-                                    page.waitForResponse('https://d1kc0e613bxbjg.cloudfront.net/images/form/visa_pos_fc.png')
+                                    page.waitForResponse(response => response.url().includes('visa_pos_fc.png') && response.status() === 200)
                                 ]))
                                 .then(() => page.screenshot({path: 'example.png'}))
                                 .then(() =>

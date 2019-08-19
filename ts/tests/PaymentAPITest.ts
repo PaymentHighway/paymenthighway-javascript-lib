@@ -15,13 +15,18 @@ import {PaymentData} from '../src/model/request/applepay/PaymentData';
 import {ApplePayTransaction, ApplePayTransactionRequest} from '../src/model/request/ApplePayTransactionRequest';
 import {MobilePayInitRequest} from '../src/model/request/MobilePayInitRequest';
 import {Splitting} from '../src/model/Splitting';
+import { ChargeMitRequest } from '../src/model/request/ChargeMitRequest';
+import { ChargeCitRequest } from '../src/model/request/ChargeCitRequest';
+import { StrongCustomerAuthentication } from '../src/model/request/StrongCustomerAuthentication';
+import { ScaReturnUrls } from '../src/model/request/ScaReturnUrls';
 
 let api: PaymentAPI;
 let validCard: any;
 let testCard: Card;
+let scaSoftDeclineCard: Card;
 
 beforeEach(() => {
-    api = new PaymentAPI('https://v1-hub-staging.sph-test-solinor.com/', 'testKey', 'testSecret', 'test', 'test_merchantId');
+    api = new PaymentAPI('https://v1-hub-psd2.sph-test-solinor.com/', 'testKey', 'testSecret', 'test', 'test_merchantId');
     testCard = new Card('4153013999700024', '2023', '11', '024');
     validCard = {
         card: testCard,
@@ -30,6 +35,7 @@ beforeEach(() => {
         blocking: true,
         orderId: PaymentHighwayUtility.createRequestId()
     };
+    scaSoftDeclineCard = new Card('4153013999701162', '2023', '11', '162');
 });
 
 function createDebitTransaction(orderId?: string, commit?: boolean, splitting?: Splitting): PromiseLike<TransactionResponse> {
@@ -71,6 +77,50 @@ describe('PaymentAPI', () => {
         return createDebitTransaction().then((body) => {
             assert.isNotNull(body.id, 'Transaction id not received');
         });
+    });
+
+    it('Test charge merchant initiated transaction', async () => {
+        const initResponse = await api.initTransaction();
+
+        const chargeMitRequest = new ChargeMitRequest(testCard, 9999, 'EUR');
+        const chargeResponse = await api.chargeMerchantInitiatedTransaction(initResponse.id, chargeMitRequest);
+
+        checkResult(chargeResponse);
+    });
+
+    it('Test charge customer initiated transaction', async () => {
+        const initResponse = await api.initTransaction();
+
+        const strongCustomerAuthentication = new StrongCustomerAuthentication(
+            new ScaReturnUrls(
+                "https://example.com/success",
+                "https://example.com/cancel",
+                "https://example.com/failure"
+            )
+        )
+
+        const chargeCitRequest = new ChargeCitRequest(testCard, 9999, 'EUR', strongCustomerAuthentication);
+        const chargeResponse = await api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
+
+        checkResult(chargeResponse);
+    });
+
+    it('Test soft-decline of customer initiated transaction', async () => {
+        const initResponse = await api.initTransaction();
+
+        const strongCustomerAuthentication = new StrongCustomerAuthentication(
+            new ScaReturnUrls(
+                "https://example.com/success",
+                "https://example.com/cancel",
+                "https://example.com/failure"
+            )
+        )
+
+        const chargeCitRequest = new ChargeCitRequest(scaSoftDeclineCard, 100, 'EUR', strongCustomerAuthentication, undefined, undefined, undefined, undefined, true);
+        const chargeResponse = await api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
+
+        assert(chargeResponse.result.code === 400, 'Request should have been soft declined with code 400, complete response was: ' + JSON.stringify(chargeResponse));
+        assert.isNotNull(chargeResponse.three_d_secure_url, '3D Secure url not received');
     });
 
     it('Test commit transaction', () => {

@@ -24,6 +24,8 @@ import { PivoTransactionStatusResponse } from './model/response/PivoTransactionS
 import { SiirtoTransactionStatusResponse } from './model/response/SiirtoTransactionStatusResponse';
 import { AfterPayCommitTransactionRequest } from './model/request/AfterPayCommitTransactionRequest';
 import { AfterPayRevertTransactionRequest } from './model/request/AfterPayRevertTransactionRequest';
+import { ChargeCitRequest } from './model/request/ChargeCitRequest';
+import { ChargeMitRequest } from './model/request/ChargeMitRequest';
 /**
  * Payment Highway Payment API Service.
  */
@@ -51,6 +53,22 @@ export declare class PaymentAPI {
      * @returns {PromiseLike<DebitResponse>}
      */
     debitTransaction(transactionId: string, request: TransactionRequest): PromiseLike<DebitResponse>;
+    /**
+     * Payment Highway Charge Customer Initiated Transaction
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<DebitResponse>}
+     */
+    chargeCustomerInitiatedTransaction(transactionId: string, request: ChargeCitRequest): PromiseLike<DebitResponse>;
+    /**
+     * Payment Highway Charge Merchant Initiated Transaction
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<DebitResponse>}
+     */
+    chargeMerchantInitiatedTransaction(transactionId: string, request: ChargeMitRequest): PromiseLike<DebitResponse>;
     /**
      * Payment Highway Debit Masterpass Transaction
      *
