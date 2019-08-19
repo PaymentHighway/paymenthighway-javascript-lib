@@ -18,6 +18,14 @@ export class StrongCustomerAuthentication {
     ) {}
 }
 
+/**
+ * Desired challenge window size for 3DS 2.x.
+ * 01 = 250 x 400
+ * 02 = 390 x 400
+ * 03 = 500 x 600
+ * 04 = 600 x 400
+ * 05 = Full screen
+ */
 export enum ChallengeWindowSize {
     Window250x400 = "01",
     Window390x400 = "02",
