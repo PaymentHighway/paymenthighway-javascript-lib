@@ -24,6 +24,11 @@ const ChargeMitRequest_1 = require("../src/model/request/ChargeMitRequest");
 const ChargeCitRequest_1 = require("../src/model/request/ChargeCitRequest");
 const StrongCustomerAuthentication_1 = require("../src/model/request/sca/StrongCustomerAuthentication");
 const ReturnUrls_1 = require("../src/model/request/sca/ReturnUrls");
+const CustomerDetails_1 = require("../src/model/request/sca/CustomerDetails");
+const PhoneNumber_1 = require("../src/model/request/sca/PhoneNumber");
+const CustomerAccount_1 = require("../src/model/request/sca/CustomerAccount");
+const Purchase_1 = require("../src/model/request/sca/Purchase");
+const Address_1 = require("../src/model/request/sca/Address");
 let api;
 let validCard;
 let testCard;
@@ -58,6 +63,9 @@ function checkResult(response) {
 function printResult(response) {
     return ', complete result was: \n' + JSON.stringify(response);
 }
+function getFullStrongCustomerAuthenticationData() {
+    return new StrongCustomerAuthentication_1.StrongCustomerAuthentication(new ReturnUrls_1.ReturnUrls("https://example.com/success", "https://example.com/cancel", "https://example.com/failure", "https://example.com/webhook/success", "https://example.com/webhook/cancel", "https://example.com/webhook/failure", 0), new CustomerDetails_1.CustomerDetails(true, "Eric Example", "eric.example@example.com", new PhoneNumber_1.PhoneNumber("358", "123456789"), new PhoneNumber_1.PhoneNumber("358", "441234566"), new PhoneNumber_1.PhoneNumber("358", "441234566")), new CustomerAccount_1.CustomerAccount(CustomerAccount_1.AccountAgeIndicator.MoreThan60Days, "2018-07-05", CustomerAccount_1.AccountInformationChangeIndicator.MoreThan60Days, "2018-09-11", CustomerAccount_1.AccountPasswordChangeIndicator.NoChange, "2018-07-05", 7, 1, 3, 8, CustomerAccount_1.ShippingAddressFirstUsedIndicator.Between30And60Days, "2019-07-01", CustomerAccount_1.SuspiciousActivityIndicator.NoSuspiciousActivity), new Purchase_1.Purchase(Purchase_1.ShippingIndicator.ShipToCardholdersAddress, Purchase_1.DeliveryTimeFrame.SameDayShipping, "eric.example@example.com", Purchase_1.ReorderItemsIndicator.FirstTimeOrdered, Purchase_1.PreOrderPurchaseIndicator.MerchandiseAvailable, "2019-08-20", Purchase_1.ShippingNameIndicator.AccountNameMatchesShippingName), new Address_1.Address("Helsinki", "246", "Arkadiankatu 1", "", "", "00101", "18"), new Address_1.Address("Helsinki", "246", "Arkadiankatu 1", "", "", "00101", "18"), StrongCustomerAuthentication_1.ChallengeWindowSize.Window600x400, false, false);
+}
 describe('PaymentAPI', () => {
     it('Should have instance of PaymentHighwayAPI', () => {
         chai_1.assert.instanceOf(api, PaymentAPI_1.PaymentAPI, 'Was not instance of PaymentAPI');
@@ -82,6 +90,13 @@ describe('PaymentAPI', () => {
     it('Test charge customer initiated transaction', () => __awaiter(this, void 0, void 0, function* () {
         const initResponse = yield api.initTransaction();
         const strongCustomerAuthentication = new StrongCustomerAuthentication_1.StrongCustomerAuthentication(new ReturnUrls_1.ReturnUrls("https://example.com/success", "https://example.com/cancel", "https://example.com/failure"));
+        const chargeCitRequest = new ChargeCitRequest_1.ChargeCitRequest(testCard, 9999, 'EUR', strongCustomerAuthentication);
+        const chargeResponse = yield api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
+        checkResult(chargeResponse);
+    }));
+    it('Test charge customer initiated transaction with full SCA data', () => __awaiter(this, void 0, void 0, function* () {
+        const initResponse = yield api.initTransaction();
+        const strongCustomerAuthentication = getFullStrongCustomerAuthenticationData();
         const chargeCitRequest = new ChargeCitRequest_1.ChargeCitRequest(testCard, 9999, 'EUR', strongCustomerAuthentication);
         const chargeResponse = yield api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
         checkResult(chargeResponse);

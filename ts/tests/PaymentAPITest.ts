@@ -17,8 +17,13 @@ import {MobilePayInitRequest} from '../src/model/request/MobilePayInitRequest';
 import {Splitting} from '../src/model/Splitting';
 import { ChargeMitRequest } from '../src/model/request/ChargeMitRequest';
 import { ChargeCitRequest } from '../src/model/request/ChargeCitRequest';
-import { StrongCustomerAuthentication } from '../src/model/request/sca/StrongCustomerAuthentication';
+import { StrongCustomerAuthentication, ChallengeWindowSize } from '../src/model/request/sca/StrongCustomerAuthentication';
 import { ReturnUrls } from '../src/model/request/sca/ReturnUrls';
+import { CustomerDetails } from '../src/model/request/sca/CustomerDetails';
+import { PhoneNumber } from '../src/model/request/sca/PhoneNumber';
+import { CustomerAccount, AccountAgeIndicator, AccountInformationChangeIndicator, AccountPasswordChangeIndicator, ShippingAddressFirstUsedIndicator, SuspiciousActivityIndicator } from '../src/model/request/sca/CustomerAccount';
+import { Purchase, ShippingIndicator, DeliveryTimeFrame, ReorderItemsIndicator, PreOrderPurchaseIndicator, ShippingNameIndicator } from '../src/model/request/sca/Purchase';
+import { Address } from '../src/model/request/sca/Address';
 
 let api: PaymentAPI;
 let validCard: any;
@@ -61,6 +66,73 @@ function printResult(response: Response): string {
     return ', complete result was: \n' + JSON.stringify(response);
 }
 
+function getFullStrongCustomerAuthenticationData(): StrongCustomerAuthentication {
+    return new StrongCustomerAuthentication(
+        new ReturnUrls(
+            "https://example.com/success",
+            "https://example.com/cancel",
+            "https://example.com/failure",
+            "https://example.com/webhook/success",
+            "https://example.com/webhook/cancel",
+            "https://example.com/webhook/failure",
+            0
+        ),
+        new CustomerDetails(
+            true,
+            "Eric Example",
+            "eric.example@example.com",
+            new PhoneNumber("358", "123456789"),
+            new PhoneNumber("358", "441234566"),
+            new PhoneNumber("358", "441234566")
+        ),
+        new CustomerAccount(
+            AccountAgeIndicator.MoreThan60Days,
+            "2018-07-05",
+            AccountInformationChangeIndicator.MoreThan60Days,
+            "2018-09-11",
+            AccountPasswordChangeIndicator.NoChange,
+            "2018-07-05",
+            7,
+            1,
+            3,
+            8,
+            ShippingAddressFirstUsedIndicator.Between30And60Days,
+            "2019-07-01",
+            SuspiciousActivityIndicator.NoSuspiciousActivity
+        ),
+        new Purchase(
+            ShippingIndicator.ShipToCardholdersAddress,
+            DeliveryTimeFrame.SameDayShipping,
+            "eric.example@example.com",
+            ReorderItemsIndicator.FirstTimeOrdered,
+            PreOrderPurchaseIndicator.MerchandiseAvailable,
+            "2019-08-20",
+            ShippingNameIndicator.AccountNameMatchesShippingName
+        ),
+        new Address(
+            "Helsinki",
+            "246",
+            "Arkadiankatu 1",
+            "",
+            "",
+            "00101",
+            "18"
+        ),
+        new Address(
+            "Helsinki",
+            "246",
+            "Arkadiankatu 1",
+            "",
+            "",
+            "00101",
+            "18"
+        ),
+        ChallengeWindowSize.Window600x400,
+        false,
+        false
+    )
+}
+
 describe('PaymentAPI', () => {
     it('Should have instance of PaymentHighwayAPI', () => {
         assert.instanceOf(api, PaymentAPI, 'Was not instance of PaymentAPI');
@@ -98,6 +170,17 @@ describe('PaymentAPI', () => {
                 "https://example.com/failure"
             )
         )
+
+        const chargeCitRequest = new ChargeCitRequest(testCard, 9999, 'EUR', strongCustomerAuthentication);
+        const chargeResponse = await api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
+
+        checkResult(chargeResponse);
+    });
+
+    it('Test charge customer initiated transaction with full SCA data', async () => {
+        const initResponse = await api.initTransaction();
+
+        const strongCustomerAuthentication = getFullStrongCustomerAuthenticationData();
 
         const chargeCitRequest = new ChargeCitRequest(testCard, 9999, 'EUR', strongCustomerAuthentication);
         const chargeResponse = await api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
