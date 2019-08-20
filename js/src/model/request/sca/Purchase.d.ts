@@ -8,7 +8,7 @@ export declare class Purchase {
      * @param pre_order_date For a pre-ordered purchase, the expected date that the merchandise will be available
      * @param shipping_name_indicator
      */
-    constructor(shipping_indicator?: ShippingIndicator, delivery_time_frame?: DeliveryTimeFrameIndicator, email?: string, reorder_items_indicator?: ReorderItemsIndicator, pre_order_purchase_indicator?: PreOrderPurchaseIndicator, pre_order_date?: string, shipping_name_indicator?: ShippingNameIndicator);
+    constructor(shipping_indicator?: ShippingIndicator, delivery_time_frame?: DeliveryTimeFrame, email?: string, reorder_items_indicator?: ReorderItemsIndicator, pre_order_purchase_indicator?: PreOrderPurchaseIndicator, pre_order_date?: string, shipping_name_indicator?: ShippingNameIndicator);
 }
 /**
  * 01 = Ship to cardholder’s billing address,
@@ -29,12 +29,13 @@ export declare enum ShippingIndicator {
     Other = "07"
 }
 /**
+ * Indicates the merchandise delivery timeframe.
  * 01 = Electronic Delivery
  * 02 = Same day shipping
  * 03 = Overnight shipping
  * 04 = Two-day or more shipping
  */
-export declare enum DeliveryTimeFrameIndicator {
+export declare enum DeliveryTimeFrame {
     ElectronicDelivery = "01",
     SameDayShipping = "02",
     OvernightShipping = "03",

@@ -33,18 +33,19 @@ var ShippingIndicator;
     ShippingIndicator["Other"] = "07";
 })(ShippingIndicator = exports.ShippingIndicator || (exports.ShippingIndicator = {}));
 /**
+ * Indicates the merchandise delivery timeframe.
  * 01 = Electronic Delivery
  * 02 = Same day shipping
  * 03 = Overnight shipping
  * 04 = Two-day or more shipping
  */
-var DeliveryTimeFrameIndicator;
-(function (DeliveryTimeFrameIndicator) {
-    DeliveryTimeFrameIndicator["ElectronicDelivery"] = "01";
-    DeliveryTimeFrameIndicator["SameDayShipping"] = "02";
-    DeliveryTimeFrameIndicator["OvernightShipping"] = "03";
-    DeliveryTimeFrameIndicator["TwoDarOrMoreShipping"] = "04";
-})(DeliveryTimeFrameIndicator = exports.DeliveryTimeFrameIndicator || (exports.DeliveryTimeFrameIndicator = {}));
+var DeliveryTimeFrame;
+(function (DeliveryTimeFrame) {
+    DeliveryTimeFrame["ElectronicDelivery"] = "01";
+    DeliveryTimeFrame["SameDayShipping"] = "02";
+    DeliveryTimeFrame["OvernightShipping"] = "03";
+    DeliveryTimeFrame["TwoDarOrMoreShipping"] = "04";
+})(DeliveryTimeFrame = exports.DeliveryTimeFrame || (exports.DeliveryTimeFrame = {}));
 var ReorderItemsIndicator;
 (function (ReorderItemsIndicator) {
     ReorderItemsIndicator["FirstTimeOrdered"] = "01";

@@ -10,7 +10,7 @@ export class Purchase {
      */
     constructor(
         shipping_indicator?: ShippingIndicator,
-        delivery_time_frame?: DeliveryTimeFrameIndicator,
+        delivery_time_frame?: DeliveryTimeFrame,
         email?: string,
         reorder_items_indicator?: ReorderItemsIndicator,
         pre_order_purchase_indicator?: PreOrderPurchaseIndicator,
@@ -39,12 +39,13 @@ export enum ShippingIndicator {
 }
 
 /**
+ * Indicates the merchandise delivery timeframe.
  * 01 = Electronic Delivery
  * 02 = Same day shipping
  * 03 = Overnight shipping
  * 04 = Two-day or more shipping
  */
-export enum DeliveryTimeFrameIndicator {
+export enum DeliveryTimeFrame {
     ElectronicDelivery = "01",
     SameDayShipping = "02",
     OvernightShipping = "03",
