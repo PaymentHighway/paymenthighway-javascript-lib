@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class PhoneNumber {
     /**
-     * @param countryCode 1-3 digits country code (ITU-E.164)
+     * @param country_code 1-3 digits country code (ITU-E.164)
      * @param number 1-15 digits phone number
      */
-    constructor(countryCode, number) {
-        this.countryCode = countryCode;
+    constructor(country_code, number) {
+        this.country_code = country_code;
         this.number = number;
     }
 }
