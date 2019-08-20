@@ -1,4 +1,4 @@
-export class ScaPurchase {
+export class Purchase {
     /**
      * @param shipping_indicator 
      * @param delivery_time_frame 
@@ -45,7 +45,7 @@ export enum ShippingIndicator {
  * 04 = Two-day or more shipping
  */
 export enum DeliveryTimeFrameIndicator {
-    ElectroniceDelivery = "01",
+    ElectronicDelivery = "01",
     SameDayShipping = "02",
     OvernightShipping = "03",
     TwoDarOrMoreShipping= "04"

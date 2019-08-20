@@ -1,17 +1,17 @@
-import { ScaReturnUrls } from "./ScaReturnUrls";
-import { ScaCustomerDetails } from "./ScaCustomerDetails";
-import { ScaCustomerAccount } from "./ScaCustomerAccount";
-import { ScaPurchase } from "./ScaPurchase";
-import { ScaAddress } from "./ScaAddress";
+import { ReturnUrls } from "./ReturnUrls";
+import { CustomerDetails } from "./CustomerDetails";
+import { CustomerAccount } from "./CustomerAccount";
+import { Purchase } from "./Purchase";
+import { Address } from "./Address";
 
 export class StrongCustomerAuthentication {
     constructor(
-        public return_urls: ScaReturnUrls,
-        public customer_details?: ScaCustomerDetails,
-        public customer_account?: ScaCustomerAccount,
-        public purchase?: ScaPurchase,
-        public billing_address?: ScaAddress,
-        public shipping_address?: ScaAddress,
+        public return_urls: ReturnUrls,
+        public customer_details?: CustomerDetails,
+        public customer_account?: CustomerAccount,
+        public purchase?: Purchase,
+        public billing_address?: Address,
+        public shipping_address?: Address,
         public desired_challenge_window_size?: ChallengeWindowSize,
         public exit_iframe_on_result?: boolean,
         public exit_iframe_on_three_d_secure?: boolean

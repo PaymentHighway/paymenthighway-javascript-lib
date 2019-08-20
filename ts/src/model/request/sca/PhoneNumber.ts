@@ -1,4 +1,4 @@
-export class ScaPhoneNumber{
+export class PhoneNumber{
     
     /**
      * @param countryCode 1-3 digits country code (ITU-E.164)

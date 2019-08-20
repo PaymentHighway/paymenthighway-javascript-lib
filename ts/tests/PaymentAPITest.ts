@@ -17,8 +17,8 @@ import {MobilePayInitRequest} from '../src/model/request/MobilePayInitRequest';
 import {Splitting} from '../src/model/Splitting';
 import { ChargeMitRequest } from '../src/model/request/ChargeMitRequest';
 import { ChargeCitRequest } from '../src/model/request/ChargeCitRequest';
-import { StrongCustomerAuthentication } from '../src/model/request/StrongCustomerAuthentication';
-import { ScaReturnUrls } from '../src/model/request/ScaReturnUrls';
+import { StrongCustomerAuthentication } from '../src/model/request/sca/StrongCustomerAuthentication';
+import { ReturnUrls } from '../src/model/request/sca/ReturnUrls';
 
 let api: PaymentAPI;
 let validCard: any;
@@ -92,7 +92,7 @@ describe('PaymentAPI', () => {
         const initResponse = await api.initTransaction();
 
         const strongCustomerAuthentication = new StrongCustomerAuthentication(
-            new ScaReturnUrls(
+            new ReturnUrls(
                 "https://example.com/success",
                 "https://example.com/cancel",
                 "https://example.com/failure"
@@ -109,7 +109,7 @@ describe('PaymentAPI', () => {
         const initResponse = await api.initTransaction();
 
         const strongCustomerAuthentication = new StrongCustomerAuthentication(
-            new ScaReturnUrls(
+            new ReturnUrls(
                 "https://example.com/success",
                 "https://example.com/cancel",
                 "https://example.com/failure"

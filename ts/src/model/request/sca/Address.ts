@@ -1,4 +1,4 @@
-export class ScaAddress {
+export class Address {
     /**
      * @param city max length 50, City name 
      * @param country 3 digits country code, 3166-1 numeric (eg. "246")

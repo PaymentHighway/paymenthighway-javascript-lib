@@ -26,6 +26,7 @@ import { AfterPayCommitTransactionRequest } from './model/request/AfterPayCommit
 import { AfterPayRevertTransactionRequest } from './model/request/AfterPayRevertTransactionRequest';
 import { ChargeCitRequest } from './model/request/ChargeCitRequest';
 import { ChargeMitRequest } from './model/request/ChargeMitRequest';
+import { ChargeCitResponse } from './model/response/ChargeCitResponse';
 /**
  * Payment Highway Payment API Service.
  */
@@ -60,7 +61,7 @@ export declare class PaymentAPI {
      * @param request
      * @returns {PromiseLike<DebitResponse>}
      */
-    chargeCustomerInitiatedTransaction(transactionId: string, request: ChargeCitRequest): PromiseLike<DebitResponse>;
+    chargeCustomerInitiatedTransaction(transactionId: string, request: ChargeCitRequest): PromiseLike<ChargeCitResponse>;
     /**
      * Payment Highway Charge Merchant Initiated Transaction
      *

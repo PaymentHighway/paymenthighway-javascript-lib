@@ -2,7 +2,7 @@ import { Card } from './Card';
 import { Token } from '../Token';
 import { Customer } from '../response/Customer';
 import { Splitting } from '../Splitting';
-import { StrongCustomerAuthentication } from './StrongCustomerAuthentication';
+import { StrongCustomerAuthentication } from './sca/StrongCustomerAuthentication';
 export declare class ChargeCitRequest {
     card: Card;
     amount: number;

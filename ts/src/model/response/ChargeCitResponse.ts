@@ -1,5 +1,6 @@
 import {Result} from './Result';
-export interface DebitResponse {
+export interface ChargeCitResponse {
     result: Result;
     filing_code?: string;
+    three_d_secure_url?: string;
 }

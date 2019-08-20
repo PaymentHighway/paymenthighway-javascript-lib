@@ -1,4 +1,4 @@
-export class ScaCustomerAccount {
+export class CustomerAccount {
     /**
      * @param account_age_indicator Length of time that the cardholder has had the account.
      * @param account_date Date, when the cardholder opened the account at merchant (eg. "2019-07-05")

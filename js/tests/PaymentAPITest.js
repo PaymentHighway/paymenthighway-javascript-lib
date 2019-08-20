@@ -22,8 +22,8 @@ const MobilePayInitRequest_1 = require("../src/model/request/MobilePayInitReques
 const Splitting_1 = require("../src/model/Splitting");
 const ChargeMitRequest_1 = require("../src/model/request/ChargeMitRequest");
 const ChargeCitRequest_1 = require("../src/model/request/ChargeCitRequest");
-const StrongCustomerAuthentication_1 = require("../src/model/request/StrongCustomerAuthentication");
-const ScaReturnUrls_1 = require("../src/model/request/ScaReturnUrls");
+const StrongCustomerAuthentication_1 = require("../src/model/request/sca/StrongCustomerAuthentication");
+const ReturnUrls_1 = require("../src/model/request/sca/ReturnUrls");
 let api;
 let validCard;
 let testCard;
@@ -81,14 +81,14 @@ describe('PaymentAPI', () => {
     }));
     it('Test charge customer initiated transaction', () => __awaiter(this, void 0, void 0, function* () {
         const initResponse = yield api.initTransaction();
-        const strongCustomerAuthentication = new StrongCustomerAuthentication_1.StrongCustomerAuthentication(new ScaReturnUrls_1.ScaReturnUrls("https://example.com/success", "https://example.com/cancel", "https://example.com/failure"));
+        const strongCustomerAuthentication = new StrongCustomerAuthentication_1.StrongCustomerAuthentication(new ReturnUrls_1.ReturnUrls("https://example.com/success", "https://example.com/cancel", "https://example.com/failure"));
         const chargeCitRequest = new ChargeCitRequest_1.ChargeCitRequest(testCard, 9999, 'EUR', strongCustomerAuthentication);
         const chargeResponse = yield api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
         checkResult(chargeResponse);
     }));
     it('Test soft-decline of customer initiated transaction', () => __awaiter(this, void 0, void 0, function* () {
         const initResponse = yield api.initTransaction();
-        const strongCustomerAuthentication = new StrongCustomerAuthentication_1.StrongCustomerAuthentication(new ScaReturnUrls_1.ScaReturnUrls("https://example.com/success", "https://example.com/cancel", "https://example.com/failure"));
+        const strongCustomerAuthentication = new StrongCustomerAuthentication_1.StrongCustomerAuthentication(new ReturnUrls_1.ReturnUrls("https://example.com/success", "https://example.com/cancel", "https://example.com/failure"));
         const chargeCitRequest = new ChargeCitRequest_1.ChargeCitRequest(scaSoftDeclineCard, 100, 'EUR', strongCustomerAuthentication, undefined, undefined, undefined, undefined, true);
         const chargeResponse = yield api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
         chai_1.assert(chargeResponse.result.code === 400, 'Request should have been soft declined with code 400, complete response was: ' + JSON.stringify(chargeResponse));

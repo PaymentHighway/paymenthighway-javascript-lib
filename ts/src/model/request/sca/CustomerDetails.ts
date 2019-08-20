@@ -1,6 +1,6 @@
-import { ScaPhoneNumber } from "./ScaPhoneNumber";
+import { PhoneNumber } from "./PhoneNumber";
 
-export class ScaCustomerDetails {
+export class CustomerDetails {
 
     /**
      * @param shipping_address_matches_billing_address Does the shipping address matches the billing address
@@ -14,8 +14,8 @@ export class ScaCustomerDetails {
         public shipping_address_matches_billing_address?: boolean,
         public name?: string,
         public email?: string,
-        public home_phone?: ScaPhoneNumber,
-        public mobile_phone?: ScaPhoneNumber,
-        public work_phone?: ScaPhoneNumber
+        public home_phone?: PhoneNumber,
+        public mobile_phone?: PhoneNumber,
+        public work_phone?: PhoneNumber
     ){}
 }
