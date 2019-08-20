@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Card_1 = require("./Card");
 class ChargeCitRequest {
-    constructor(cardOrToken, amount, currency, strong_customer_authentication, order, customer, commit, splitting, use_exemptions) {
+    constructor(cardOrToken, amount, currency, strong_customer_authentication, order, customer, commit, splitting) {
         if (cardOrToken instanceof Card_1.Card) {
             this.card = cardOrToken;
         }
@@ -16,7 +16,6 @@ class ChargeCitRequest {
         this.customer = customer;
         this.commit = commit;
         this.splitting = splitting;
-        this.use_exemptions = use_exemptions;
     }
 }
 exports.ChargeCitRequest = ChargeCitRequest;

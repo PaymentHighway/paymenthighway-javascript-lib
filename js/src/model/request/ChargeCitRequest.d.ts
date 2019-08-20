@@ -14,5 +14,5 @@ export declare class ChargeCitRequest {
     splitting: Splitting;
     use_exemptions: boolean;
     strong_customer_authentication: StrongCustomerAuthentication;
-    constructor(cardOrToken: Card | Token, amount: number, currency: string, strong_customer_authentication: StrongCustomerAuthentication, order?: string, customer?: Customer, commit?: boolean, splitting?: Splitting, use_exemptions?: boolean);
+    constructor(cardOrToken: Card | Token, amount: number, currency: string, strong_customer_authentication: StrongCustomerAuthentication, order?: string, customer?: Customer, commit?: boolean, splitting?: Splitting);
 }

@@ -116,7 +116,7 @@ describe('PaymentAPI', () => {
             )
         )
 
-        const chargeCitRequest = new ChargeCitRequest(scaSoftDeclineCard, 100, 'EUR', strongCustomerAuthentication, undefined, undefined, undefined, undefined, true);
+        const chargeCitRequest = new ChargeCitRequest(scaSoftDeclineCard, 100, 'EUR', strongCustomerAuthentication);
         const chargeResponse = await api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
 
         assert(chargeResponse.result.code === 400, 'Request should have been soft declined with code 400, complete response was: ' + JSON.stringify(chargeResponse));

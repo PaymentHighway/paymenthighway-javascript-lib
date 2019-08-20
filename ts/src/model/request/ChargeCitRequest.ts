@@ -16,7 +16,7 @@ export class ChargeCitRequest {
     public use_exemptions: boolean;
     public strong_customer_authentication: StrongCustomerAuthentication
 
-    constructor(cardOrToken: Card|Token, amount: number, currency: string, strong_customer_authentication: StrongCustomerAuthentication, order?: string, customer?: Customer, commit?: boolean, splitting?: Splitting, use_exemptions?: boolean ) {
+    constructor(cardOrToken: Card|Token, amount: number, currency: string, strong_customer_authentication: StrongCustomerAuthentication, order?: string, customer?: Customer, commit?: boolean, splitting?: Splitting) {
         if (cardOrToken instanceof Card) {
             this.card = cardOrToken;
         } else {
@@ -29,6 +29,5 @@ export class ChargeCitRequest {
         this.customer = customer;
         this.commit = commit;
         this.splitting = splitting;
-        this.use_exemptions = use_exemptions;
     }
 }
