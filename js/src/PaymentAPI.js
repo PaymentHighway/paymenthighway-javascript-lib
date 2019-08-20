@@ -17,7 +17,7 @@ class PaymentAPI {
         this.secureSigner = new SecureSigner_1.SecureSigner(this.signatureKeyId, this.signatureSecret);
     }
     /**
-     * Payment Highway Init Transaction
+     * Init Transaction
      *
      * @returns {PromiseLike<TransactionResponse>}
      */
@@ -26,7 +26,7 @@ class PaymentAPI {
         return this.makeRequest('POST', paymentUri);
     }
     /**
-     * Payment Highway Debit Transaction
+     * Debit Transaction
      *
      * @param transactionId
      * @param request
@@ -37,7 +37,7 @@ class PaymentAPI {
         return this.makeRequest('POST', debitUri, request);
     }
     /**
-     * Payment Highway Charge Customer Initiated Transaction
+     * Charge Customer Initiated Transaction
      *
      * @param transactionId
      * @param request
@@ -48,7 +48,7 @@ class PaymentAPI {
         return this.makeRequest('POST', chargeCitUri, request);
     }
     /**
-     * Payment Highway Charge Merchant Initiated Transaction
+     * Charge Merchant Initiated Transaction
      *
      * @param transactionId
      * @param request
@@ -59,7 +59,7 @@ class PaymentAPI {
         return this.makeRequest('POST', chargeMitUri, request);
     }
     /**
-     * Payment Highway Debit Masterpass Transaction
+     * Debit Masterpass Transaction
      *
      * @param {string} transactionId
      * @param {MasterpassTransactionRequest} request
@@ -70,7 +70,7 @@ class PaymentAPI {
         return this.makeRequest('POST', debitUri, request);
     }
     /**
-     * Payment Highway Debit Apple Pay Transaction
+     * Debit Apple Pay Transaction
      *
      * @param {string} transactionId
      * @param {ApplePayTransactionRequest} request
@@ -81,7 +81,7 @@ class PaymentAPI {
         return this.makeRequest('POST', debitUri, request);
     }
     /**
-     * Payment Highway Revert Transaction
+     * Revert Transaction
      *
      * @param transactionId
      * @param request
@@ -92,7 +92,7 @@ class PaymentAPI {
         return this.makeRequest('POST', revertUri, request);
     }
     /**
-     * Payment Highway Revert Siirto Transaction
+     * Revert Siirto Transaction
      *
      * @param transactionId
      * @param request
@@ -103,7 +103,7 @@ class PaymentAPI {
         return this.makeRequest('POST', revertUri, request);
     }
     /**
-     * Payment Highway Revert Pivo Transaction
+     * Revert Pivo Transaction
      *
      * @param transactionId
      * @param request
@@ -114,7 +114,7 @@ class PaymentAPI {
         return this.makeRequest('POST', revertUri, request);
     }
     /**
-     * Payment Highway Transaction Commit Request
+     * Commit Transaction Request
      * Used to commit (capture) the transaction.
      * In order to find out the result of the transaction without committing it, use Transaction Result request instead.
      *
@@ -172,7 +172,7 @@ class PaymentAPI {
         return this.makeRequest('GET', statusUri);
     }
     /**
-     * Payment Highway Transaction Status Request
+     * Transaction Status Request
      *
      * @param transactionId
      * @returns {PromiseLike<TransactionStatusResponse>}
@@ -182,7 +182,7 @@ class PaymentAPI {
         return this.makeRequest('GET', statusUri);
     }
     /**
-     * Payment Highway Pivo Transaction Status Request
+     * Pivo Transaction Status Request
      *
      * @param transactionId
      * @returns {PromiseLike<PivoTransactionStatusResponse>}
@@ -192,7 +192,7 @@ class PaymentAPI {
         return this.makeRequest('GET', statusUri);
     }
     /**
-     * Payment Highway Siirto Transaction Status Request
+     * Siirto Transaction Status Request
      *
      * @param transactionId
      * @returns {PromiseLike<SiirtoTransactionStatusResponse>}
@@ -202,7 +202,7 @@ class PaymentAPI {
         return this.makeRequest('GET', statusUri);
     }
     /**
-     * Payment Highway Order Status Request
+     * Order Status Request
      *
      * @param orderId   The ID of the order whose transactions should be searched for
      * @returns {PromiseLike<OrderSearchResponse>}
@@ -212,7 +212,7 @@ class PaymentAPI {
         return this.makeRequest('GET', searchUri);
     }
     /**
-     * Payment Highway Tokenize Request
+     * Tokenize Request
      *
      * @param tokenizationId
      * @returns {PromiseLike<TokenizationResponse>}
@@ -233,7 +233,7 @@ class PaymentAPI {
         return this.makeRequest('GET', userProfileUrl);
     }
     /**
-     * Payment Highway Transaction Result Request
+     * Transaction Result Request
      * Used to find out whether or not an uncommitted transaction succeeded, without actually committing (capturing) it.
      *
      * @param transactionId
@@ -244,7 +244,7 @@ class PaymentAPI {
         return this.makeRequest('GET', transactionResultUrl);
     }
     /**
-     * Payment Highway Siirto Transaction Result Request
+     * Siirto Transaction Result Request
      * Used to find out whether or not an Siirto transaction succeeded.
      *
      * @param transactionId
@@ -255,7 +255,7 @@ class PaymentAPI {
         return this.makeRequest('GET', transactionResultUrl);
     }
     /**
-     * Payment Highway Pivo Transaction Result Request
+     * Pivo Transaction Result Request
      * Used to find out whether or not an Pivo transaction succeeded.
      *
      * @param transactionId
@@ -266,7 +266,7 @@ class PaymentAPI {
         return this.makeRequest('GET', transactionResultUrl);
     }
     /**
-     * Payment Highway Daily Report Request
+     * Daily Report Request
      *
      * @param date
      * @returns {PromiseLike<ReportResponse>}
@@ -276,7 +276,7 @@ class PaymentAPI {
         return this.makeRequest('GET', reportUri);
     }
     /**
-     * Payment Highway Reconciliation Report Request
+     * Reconciliation Report Request
      *
      * @param date      The date to fetch the reconciliation report for.
      * @param useDateProcessed Use the acquirer processed date instead of report received date. Might cause changes to the past

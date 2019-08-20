@@ -28,7 +28,7 @@ export declare enum AccountAgeIndicator {
     NoAccount = "01",
     CreatedDuringTransaction = "02",
     LessThan30Days = "03",
-    LessThan60Days = "04",
+    Between30And60Days = "04",
     MoreThan60Days = "05"
 }
 /**
@@ -41,7 +41,7 @@ export declare enum AccountAgeIndicator {
 export declare enum AccountInformationChangeIndicator {
     ChangedDuringTransaction = "01",
     LessThan30Days = "02",
-    LessThan60Days = "03",
+    Between30And60Days = "03",
     MoreThan60Days = "04"
 }
 /**
@@ -56,7 +56,7 @@ export declare enum AccountPasswordChangeIndicator {
     NoChange = "01",
     ChangedDuringTransaction = "02",
     LessThan30Days = "03",
-    LessThan60Days = "04",
+    Between30And60Days = "04",
     MoreThan60Days = "05"
 }
 /**
@@ -69,7 +69,7 @@ export declare enum AccountPasswordChangeIndicator {
 export declare enum ShippingAddressFirstUsedIndicator {
     ThisTransaction = "01",
     LessThan30Days = "02",
-    LessThan60Days = "03",
+    Between30And60Days = "03",
     MoreThan60Days = "04"
 }
 /**
