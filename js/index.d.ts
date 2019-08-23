@@ -14,6 +14,7 @@ export * from './src/model/request/CommitTransactionRequest';
 export * from './src/model/request/Customer';
 export * from './src/model/request/MasterpassTransactionRequest';
 export * from './src/model/request/MobilePayInitRequest';
+export * from './src/model/request/PhRequest';
 export * from './src/model/request/RevertPivoTransactionRequest';
 export * from './src/model/request/RevertSiirtoTransactionRequest';
 export * from './src/model/request/RevertTransactionRequest';

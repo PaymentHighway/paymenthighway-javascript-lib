@@ -1,3 +1,5 @@
-export class AfterPayCommitTransactionRequest {
-    constructor(public amount: number) {}
+import { Request } from "./PhRequest";
+
+export class AfterPayCommitTransactionRequest extends Request {
+    constructor(public amount: number) {super();}
 }

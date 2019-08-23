@@ -3,8 +3,9 @@ import {Token} from '../Token';
 import {Customer} from '../response/Customer';
 import {Splitting} from '../Splitting';
 import { StrongCustomerAuthentication } from './sca/StrongCustomerAuthentication';
+import { Request } from './PhRequest';
 
-export class ChargeCitRequest {
+export class ChargeCitRequest extends Request {
     public card: Card;
     public amount: number;
     public currency: string;
@@ -17,6 +18,7 @@ export class ChargeCitRequest {
     public strong_customer_authentication: StrongCustomerAuthentication
 
     constructor(cardOrToken: Card|Token, amount: number, currency: string, strong_customer_authentication: StrongCustomerAuthentication, order?: string, customer?: Customer, commit?: boolean, splitting?: Splitting) {
+        super();
         if (cardOrToken instanceof Card) {
             this.card = cardOrToken;
         } else {

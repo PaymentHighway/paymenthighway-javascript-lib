@@ -3,7 +3,8 @@ import { Token } from '../Token';
 import { Customer } from '../response/Customer';
 import { Splitting } from '../Splitting';
 import { StrongCustomerAuthentication } from './sca/StrongCustomerAuthentication';
-export declare class ChargeCitRequest {
+import { Request } from './PhRequest';
+export declare class ChargeCitRequest extends Request {
     card: Card;
     amount: number;
     currency: string;

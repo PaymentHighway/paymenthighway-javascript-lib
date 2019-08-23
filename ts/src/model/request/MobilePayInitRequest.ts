@@ -1,4 +1,6 @@
-export class MobilePayInitRequest {
+import { Request } from "./PhRequest";
+
+export class MobilePayInitRequest extends Request {
     constructor(
         public amount: number,
         public currency: string,
@@ -12,6 +14,7 @@ export class MobilePayInitRequest {
         public sub_merchant_id?: string,
         public shop_name?: string,
         public shop_logo_url?: string) {
+            super();
     }
 
     public static Builder(amount: number, currency: string) {

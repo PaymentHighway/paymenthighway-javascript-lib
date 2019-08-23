@@ -306,27 +306,39 @@ class PaymentAPI {
      *
      * @return
      */
-    createNameValuePairs() {
+    createNameValuePairs(requestId) {
         return [
             new Pair_1.Pair('sph-api-version', PaymentAPI.API_VERSION),
             new Pair_1.Pair('sph-account', this.account),
             new Pair_1.Pair('sph-merchant', this.merchant),
             new Pair_1.Pair('sph-timestamp', PaymentHighwayUtility_1.PaymentHighwayUtility.getUtcTimestamp()),
-            new Pair_1.Pair('sph-request-id', PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId())
+            new Pair_1.Pair('sph-request-id', requestId)
         ];
     }
     /**
      *
      * @param method
      * @param paymentUri
-     * @param requestBody
+     * @param request
      * @returns {PromiseLike<TransactionResponse>}
      */
-    makeRequest(method, paymentUri, requestBody) {
-        return this.executeRequest(method, paymentUri, this.createNameValuePairs(), requestBody)
+    makeRequest(method, paymentUri, request) {
+        const requestId = request && request.requestId || PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
+        const requestBody = request && this.getRequestBody(request);
+        return this.executeRequest(method, paymentUri, this.createNameValuePairs(requestId), requestBody)
             .then((body) => {
             return body;
         });
+    }
+    /**
+     * Gets request fields to be included in the request body
+     * @param request
+     * @returns {Object} request with fields removed that should not be included in the request body
+     */
+    getRequestBody(request) {
+        let requestBody = Object.assign({}, request);
+        delete requestBody.requestId;
+        return requestBody;
     }
     /**
      *

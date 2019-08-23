@@ -2,8 +2,9 @@ import {Card} from './Card';
 import {Token} from '../Token';
 import {Customer} from '../response/Customer';
 import {Splitting} from '../Splitting';
+import { Request } from './PhRequest';
 
-export class ChargeMitRequest {
+export class ChargeMitRequest extends Request {
     public card: Card;
     public amount: number;
     public currency: string;
@@ -14,6 +15,7 @@ export class ChargeMitRequest {
     public splitting: Splitting;
 
     constructor(cardOrToken: Card|Token, amount: number, currency: string, order?: string, customer?: Customer, commit?: boolean, splitting?: Splitting) {
+        super();
         if (cardOrToken instanceof Card) {
             this.card = cardOrToken;
         } else {

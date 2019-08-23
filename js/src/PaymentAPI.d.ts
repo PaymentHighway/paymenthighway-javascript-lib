@@ -253,10 +253,16 @@ export declare class PaymentAPI {
      *
      * @param method
      * @param paymentUri
-     * @param requestBody
+     * @param request
      * @returns {PromiseLike<TransactionResponse>}
      */
     private makeRequest;
+    /**
+     * Gets request fields to be included in the request body
+     * @param request
+     * @returns {Object} request with fields removed that should not be included in the request body
+     */
+    private getRequestBody;
     /**
      *
      * @param method

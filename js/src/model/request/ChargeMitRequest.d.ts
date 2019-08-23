@@ -2,7 +2,8 @@ import { Card } from './Card';
 import { Token } from '../Token';
 import { Customer } from '../response/Customer';
 import { Splitting } from '../Splitting';
-export declare class ChargeMitRequest {
+import { Request } from './PhRequest';
+export declare class ChargeMitRequest extends Request {
     card: Card;
     amount: number;
     currency: string;

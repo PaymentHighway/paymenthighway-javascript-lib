@@ -33,6 +33,7 @@ import {AfterPayRevertTransactionRequest} from './model/request/AfterPayRevertTr
 import { ChargeCitRequest } from './model/request/ChargeCitRequest';
 import { ChargeMitRequest } from './model/request/ChargeMitRequest';
 import { ChargeCitResponse } from './model/response/ChargeCitResponse';
+import { Request } from './model/request/PhRequest';
 
 /**
  * Payment Highway Payment API Service.
@@ -371,13 +372,13 @@ export class PaymentAPI {
      *
      * @return
      */
-    private createNameValuePairs(): Pair<string, string>[] {
+    private createNameValuePairs(requestId: string): Pair<string, string>[] {
         return [
             new Pair('sph-api-version', PaymentAPI.API_VERSION),
             new Pair('sph-account', this.account),
             new Pair('sph-merchant', this.merchant),
             new Pair('sph-timestamp', PaymentHighwayUtility.getUtcTimestamp()),
-            new Pair('sph-request-id', PaymentHighwayUtility.createRequestId())
+            new Pair('sph-request-id', requestId)
         ];
     }
 
@@ -385,14 +386,28 @@ export class PaymentAPI {
      *
      * @param method
      * @param paymentUri
-     * @param requestBody
+     * @param request
      * @returns {PromiseLike<TransactionResponse>}
      */
-    private makeRequest(method: Method, paymentUri: string, requestBody?: Object): PromiseLike<any> {
-        return this.executeRequest(method, paymentUri, this.createNameValuePairs(), requestBody)
+    private makeRequest(method: Method, paymentUri: string, request?: Request): PromiseLike<any> {
+        const requestId = request && request.requestId || PaymentHighwayUtility.createRequestId();
+        const requestBody = request && this.getRequestBody(request);
+
+        return this.executeRequest(method, paymentUri, this.createNameValuePairs(requestId), requestBody)
             .then((body: TransactionResponse) => {
                 return body;
             });
+    }
+
+    /**
+     * Gets request fields to be included in the request body
+     * @param request
+     * @returns {Object} request with fields removed that should not be included in the request body
+     */
+    private getRequestBody(request: Request): Object {
+        let requestBody = Object.assign({}, request);
+        delete requestBody.requestId;
+        return requestBody;
     }
 
     /**

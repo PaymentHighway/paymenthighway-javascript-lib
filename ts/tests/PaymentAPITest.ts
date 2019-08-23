@@ -24,6 +24,7 @@ import { PhoneNumber } from '../src/model/request/sca/PhoneNumber';
 import { CustomerAccount, AccountAgeIndicator, AccountInformationChangeIndicator, AccountPasswordChangeIndicator, ShippingAddressFirstUsedIndicator, SuspiciousActivityIndicator } from '../src/model/request/sca/CustomerAccount';
 import { Purchase, ShippingIndicator, DeliveryTimeFrame, ReorderItemsIndicator, PreOrderPurchaseIndicator, ShippingNameIndicator } from '../src/model/request/sca/Purchase';
 import { Address } from '../src/model/request/sca/Address';
+import { Request } from '../src/model/request/PhRequest';
 
 let api: PaymentAPI;
 let validCard: any;
@@ -387,16 +388,22 @@ describe('PaymentAPI', () => {
         let paymentToken: PaymentData = JSON.parse('{ "data": "ABCD", "header": { "ephemeralPublicKey": "XYZ", "publicKeyHash": "13579", "transactionId": "24680" }, "signature": "ABCDXYZ0000", "version": "EC_v1" }');
         assert.strictEqual(paymentToken.data, 'ABCD', 'Data was not equal to ABCD');
 
-        let withStaticBuilder = ApplePayTransactionRequest.Builder(paymentToken, amount, currency).build();
-        let withRequestBuilder = new ApplePayTransaction.RequestBuilder(paymentToken, amount, currency).build();
+        let withStaticBuilder = withoutRequestId(ApplePayTransactionRequest.Builder(paymentToken, amount, currency).build());
+        let withRequestBuilder = withoutRequestId(new ApplePayTransaction.RequestBuilder(paymentToken, amount, currency).build());
 
         assert.deepEqual(withStaticBuilder, withRequestBuilder, 'results differ from builder');
 
-        let requestWithCommit = ApplePayTransactionRequest.Builder(paymentToken, amount, currency).setCommit(true).build();
+        let requestWithCommit = withoutRequestId(ApplePayTransactionRequest.Builder(paymentToken, amount, currency).setCommit(true).build());
         assert.notDeepEqual(withStaticBuilder, requestWithCommit, 'requests should differ if commit is added');
 
         assert(withStaticBuilder.amount === 100);
     });
+
+    function withoutRequestId<T extends Request>(request: T): any {
+        let copy = Object.assign({}, request);
+        delete copy.requestId;
+        return copy;
+    }
 
     it('Test Apple Pay validators', () => {
         let amount = 100;

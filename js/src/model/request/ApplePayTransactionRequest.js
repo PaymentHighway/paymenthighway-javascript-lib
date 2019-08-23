@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class ApplePayTransactionRequest {
+const PhRequest_1 = require("./PhRequest");
+class ApplePayTransactionRequest extends PhRequest_1.Request {
     constructor(payment_data, amount, currency, commit, order, customer) {
+        super();
         this.payment_data = payment_data;
         this.amount = amount;
         this.currency = currency;
