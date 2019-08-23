@@ -2,13 +2,13 @@ export declare class Purchase {
     /**
      * @param shipping_indicator
      * @param delivery_time_frame
-     * @param email max length 254
+     * @param delivery_email max length 254
      * @param reorder_items_indicator
      * @param pre_order_purchase_indicator
      * @param pre_order_date For a pre-ordered purchase, the expected date that the merchandise will be available
      * @param shipping_name_indicator
      */
-    constructor(shipping_indicator?: ShippingIndicator, delivery_time_frame?: DeliveryTimeFrame, email?: string, reorder_items_indicator?: ReorderItemsIndicator, pre_order_purchase_indicator?: PreOrderPurchaseIndicator, pre_order_date?: string, shipping_name_indicator?: ShippingNameIndicator);
+    constructor(shipping_indicator?: ShippingIndicator, delivery_time_frame?: DeliveryTimeFrame, delivery_email?: string, reorder_items_indicator?: ReorderItemsIndicator, pre_order_purchase_indicator?: PreOrderPurchaseIndicator, pre_order_date?: string, shipping_name_indicator?: ShippingNameIndicator);
 }
 /**
  * 01 = Ship to cardholder’s billing address,

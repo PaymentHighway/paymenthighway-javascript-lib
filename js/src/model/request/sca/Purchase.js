@@ -4,13 +4,13 @@ class Purchase {
     /**
      * @param shipping_indicator
      * @param delivery_time_frame
-     * @param email max length 254
+     * @param delivery_email max length 254
      * @param reorder_items_indicator
      * @param pre_order_purchase_indicator
      * @param pre_order_date For a pre-ordered purchase, the expected date that the merchandise will be available
      * @param shipping_name_indicator
      */
-    constructor(shipping_indicator, delivery_time_frame, email, reorder_items_indicator, pre_order_purchase_indicator, pre_order_date, shipping_name_indicator) { }
+    constructor(shipping_indicator, delivery_time_frame, delivery_email, reorder_items_indicator, pre_order_purchase_indicator, pre_order_date, shipping_name_indicator) { }
 }
 exports.Purchase = Purchase;
 /**
