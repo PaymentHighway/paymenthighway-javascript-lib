@@ -59,7 +59,7 @@ export declare class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {PromiseLike<DebitResponse>}
+     * @returns {PromiseLike<ChargeCitResponse>}
      */
     chargeCustomerInitiatedTransaction(transactionId: string, request: ChargeCitRequest): PromiseLike<ChargeCitResponse>;
     /**

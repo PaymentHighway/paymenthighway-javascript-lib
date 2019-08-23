@@ -75,13 +75,13 @@ export class PaymentAPI {
         const debitUri = '/transaction/' + transactionId + '/debit';
         return this.makeRequest('POST', debitUri, request);
     }
-    
+
     /**
      * Charge Customer Initiated Transaction
-     * 
-     * @param transactionId 
-     * @param request 
-     * @returns {PromiseLike<DebitResponse>}
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<ChargeCitResponse>}
      */
     public chargeCustomerInitiatedTransaction(transactionId: string, request: ChargeCitRequest): PromiseLike<ChargeCitResponse> {
         const chargeCitUri = '/transaction/' + transactionId + '/card/charge/customer_initiated';
@@ -90,9 +90,9 @@ export class PaymentAPI {
 
     /**
      * Charge Merchant Initiated Transaction
-     * 
-     * @param transactionId 
-     * @param request 
+     *
+     * @param transactionId
+     * @param request
      * @returns {PromiseLike<DebitResponse>}
      */
     public chargeMerchantInitiatedTransaction(transactionId: string, request: ChargeMitRequest): PromiseLike<DebitResponse> {

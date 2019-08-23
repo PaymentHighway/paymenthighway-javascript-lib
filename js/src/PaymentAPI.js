@@ -41,7 +41,7 @@ class PaymentAPI {
      *
      * @param transactionId
      * @param request
-     * @returns {PromiseLike<DebitResponse>}
+     * @returns {PromiseLike<ChargeCitResponse>}
      */
     chargeCustomerInitiatedTransaction(transactionId, request) {
         const chargeCitUri = '/transaction/' + transactionId + '/card/charge/customer_initiated';
