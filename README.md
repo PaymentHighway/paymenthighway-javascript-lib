@@ -288,17 +288,19 @@ When charging a customer initiated transaction there is always a possibility tha
 In addition to the return urls the [`StrongCustomerAuthentication`](/ts/src/model/request/sca/StrongCustomerAuthentication.ts) object has many optional fields for information about the customer and the transaction. This information is used in transaction risk analysis (TRA) and can increase the likelihood that the transaction is considered low risk so that strong customer authentication is not needed.
 
 ```javascript
-var token = new paymentHighway.Token('tokenId');
-var amount = 1990;
-var currency = 'EUR';
-var sca = new StrongCustomerAuthentication(
-    new ReturnUrls(
-        "https://example.com/success", // URL the user is redirected after succesful 3D-Secure authentication if strong customer authentication is required
-        "https://example.com/cancel", // URL the user is redirected after cancelled 3D-Secure authentication if strong customer authentication is required
-        "https://example.com/failure", // URL the user is redirected after failed 3D-Secure authentication if strong customer authentication is required
-    )
-    // Optinally other information about the customer and purchase to help in transaction risk analysis (TRA)
-)
+let token = new paymentHighway.Token('tokenId');
+let amount = 1990;
+let currency = 'EUR';
+let returnUrls = ReturnUrls.Builder(
+            "https://example.com/success", // URL the user is redirected after succesful 3D-Secure authentication if strong customer authentication is required
+            "https://example.com/cancel", // URL the user is redirected after cancelled 3D-Secure authentication if strong customer authentication is required
+            "https://example.com/failure" // URL the user is redirected after failed 3D-Secure authentication if strong customer authentication is required
+        )
+        .build();
+let sca = StrongCustomerAuthentication.Builder(returnUrls)
+        .build(); 
+// Optinally other information about the customer and purchase to help in transaction risk analysis (TRA)
+
 
 return paymentAPI.chargeCustomerInitiatedTransaction(transactionId, new ChargeCitRequest(token, amount, currency, sca));
 ```
