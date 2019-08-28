@@ -29,6 +29,7 @@ const PhoneNumber_1 = require("../src/model/request/sca/PhoneNumber");
 const CustomerAccount_1 = require("../src/model/request/sca/CustomerAccount");
 const Purchase_1 = require("../src/model/request/sca/Purchase");
 const Address_1 = require("../src/model/request/sca/Address");
+const CustomerAuthenticationInfo_1 = require("../src/model/request/sca/CustomerAuthenticationInfo");
 let api;
 let validCard;
 let testCard;
@@ -64,7 +65,77 @@ function printResult(response) {
     return ', complete result was: \n' + JSON.stringify(response);
 }
 function getFullStrongCustomerAuthenticationData() {
-    return new StrongCustomerAuthentication_1.StrongCustomerAuthentication(new ReturnUrls_1.ReturnUrls("https://example.com/success", "https://example.com/cancel", "https://example.com/failure", "https://example.com/webhook/success", "https://example.com/webhook/cancel", "https://example.com/webhook/failure", 0), new CustomerDetails_1.CustomerDetails(true, "Eric Example", "eric.example@example.com", new PhoneNumber_1.PhoneNumber("358", "123456789"), new PhoneNumber_1.PhoneNumber("358", "441234566"), new PhoneNumber_1.PhoneNumber("358", "441234566")), new CustomerAccount_1.CustomerAccount(CustomerAccount_1.AccountAgeIndicator.MoreThan60Days, "2018-07-05", CustomerAccount_1.AccountInformationChangeIndicator.MoreThan60Days, "2018-09-11", CustomerAccount_1.AccountPasswordChangeIndicator.NoChange, "2018-07-05", 7, 1, 3, 8, CustomerAccount_1.ShippingAddressFirstUsedIndicator.Between30And60Days, "2019-07-01", CustomerAccount_1.SuspiciousActivityIndicator.NoSuspiciousActivity), new Purchase_1.Purchase(Purchase_1.ShippingIndicator.ShipToCardholdersAddress, Purchase_1.DeliveryTimeFrame.SameDayShipping, "eric.example@example.com", Purchase_1.ReorderItemsIndicator.FirstTimeOrdered, Purchase_1.PreOrderPurchaseIndicator.MerchandiseAvailable, "2019-08-20", Purchase_1.ShippingNameIndicator.AccountNameMatchesShippingName), new Address_1.Address("Helsinki", "246", "Arkadiankatu 1", "", "", "00101", "18"), new Address_1.Address("Helsinki", "246", "Arkadiankatu 1", "", "", "00101", "18"), StrongCustomerAuthentication_1.ChallengeWindowSize.Window600x400, false, false);
+    const returnUrls = ReturnUrls_1.ReturnUrls.Builder('https://example.com/success', 'https://example.com/cancel', 'https://example.com/failure').setWebhookSuccessUrl('https://example.com/webhook/success')
+        .setWebhookCancelUrl('https://example.com/webhook/cancel')
+        .setWebhookFailureUrl('https://example.com/webhook/failure')
+        .setWebhookDelay(0)
+        .build();
+    const customerDetails = CustomerDetails_1.CustomerDetails.Builder()
+        .setShippingAddressMatchesBillingAddress(true)
+        .setName('Eric Example')
+        .setEmail('eric.example@example.com')
+        .setHomePhone(new PhoneNumber_1.PhoneNumber('358', '123456789'))
+        .setMobilePhone(new PhoneNumber_1.PhoneNumber('358', '441234566'))
+        .setWorkPhone(new PhoneNumber_1.PhoneNumber('358', '441234566'))
+        .build();
+    const customerAccount = CustomerAccount_1.CustomerAccount.Builder()
+        .setAccountAgeIndicator(CustomerAccount_1.AccountAgeIndicator.MoreThan60Days)
+        .setAccountDate('2018-07-05')
+        .setChangeIndicator(CustomerAccount_1.AccountInformationChangeIndicator.MoreThan60Days)
+        .setChangeDate('2018-09-11')
+        .setPasswordChangeIndicator(CustomerAccount_1.AccountPasswordChangeIndicator.NoChange)
+        .setPasswordChangeDate('2018-07-05')
+        .setNumberOfRecentPurchases(7)
+        .setNumberOfAddCardAttemptsDay(1)
+        .setNumberOfTransactionActivityDay(3)
+        .setNumberOfTransactionActivityYear(8)
+        .setShippingAddressIndicator(CustomerAccount_1.ShippingAddressFirstUsedIndicator.Between30And60Days)
+        .setShippingAddressUsageDate('2019-07-01')
+        .setSuspiciousActivity(CustomerAccount_1.SuspiciousActivityIndicator.NoSuspiciousActivity)
+        .build();
+    const purchase = Purchase_1.Purchase.Builder()
+        .setShippingIndicator(Purchase_1.ShippingIndicator.ShipToCardholdersAddress)
+        .setDeliveryTimeFrame(Purchase_1.DeliveryTimeFrame.SameDayShipping)
+        .setDeliveryEmail('eric.example@example.com')
+        .setReorderItemsIndicator(Purchase_1.ReorderItemsIndicator.FirstTimeOrdered)
+        .setPreOrderPurchaseIndicator(Purchase_1.PreOrderPurchaseIndicator.MerchandiseAvailable)
+        .setPreOrderDate('2019-08-20')
+        .setShippingNameIndicator(Purchase_1.ShippingNameIndicator.AccountNameMatchesShippingName)
+        .setGiftCardAmount(200)
+        .setGiftCardCount(7)
+        .build();
+    const billingAddress = Address_1.Address.Builder()
+        .setCity('Helsinki')
+        .setCountry('246')
+        .setAddressLine1('Arkadiankatu 1')
+        .setAddressLine2('')
+        .setAddressLine3('')
+        .setPostCode('00101')
+        .setState('18')
+        .build();
+    const shippingAddress = Address_1.Address.Builder()
+        .setCity('Helsinki')
+        .setCountry('246')
+        .setAddressLine1('Arkadiankatu 1')
+        .setAddressLine2('')
+        .setAddressLine3('')
+        .setPostCode('00101')
+        .setState('18')
+        .build();
+    const customerAuthenticationInfo = CustomerAuthenticationInfo_1.CustomerAuthenticationInfo.Builder()
+        .setMethod(CustomerAuthenticationInfo_1.Method.OwnCredentials)
+        .build();
+    return StrongCustomerAuthentication_1.StrongCustomerAuthentication.Builder(returnUrls)
+        .setCustomerDetails(customerDetails)
+        .setCustomerAccount(customerAccount)
+        .setPurchase(purchase)
+        .setBillingAddress(billingAddress)
+        .setShippingAddress(shippingAddress)
+        .setCustomerAuthenticationInfo(customerAuthenticationInfo)
+        .setDesiredChallengeWindowSize(StrongCustomerAuthentication_1.ChallengeWindowSize.Window600x400)
+        .setExitIframeOnResult(false)
+        .setExitIframeOnThreeDSecure(false)
+        .build();
 }
 describe('PaymentAPI', () => {
     it('Should have instance of PaymentHighwayAPI', () => {
@@ -89,7 +160,7 @@ describe('PaymentAPI', () => {
     }));
     it('Test charge customer initiated transaction', () => __awaiter(this, void 0, void 0, function* () {
         const initResponse = yield api.initTransaction();
-        const strongCustomerAuthentication = new StrongCustomerAuthentication_1.StrongCustomerAuthentication(new ReturnUrls_1.ReturnUrls("https://example.com/success", "https://example.com/cancel", "https://example.com/failure"));
+        const strongCustomerAuthentication = new StrongCustomerAuthentication_1.StrongCustomerAuthentication(new ReturnUrls_1.ReturnUrls('https://example.com/success', 'https://example.com/cancel', 'https://example.com/failure'));
         const chargeCitRequest = new ChargeCitRequest_1.ChargeCitRequest(testCard, 9999, 'EUR', strongCustomerAuthentication);
         const chargeResponse = yield api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
         checkResult(chargeResponse);
@@ -103,7 +174,7 @@ describe('PaymentAPI', () => {
     }));
     it('Test soft-decline of customer initiated transaction', () => __awaiter(this, void 0, void 0, function* () {
         const initResponse = yield api.initTransaction();
-        const strongCustomerAuthentication = new StrongCustomerAuthentication_1.StrongCustomerAuthentication(new ReturnUrls_1.ReturnUrls("https://example.com/success", "https://example.com/cancel", "https://example.com/failure"));
+        const strongCustomerAuthentication = new StrongCustomerAuthentication_1.StrongCustomerAuthentication(new ReturnUrls_1.ReturnUrls('https://example.com/success', 'https://example.com/cancel', 'https://example.com/failure'));
         const chargeCitRequest = new ChargeCitRequest_1.ChargeCitRequest(scaSoftDeclineCard, 100, 'EUR', strongCustomerAuthentication);
         const chargeResponse = yield api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
         chai_1.assert(chargeResponse.result.code === 400, 'Request should have been soft declined with code 400, complete response was: ' + JSON.stringify(chargeResponse));

@@ -23,6 +23,7 @@ export * from './src/model/request/applepay/PaymentData';
 export * from './src/model/request/applepay/PaymentDataHeader';
 export * from './src/model/request/sca/Address';
 export * from './src/model/request/sca/CustomerAccount';
+export * from './src/model/request/sca/CustomerAuthenticationInfo';
 export * from './src/model/request/sca/CustomerDetails';
 export * from './src/model/request/sca/PhoneNumber';
 export * from './src/model/request/sca/Purchase';

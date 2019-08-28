@@ -28,6 +28,7 @@ __export(require("./src/model/request/applepay/PaymentData"));
 __export(require("./src/model/request/applepay/PaymentDataHeader"));
 __export(require("./src/model/request/sca/Address"));
 __export(require("./src/model/request/sca/CustomerAccount"));
+__export(require("./src/model/request/sca/CustomerAuthenticationInfo"));
 __export(require("./src/model/request/sca/CustomerDetails"));
 __export(require("./src/model/request/sca/PhoneNumber"));
 __export(require("./src/model/request/sca/Purchase"));
