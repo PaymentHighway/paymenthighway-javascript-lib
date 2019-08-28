@@ -1,4 +1,4 @@
-import { PhoneNumber } from "./PhoneNumber";
+import {PhoneNumber} from './PhoneNumber';
 
 export class CustomerDetails {
 
@@ -8,7 +8,7 @@ export class CustomerDetails {
      * @param email Customer email. max length 254
      * @param home_phone
      * @param mobile_phone
-     * @param work_phone 
+     * @param work_phone
      */
     constructor(
         public shipping_address_matches_billing_address?: boolean,
@@ -17,5 +17,6 @@ export class CustomerDetails {
         public home_phone?: PhoneNumber,
         public mobile_phone?: PhoneNumber,
         public work_phone?: PhoneNumber
-    ){}
+    ) {
+    }
 }

@@ -70,68 +70,68 @@ function printResult(response: Response): string {
 function getFullStrongCustomerAuthenticationData(): StrongCustomerAuthentication {
     return new StrongCustomerAuthentication(
         new ReturnUrls(
-            "https://example.com/success",
-            "https://example.com/cancel",
-            "https://example.com/failure",
-            "https://example.com/webhook/success",
-            "https://example.com/webhook/cancel",
-            "https://example.com/webhook/failure",
+            'https://example.com/success',
+            'https://example.com/cancel',
+            'https://example.com/failure',
+            'https://example.com/webhook/success',
+            'https://example.com/webhook/cancel',
+            'https://example.com/webhook/failure',
             0
         ),
         new CustomerDetails(
             true,
-            "Eric Example",
-            "eric.example@example.com",
-            new PhoneNumber("358", "123456789"),
-            new PhoneNumber("358", "441234566"),
-            new PhoneNumber("358", "441234566")
+            'Eric Example',
+            'eric.example@example.com',
+            new PhoneNumber('358', '123456789'),
+            new PhoneNumber('358', '441234566'),
+            new PhoneNumber('358', '441234566')
         ),
         new CustomerAccount(
             AccountAgeIndicator.MoreThan60Days,
-            "2018-07-05",
+            '2018-07-05',
             AccountInformationChangeIndicator.MoreThan60Days,
-            "2018-09-11",
+            '2018-09-11',
             AccountPasswordChangeIndicator.NoChange,
-            "2018-07-05",
+            '2018-07-05',
             7,
             1,
             3,
             8,
             ShippingAddressFirstUsedIndicator.Between30And60Days,
-            "2019-07-01",
+            '2019-07-01',
             SuspiciousActivityIndicator.NoSuspiciousActivity
         ),
         new Purchase(
             ShippingIndicator.ShipToCardholdersAddress,
             DeliveryTimeFrame.SameDayShipping,
-            "eric.example@example.com",
+            'eric.example@example.com',
             ReorderItemsIndicator.FirstTimeOrdered,
             PreOrderPurchaseIndicator.MerchandiseAvailable,
-            "2019-08-20",
+            '2019-08-20',
             ShippingNameIndicator.AccountNameMatchesShippingName
         ),
         new Address(
-            "Helsinki",
-            "246",
-            "Arkadiankatu 1",
-            "",
-            "",
-            "00101",
-            "18"
+            'Helsinki',
+            '246',
+            'Arkadiankatu 1',
+            '',
+            '',
+            '00101',
+            '18'
         ),
         new Address(
-            "Helsinki",
-            "246",
-            "Arkadiankatu 1",
-            "",
-            "",
-            "00101",
-            "18"
+            'Helsinki',
+            '246',
+            'Arkadiankatu 1',
+            '',
+            '',
+            '00101',
+            '18'
         ),
         ChallengeWindowSize.Window600x400,
         false,
         false
-    )
+    );
 }
 
 describe('PaymentAPI', () => {
@@ -166,11 +166,11 @@ describe('PaymentAPI', () => {
 
         const strongCustomerAuthentication = new StrongCustomerAuthentication(
             new ReturnUrls(
-                "https://example.com/success",
-                "https://example.com/cancel",
-                "https://example.com/failure"
+                'https://example.com/success',
+                'https://example.com/cancel',
+                'https://example.com/failure'
             )
-        )
+        );
 
         const chargeCitRequest = new ChargeCitRequest(testCard, 9999, 'EUR', strongCustomerAuthentication);
         const chargeResponse = await api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
@@ -194,11 +194,11 @@ describe('PaymentAPI', () => {
 
         const strongCustomerAuthentication = new StrongCustomerAuthentication(
             new ReturnUrls(
-                "https://example.com/success",
-                "https://example.com/cancel",
-                "https://example.com/failure"
+                'https://example.com/success',
+                'https://example.com/cancel',
+                'https://example.com/failure'
             )
-        )
+        );
 
         const chargeCitRequest = new ChargeCitRequest(scaSoftDeclineCard, 100, 'EUR', strongCustomerAuthentication);
         const chargeResponse = await api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);

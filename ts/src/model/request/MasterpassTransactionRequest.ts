@@ -1,4 +1,4 @@
-import { Request } from "./PhRequest";
+import { Request } from './PhRequest';
 
 export class MasterpassTransactionRequest extends Request {
     public amount: number;

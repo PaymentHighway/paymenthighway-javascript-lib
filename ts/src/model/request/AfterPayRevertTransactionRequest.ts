@@ -1,4 +1,4 @@
-import { Request } from "./PhRequest";
+import { Request } from './PhRequest';
 
 /**
  * When reverting without amount,

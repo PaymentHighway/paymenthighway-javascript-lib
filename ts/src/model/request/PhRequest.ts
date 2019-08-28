@@ -1,4 +1,4 @@
-import { PaymentHighwayUtility } from "../../PaymentHighwayUtility";
+import { PaymentHighwayUtility } from '../../PaymentHighwayUtility';
 
 export class Request {
     public requestId: string;

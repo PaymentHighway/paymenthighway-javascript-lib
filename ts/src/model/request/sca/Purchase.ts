@@ -29,13 +29,13 @@ export class Purchase {
  * 07 = Other (for example, Gaming, digital services not shipped, emedia subscriptions, etc.)
  */
 export enum ShippingIndicator {
-    ShipToCardholdersAddress = "01",
-    ShipToVerifiedAddress = "02",
-    ShipToDifferentAddress = "03",
-    ShipToStore = "04",
-    DigitalGoods = "05",
-    TravelAndEventTickets = "06",
-    Other = "07"
+    ShipToCardholdersAddress = '01',
+    ShipToVerifiedAddress = '02',
+    ShipToDifferentAddress = '03',
+    ShipToStore = '04',
+    DigitalGoods = '05',
+    TravelAndEventTickets = '06',
+    Other = '07'
 }
 
 /**
@@ -46,20 +46,20 @@ export enum ShippingIndicator {
  * 04 = Two-day or more shipping
  */
 export enum DeliveryTimeFrame {
-    ElectronicDelivery = "01",
-    SameDayShipping = "02",
-    OvernightShipping = "03",
-    TwoDarOrMoreShipping= "04"
+    ElectronicDelivery = '01',
+    SameDayShipping = '02',
+    OvernightShipping = '03',
+    TwoDarOrMoreShipping= '04'
 }
 
 export enum ReorderItemsIndicator {
-    FirstTimeOrdered = "01",
-    Reorder = "02"
+    FirstTimeOrdered = '01',
+    Reorder = '02'
 }
 
 export enum PreOrderPurchaseIndicator {
-    MerchandiseAvailable = "01",
-    FutureAvailability = "02"
+    MerchandiseAvailable = '01',
+    FutureAvailability = '02'
 }
 
 /**
@@ -67,6 +67,6 @@ export enum PreOrderPurchaseIndicator {
  * 02 = Account Name different than shipping Name
  */
 export enum ShippingNameIndicator {
-    AccountNameMatchesShippingName = "01",
-    AccountNameDifferentThanShippingName= "02"
+    AccountNameMatchesShippingName = '01',
+    AccountNameDifferentThanShippingName= '02'
 }

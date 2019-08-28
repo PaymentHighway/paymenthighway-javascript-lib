@@ -1,8 +1,8 @@
-import { ReturnUrls } from "./ReturnUrls";
-import { CustomerDetails } from "./CustomerDetails";
-import { CustomerAccount } from "./CustomerAccount";
-import { Purchase } from "./Purchase";
-import { Address } from "./Address";
+import { ReturnUrls } from './ReturnUrls';
+import { CustomerDetails } from './CustomerDetails';
+import { CustomerAccount } from './CustomerAccount';
+import { Purchase } from './Purchase';
+import { Address } from './Address';
 
 export class StrongCustomerAuthentication {
     constructor(
@@ -27,9 +27,9 @@ export class StrongCustomerAuthentication {
  * 05 = Full screen
  */
 export enum ChallengeWindowSize {
-    Window250x400 = "01",
-    Window390x400 = "02",
-    Window500x600 = "03",
-    Window600x400 = "04",
-    FullScreen = "05"
+    Window250x400 = '01',
+    Window390x400 = '02',
+    Window500x600 = '03',
+    Window600x400 = '04',
+    FullScreen = '05'
 }
