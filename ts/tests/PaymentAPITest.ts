@@ -39,7 +39,7 @@ import {
 } from '../src/model/request/sca/Purchase';
 import {Address} from '../src/model/request/sca/Address';
 import {Request} from '../src/model/request/PhRequest';
-import {CustomerAuthenticationInfo, Method} from "../src/model/request/sca/CustomerAuthenticationInfo";
+import {CustomerAuthenticationInfo, Method} from '../src/model/request/sca/CustomerAuthenticationInfo';
 
 let api: PaymentAPI;
 let validCard: any;
