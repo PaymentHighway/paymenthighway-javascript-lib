@@ -24,38 +24,38 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/solinor/paymenthighway-javascript-lib"
+    "url": "https://github.com/PaymentHighway/paymenthighway-javascript-lib"
   },
   "license": "MIT",
   "dependencies": {
-    "@types/lodash": "^4.14.123",
-    "@types/node": "^6.14.4",
+    "@types/lodash": "^4.14.138",
+    "@types/node": "^6.14.7",
     "@types/request": "2.47.0",
-    "@types/request-promise": "^4.1.42",
-    "@types/urijs": "^1.15.31",
-    "@types/uuid": "^3.4.4",
-    "lodash": "^4.17.11",
+    "@types/request-promise": "^4.1.44",
+    "@types/urijs": "^1.19.3",
+    "@types/uuid": "^3.4.5",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.3"
   },
   "engines": {
     "node": ">=6.0.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.7",
-    "@types/chai-string": "^1.1.30",
-    "@types/mocha": "^5.2.6",
-    "@types/puppeteer": "^1.12.3",
+    "@types/chai": "4.1.7",
+    "@types/chai-string": "1.4.1",
+    "@types/mocha": "^5.2.7",
+    "@types/puppeteer": "1.6.2",
     "barrelsby": "0.0.8",
     "chai": "^4.2.0",
     "chai-string": "^1.5.0",
     "husky": "^0.14.3",
     "mocha": "^5.2.0",
-    "nyc": "^13.3.0",
-    "puppeteer": "^1.6.2",
-    "tslint": "^5.14.0",
+    "nyc": "^14.1.1",
+    "puppeteer": "1.6.2",
+    "tslint": "^5.19.0",
     "tslint-microsoft-contrib": "^5.2.1",
     "typescript": "^2.9.2",
     "urijs": "^1.18.1"
