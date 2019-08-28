@@ -15,16 +15,31 @@ import {PaymentData} from '../src/model/request/applepay/PaymentData';
 import {ApplePayTransaction, ApplePayTransactionRequest} from '../src/model/request/ApplePayTransactionRequest';
 import {MobilePayInitRequest} from '../src/model/request/MobilePayInitRequest';
 import {Splitting} from '../src/model/Splitting';
-import { ChargeMitRequest } from '../src/model/request/ChargeMitRequest';
-import { ChargeCitRequest } from '../src/model/request/ChargeCitRequest';
-import { StrongCustomerAuthentication, ChallengeWindowSize } from '../src/model/request/sca/StrongCustomerAuthentication';
-import { ReturnUrls } from '../src/model/request/sca/ReturnUrls';
-import { CustomerDetails } from '../src/model/request/sca/CustomerDetails';
-import { PhoneNumber } from '../src/model/request/sca/PhoneNumber';
-import { CustomerAccount, AccountAgeIndicator, AccountInformationChangeIndicator, AccountPasswordChangeIndicator, ShippingAddressFirstUsedIndicator, SuspiciousActivityIndicator } from '../src/model/request/sca/CustomerAccount';
-import { Purchase, ShippingIndicator, DeliveryTimeFrame, ReorderItemsIndicator, PreOrderPurchaseIndicator, ShippingNameIndicator } from '../src/model/request/sca/Purchase';
-import { Address } from '../src/model/request/sca/Address';
-import { Request } from '../src/model/request/PhRequest';
+import {ChargeMitRequest} from '../src/model/request/ChargeMitRequest';
+import {ChargeCitRequest} from '../src/model/request/ChargeCitRequest';
+import {ChallengeWindowSize, StrongCustomerAuthentication} from '../src/model/request/sca/StrongCustomerAuthentication';
+import {ReturnUrls} from '../src/model/request/sca/ReturnUrls';
+import {CustomerDetails} from '../src/model/request/sca/CustomerDetails';
+import {PhoneNumber} from '../src/model/request/sca/PhoneNumber';
+import {
+    AccountAgeIndicator,
+    AccountInformationChangeIndicator,
+    AccountPasswordChangeIndicator,
+    CustomerAccount,
+    ShippingAddressFirstUsedIndicator,
+    SuspiciousActivityIndicator
+} from '../src/model/request/sca/CustomerAccount';
+import {
+    DeliveryTimeFrame,
+    PreOrderPurchaseIndicator,
+    Purchase,
+    ReorderItemsIndicator,
+    ShippingIndicator,
+    ShippingNameIndicator
+} from '../src/model/request/sca/Purchase';
+import {Address} from '../src/model/request/sca/Address';
+import {Request} from '../src/model/request/PhRequest';
+import {CustomerAuthenticationInfo, Method} from "../src/model/request/sca/CustomerAuthenticationInfo";
 
 let api: PaymentAPI;
 let validCard: any;
@@ -68,70 +83,89 @@ function printResult(response: Response): string {
 }
 
 function getFullStrongCustomerAuthenticationData(): StrongCustomerAuthentication {
-    return new StrongCustomerAuthentication(
-        new ReturnUrls(
-            'https://example.com/success',
-            'https://example.com/cancel',
-            'https://example.com/failure',
-            'https://example.com/webhook/success',
-            'https://example.com/webhook/cancel',
-            'https://example.com/webhook/failure',
-            0
-        ),
-        new CustomerDetails(
-            true,
-            'Eric Example',
-            'eric.example@example.com',
-            new PhoneNumber('358', '123456789'),
-            new PhoneNumber('358', '441234566'),
-            new PhoneNumber('358', '441234566')
-        ),
-        new CustomerAccount(
-            AccountAgeIndicator.MoreThan60Days,
-            '2018-07-05',
-            AccountInformationChangeIndicator.MoreThan60Days,
-            '2018-09-11',
-            AccountPasswordChangeIndicator.NoChange,
-            '2018-07-05',
-            7,
-            1,
-            3,
-            8,
-            ShippingAddressFirstUsedIndicator.Between30And60Days,
-            '2019-07-01',
-            SuspiciousActivityIndicator.NoSuspiciousActivity
-        ),
-        new Purchase(
-            ShippingIndicator.ShipToCardholdersAddress,
-            DeliveryTimeFrame.SameDayShipping,
-            'eric.example@example.com',
-            ReorderItemsIndicator.FirstTimeOrdered,
-            PreOrderPurchaseIndicator.MerchandiseAvailable,
-            '2019-08-20',
-            ShippingNameIndicator.AccountNameMatchesShippingName
-        ),
-        new Address(
-            'Helsinki',
-            '246',
-            'Arkadiankatu 1',
-            '',
-            '',
-            '00101',
-            '18'
-        ),
-        new Address(
-            'Helsinki',
-            '246',
-            'Arkadiankatu 1',
-            '',
-            '',
-            '00101',
-            '18'
-        ),
-        ChallengeWindowSize.Window600x400,
-        false,
-        false
-    );
+
+    const returnUrls = ReturnUrls.Builder(
+        'https://example.com/success',
+        'https://example.com/cancel',
+        'https://example.com/failure'
+    ).setWebhookSuccessUrl('https://example.com/webhook/success')
+        .setWebhookCancelUrl('https://example.com/webhook/cancel')
+        .setWebhookFailureUrl('https://example.com/webhook/failure')
+        .setWebhookDelay(0)
+        .build();
+
+    const customerDetails = CustomerDetails.Builder()
+        .setShippingAddressMatchesBillingAddress(true)
+        .setName('Eric Example')
+        .setEmail('eric.example@example.com')
+        .setHomePhone(new PhoneNumber('358', '123456789'))
+        .setMobilePhone(new PhoneNumber('358', '441234566'))
+        .setWorkPhone(new PhoneNumber('358', '441234566'))
+        .build();
+
+    const customerAccount = CustomerAccount.Builder()
+        .setAccountAgeIndicator(AccountAgeIndicator.MoreThan60Days)
+        .setAccountDate('2018-07-05')
+        .setChangeIndicator(AccountInformationChangeIndicator.MoreThan60Days)
+        .setChangeDate('2018-09-11')
+        .setPasswordChangeIndicator(AccountPasswordChangeIndicator.NoChange)
+        .setPasswordChangeDate('2018-07-05')
+        .setNumberOfRecentPurchases(7)
+        .setNumberOfAddCardAttemptsDay(1)
+        .setNumberOfTransactionActivityDay(3)
+        .setNumberOfTransactionActivityYear(8)
+        .setShippingAddressIndicator(ShippingAddressFirstUsedIndicator.Between30And60Days)
+        .setShippingAddressUsageDate('2019-07-01')
+        .setSuspiciousActivity(SuspiciousActivityIndicator.NoSuspiciousActivity)
+        .build();
+
+    const purchase = Purchase.Builder()
+        .setShippingIndicator(ShippingIndicator.ShipToCardholdersAddress)
+        .setDeliveryTimeFrame(DeliveryTimeFrame.SameDayShipping)
+        .setDeliveryEmail('eric.example@example.com')
+        .setReorderItemsIndicator(ReorderItemsIndicator.FirstTimeOrdered)
+        .setPreOrderPurchaseIndicator(PreOrderPurchaseIndicator.MerchandiseAvailable)
+        .setPreOrderDate('2019-08-20')
+        .setShippingNameIndicator(ShippingNameIndicator.AccountNameMatchesShippingName)
+        .setGiftCardAmount(200)
+        .setGiftCardCount(7)
+        .build();
+
+    const billingAddress = Address.Builder()
+        .setCity('Helsinki')
+        .setCountry('246')
+        .setAddressLine1('Arkadiankatu 1')
+        .setAddressLine2('')
+        .setAddressLine3('')
+        .setPostCode('00101')
+        .setState('18')
+        .build();
+
+    const shippingAddress = Address.Builder()
+        .setCity('Helsinki')
+        .setCountry('246')
+        .setAddressLine1('Arkadiankatu 1')
+        .setAddressLine2('')
+        .setAddressLine3('')
+        .setPostCode('00101')
+        .setState('18')
+        .build();
+
+    const customerAuthenticationInfo = CustomerAuthenticationInfo.Builder()
+        .setMethod(Method.OwnCredentials)
+        .build();
+
+    return StrongCustomerAuthentication.Builder(returnUrls)
+        .setCustomerDetails(customerDetails)
+        .setCustomerAccount(customerAccount)
+        .setPurchase(purchase)
+        .setBillingAddress(billingAddress)
+        .setShippingAddress(shippingAddress)
+        .setCustomerAuthenticationInfo(customerAuthenticationInfo)
+        .setDesiredChallengeWindowSize(ChallengeWindowSize.Window600x400)
+        .setExitIframeOnResult(false)
+        .setExitIframeOnThreeDSecure(false)
+        .build();
 }
 
 describe('PaymentAPI', () => {

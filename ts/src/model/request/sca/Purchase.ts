@@ -1,22 +1,134 @@
 export class Purchase {
-    /**
-     * @param shipping_indicator
-     * @param delivery_time_frame
-     * @param delivery_email max length 254
-     * @param reorder_items_indicator
-     * @param pre_order_purchase_indicator
-     * @param pre_order_date For a pre-ordered purchase, the expected date that the merchandise will be available
-     * @param shipping_name_indicator
-     */
     constructor(
-        shipping_indicator?: ShippingIndicator,
-        delivery_time_frame?: DeliveryTimeFrame,
-        delivery_email?: string,
-        reorder_items_indicator?: ReorderItemsIndicator,
-        pre_order_purchase_indicator?: PreOrderPurchaseIndicator,
-        pre_order_date?: string,
-        shipping_name_indicator?: ShippingNameIndicator
-    ){}
+        public shipping_indicator?: ShippingIndicator,
+        public delivery_time_frame?: DeliveryTimeFrame,
+        public delivery_email?: string,
+        public reorder_items_indicator?: ReorderItemsIndicator,
+        public pre_order_purchase_indicator?: PreOrderPurchaseIndicator,
+        public pre_order_date?: string,
+        public shipping_name_indicator?: ShippingNameIndicator,
+        public gift_card_amount?: number,
+        public gift_card_count?: number
+    ) {
+    }
+
+    public static Builder(): PurchaseBuilder.RequestBuilder {
+        return new PurchaseBuilder.RequestBuilder();
+    }
+}
+
+export namespace PurchaseBuilder {
+    export class RequestBuilder {
+        private shipping_indicator: ShippingIndicator;
+        private delivery_time_frame: DeliveryTimeFrame;
+        private delivery_email: string;
+        private reorder_items_indicator: ReorderItemsIndicator;
+        private pre_order_purchase_indicator: PreOrderPurchaseIndicator;
+        private pre_order_date: string;
+        private shipping_name_indicator: ShippingNameIndicator;
+        private gift_card_amount: number;
+        private gift_card_count: number;
+
+        /**
+         * Merchants must choose the Shipping Indicator code that most accurately describes the cardholder’s specific transaction, not their general business.
+         * If one or more items are included in the sale, use the Shipping Indicator code for the physical goods, or if all digital goods, use the Shipping Indicator code that describes the most expensive item.
+         * @param shippingIndicator Indicates shipping method chosen for the transaction.
+         * @return Builder
+         */
+        public setShippingIndicator(shippingIndicator: ShippingIndicator) {
+            this.shipping_indicator = shippingIndicator;
+            return this;
+        }
+
+        /**
+         * @param deliveryTimeFrame Indicates the merchandise delivery timeframe.
+         * @return Builder
+         */
+        public setDeliveryTimeFrame(deliveryTimeFrame: DeliveryTimeFrame) {
+            this.delivery_time_frame = deliveryTimeFrame;
+            return this;
+        }
+
+        /**
+         * @param deliveryEmail For Electronic delivery, the email address to which the merchandise was delivered. Max length: 254
+         * @return Builder
+         */
+        public setDeliveryEmail(deliveryEmail: string) {
+            this.delivery_email = deliveryEmail;
+            return this;
+        }
+
+        /**
+         * @param reorderItemsIndicator Indicates whether the cardholder is reordering previously purchased merchandise.
+         * @return Builder
+         */
+        public setReorderItemsIndicator(reorderItemsIndicator: ReorderItemsIndicator) {
+            this.reorder_items_indicator = reorderItemsIndicator;
+            return this;
+        }
+
+        /**
+         * @param preOrderPurchaseIndicator Indicates whether Cardholder is placing an order for merchandise with a future availability or release date.
+         * @return Builder
+         */
+        public setPreOrderPurchaseIndicator(preOrderPurchaseIndicator: PreOrderPurchaseIndicator) {
+            this.pre_order_purchase_indicator = preOrderPurchaseIndicator;
+            return this;
+        }
+
+        /**
+         * For a pre-ordered purchase, the expected date that the merchandise will be available
+         * @param preOrderDate Date format: yyyy-MM-dd
+         * @return Builder
+         */
+        public setPreOrderDate(preOrderDate: string) {
+            this.pre_order_date = preOrderDate;
+            return this;
+        }
+
+        /**
+         * @param shippingNameIndicator Indicates if the Cardholder Name on the account is identical to the shipping Name used for this transaction.
+         * @return Builder
+         */
+        public setShippingNameIndicator(shippingNameIndicator: ShippingNameIndicator) {
+            this.shipping_name_indicator = shippingNameIndicator;
+            return this;
+        }
+
+        /**
+         * For prepaid or gift card purchase, the purchase amount total of prepaid or gift card(s)
+         * @param giftCardAmount Amount in the minor currency units. Max value: 999999999999999
+         * @return Builder
+         */
+        public setGiftCardAmount(giftCardAmount: number) {
+            this.gift_card_amount = giftCardAmount;
+            return this;
+        }
+
+        /**
+         * For prepaid or gift card purchase, total count of individual prepaid or gift cards/codes purchased.
+         * @param giftCardCount Max value: 99
+         * @return Builder
+         */
+        public setGiftCardCount(giftCardCount: number) {
+            this.gift_card_count = giftCardCount;
+            return this;
+        }
+
+        public build(): Purchase {
+            return new Purchase(
+                this.shipping_indicator,
+                this.delivery_time_frame,
+                this.delivery_email,
+                this.reorder_items_indicator,
+                this.pre_order_purchase_indicator,
+                this.pre_order_date,
+                this.shipping_name_indicator,
+                this.gift_card_amount,
+                this.gift_card_count
+            );
+        }
+    }
 }
 
 /**
@@ -49,7 +161,7 @@ export enum DeliveryTimeFrame {
     ElectronicDelivery = '01',
     SameDayShipping = '02',
     OvernightShipping = '03',
-    TwoDarOrMoreShipping= '04'
+    TwoDarOrMoreShipping = '04'
 }
 
 export enum ReorderItemsIndicator {
@@ -68,5 +180,5 @@ export enum PreOrderPurchaseIndicator {
  */
 export enum ShippingNameIndicator {
     AccountNameMatchesShippingName = '01',
-    AccountNameDifferentThanShippingName= '02'
+    AccountNameDifferentThanShippingName = '02'
 }
