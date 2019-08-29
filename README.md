@@ -311,8 +311,9 @@ const customerDetails = CustomerDetails.Builder()
         // ...
         .build();        
 const sca = StrongCustomerAuthentication.Builder(returnUrls)
+        .setCustomerDetails(customerDetails)
+        // Optionally other information about the customer and purchase to help in transaction risk analysis (TRA)
         .build(); 
-// Optinally other information about the customer and purchase to help in transaction risk analysis (TRA)
 
 
 return paymentAPI.chargeCustomerInitiatedTransaction(transactionId, new ChargeCitRequest(token, amount, currency, sca));
