@@ -1,4 +1,4 @@
-import {assert} from 'chai';
+import {assert, expect} from 'chai';
 import * as moment from 'moment';
 import {PaymentAPI} from '../src/PaymentAPI';
 import {PaymentHighwayUtility} from '../src/PaymentHighwayUtility';
@@ -189,27 +189,49 @@ describe('PaymentAPI', () => {
     it('Test charge merchant initiated transaction', async () => {
         const initResponse = await api.initTransaction();
 
-        const chargeMitRequest = new ChargeMitRequest(testCard, 9999, 'EUR');
+        const chargeMitRequest = ChargeMitRequest.Builder(9999, 'EUR', 'order1')
+            .setCard(testCard)
+            .build();
         const chargeResponse = await api.chargeMerchantInitiatedTransaction(initResponse.id, chargeMitRequest);
 
         checkResult(chargeResponse);
     });
 
+    it('Test charge merchant initiated transaction should throw an exception if card or token is not defined', async () => {
+        expect(() => ChargeMitRequest.Builder(9999, 'EUR', 'order1').build())
+            .to.throw('Either card or token must be defined');
+    });
+
     it('Test charge customer initiated transaction', async () => {
         const initResponse = await api.initTransaction();
 
-        const strongCustomerAuthentication = new StrongCustomerAuthentication(
-            new ReturnUrls(
+        const strongCustomerAuthentication = StrongCustomerAuthentication.Builder(
+            ReturnUrls.Builder(
                 'https://example.com/success',
                 'https://example.com/cancel',
                 'https://example.com/failure'
-            )
-        );
+            ).build()
+        ).build();
 
-        const chargeCitRequest = new ChargeCitRequest(testCard, 9999, 'EUR', strongCustomerAuthentication);
+        const chargeCitRequest = ChargeCitRequest.Builder(9999, 'EUR', 'testorder1', strongCustomerAuthentication)
+            .setCard(testCard)
+            .build();
         const chargeResponse = await api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
 
         checkResult(chargeResponse);
+    });
+
+    it('Test charge customer initiated transaction should throw an exception if card or token is not defined', async () => {
+        const strongCustomerAuthentication = StrongCustomerAuthentication.Builder(
+            ReturnUrls.Builder(
+                'https://example.com/success',
+                'https://example.com/cancel',
+                'https://example.com/failure'
+            ).build()
+        ).build();
+
+        expect(() => ChargeCitRequest.Builder(9999, 'EUR', 'order1', strongCustomerAuthentication).build())
+            .to.throw('Either card or token must be defined');
     });
 
     it('Test charge customer initiated transaction with full SCA data', async () => {
@@ -217,7 +239,9 @@ describe('PaymentAPI', () => {
 
         const strongCustomerAuthentication = getFullStrongCustomerAuthenticationData();
 
-        const chargeCitRequest = new ChargeCitRequest(testCard, 9999, 'EUR', strongCustomerAuthentication);
+        const chargeCitRequest = ChargeCitRequest.Builder( 9999, 'EUR', 'testorder1', strongCustomerAuthentication)
+            .setCard(testCard)
+            .build();
         const chargeResponse = await api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
 
         checkResult(chargeResponse);
@@ -226,15 +250,17 @@ describe('PaymentAPI', () => {
     it('Test soft-decline of customer initiated transaction', async () => {
         const initResponse = await api.initTransaction();
 
-        const strongCustomerAuthentication = new StrongCustomerAuthentication(
-            new ReturnUrls(
+        const strongCustomerAuthentication = StrongCustomerAuthentication.Builder(
+            ReturnUrls.Builder(
                 'https://example.com/success',
                 'https://example.com/cancel',
                 'https://example.com/failure'
-            )
-        );
+            ).build()
+        ).build();
 
-        const chargeCitRequest = new ChargeCitRequest(scaSoftDeclineCard, 100, 'EUR', strongCustomerAuthentication);
+        const chargeCitRequest = ChargeCitRequest.Builder(100, 'EUR', 'order1', strongCustomerAuthentication)
+            .setCard(scaSoftDeclineCard)
+            .build();
         const chargeResponse = await api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
 
         assert(chargeResponse.result.code === 400, 'Request should have been soft declined with code 400, complete response was: ' + JSON.stringify(chargeResponse));

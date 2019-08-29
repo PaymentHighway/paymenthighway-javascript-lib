@@ -2,34 +2,106 @@ import {Card} from './Card';
 import {Token} from '../Token';
 import {Customer} from '../response/Customer';
 import {Splitting} from '../Splitting';
-import { StrongCustomerAuthentication } from './sca/StrongCustomerAuthentication';
-import { Request } from './PhRequest';
+import {StrongCustomerAuthentication} from './sca/StrongCustomerAuthentication';
+import {Request} from './PhRequest';
 
 export class ChargeCitRequest extends Request {
-    public card: Card;
-    public amount: number;
-    public currency: string;
-    public token: Token;
-    public order: string;
-    public customer: Customer;
-    public commit: boolean;
-    public splitting: Splitting;
-    public use_exemptions: boolean;
-    public strong_customer_authentication: StrongCustomerAuthentication
 
-    constructor(cardOrToken: Card|Token, amount: number, currency: string, strong_customer_authentication: StrongCustomerAuthentication, order?: string, customer?: Customer, commit?: boolean, splitting?: Splitting) {
+    constructor(
+        public amount: number,
+        public currency: string,
+        public order: string,
+        public strong_customer_authentication: StrongCustomerAuthentication,
+        public card?: Card,
+        public token?: Token,
+        public customer?: Customer,
+        public commit?: boolean,
+        public splitting?: Splitting
+    ) {
         super();
-        if (cardOrToken instanceof Card) {
-            this.card = cardOrToken;
-        } else {
-            this.token = cardOrToken;
+    }
+
+    /**
+     * Payment using a card token when the customer is participating in the payment flow.
+     * @param amount Payment amount
+     * @param currency Payment currency
+     * @param order Merchant-provided order ID for the purchase. Alphanumeric with dashes and underscores. Max length 254.
+     * @param strongCustomerAuthentication Information provided for the SCA in case of a soft decline response from the issuer
+     * @return Builder
+     */
+    public static Builder(amount: number, currency: string, order: string, strongCustomerAuthentication: StrongCustomerAuthentication): ChargeCitBuilder.RequestBuilder {
+        return new ChargeCitBuilder.RequestBuilder(amount, currency, order, strongCustomerAuthentication);
+    }
+}
+
+export namespace ChargeCitBuilder {
+
+    export class RequestBuilder {
+        private readonly amount: number;
+        private readonly currency: string;
+        private readonly order: string;
+        private readonly strong_customer_authentication: StrongCustomerAuthentication;
+        private card: Card;
+        private token: Token;
+        private customer: Customer;
+        private commit: boolean;
+        private splitting: Splitting;
+
+        constructor(amount: number, currency: string, order: string, strongCustomerAuthentication: StrongCustomerAuthentication) {
+            this.amount = amount;
+            this.currency = currency;
+            this.order = order;
+            this.strong_customer_authentication = strongCustomerAuthentication;
         }
-        this.amount = amount;
-        this.currency = currency;
-        this.strong_customer_authentication = strong_customer_authentication;
-        this.order = order;
-        this.customer = customer;
-        this.commit = commit;
-        this.splitting = splitting;
+
+        /**
+         * @param card Card to charge (Only for PCI DSS certified parties!)
+         */
+        public setCard(card: Card) {
+            this.card = card;
+            return this;
+        }
+
+        /**
+         * @param token Card token to charge
+         */
+        public setToken(token: Token) {
+            this.token = token;
+            return this;
+        }
+
+        public setCustomer(customer: Customer) {
+            this.customer = customer;
+            return this;
+        }
+
+        public setCommit(commit: boolean) {
+            this.commit = commit;
+            return this;
+        }
+
+        public setSplitting(splitting: Splitting) {
+            this.splitting = splitting;
+            return this;
+        }
+
+        public build(): ChargeCitRequest {
+
+            if (!(this.card || this.token)) {
+                throw new Error('Either card or token must be defined');
+            }
+
+            return new ChargeCitRequest(
+                this.amount,
+                this.currency,
+                this.order,
+                this.strong_customer_authentication,
+                this.card,
+                this.token,
+                this.customer,
+                this.commit,
+                this.splitting
+            );
+        }
     }
 }
