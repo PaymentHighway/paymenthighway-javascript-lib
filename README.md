@@ -273,33 +273,47 @@ return paymentAPI.initTransaction()
 ```
 * returns PromiseLike<[TransactionResultResponse](/ts/src/model/response/TransactionResultResponse.ts)>
 
-#### Charging a card
+### <a name="charging_a_card_token"></a>Charging a card token
 
-After the introduction of the European PSD2 directive the electronic payment transactions are categorised in so called customer initiated transactions (CIT) and merchant initiated transactions (MIT). 
+ After the introduction of the European PSD2 directive, the electronic payment transactions are categorised in so called customer initiated transactions (CIT) and merchant initiated transactions (MIT). 
 
-Customer initiated transactions are scenarios where the customer takes actively part in the payment process either by providing their card information or selecting a previously stored payment method. Also so-called "one-click" purchases where the transaction uses a previously saved default payment method are CITs.
+ Customer initiated transactions are scenarios, where the customer actively takes part in the payment process. This also includes token, or "one-click" purchases, where the transaction uses a previously saved payment method.
 
-Merchant initated transactions are transactions which are initated by the merchant without customer's participation. Merchant initated transactions require a prior agreement between the customer and merchant also called the "mandate". Merchant initiated transactions can be used for example in scenarios where the final price is not known at the time of the purchase or the customer is not present when the charge is made.
-
+ Merchant initiated transactions are payments triggered without the customer's participation. This kind of transactions can be used for example in scenarios where the final price is not known at the time of the purchase or the customer is not present when the charge is made. A prior agreement, or "mandate" between the customer and the merchant is required.
+ 
 #### Charging a customer initiated transaction (CIT)
 
-When charging a customer initiated transaction there is always a possibility that the card issuer requires strong customer authentication. In case the issuer requests SCA then the response will contain "soft decline" code 400 and an URL where the customer needs to be redirected to perform authentication. The URLs where the customer will be redirected after completing authentication need to be defined in the [`ReturnUrls`](/ts/src/model/request/sca/ReturnUrls.ts) object.
+ When charging a token using customer initiated transaction, applicable exemptions are attempted in order to avoid the need for strong customer authentication, 3D Secure. These exemptions may include but are not limited to: low-value (under 30 EUR) or transaction risk analysis.
+  
+ Regardless, there is always a possibility the card issuer requires strong customer authentication by requesting a step-up. In this case, the response will contain "soft decline" result code 400 and an URL, where the customer needs to be redirected to, in order to perform the authentication. The merchant's URLs where the customer will be redirected back to - after completing the authentication - need to be defined in the `returnUrls` ([`ReturnUrls`](/ts/src/model/request/sca/ReturnUrls.ts)) parameter in [`StrongCustomerAuthentication`](/ts/src/model/request/sca/StrongCustomerAuthentication.ts).
 
-In addition to the return urls the [`StrongCustomerAuthentication`](/ts/src/model/request/sca/StrongCustomerAuthentication.ts) object has many optional fields for information about the customer and the transaction. This information is used in transaction risk analysis (TRA) and can increase the likelihood that the transaction is considered low risk so that strong customer authentication is not needed.
+When the customer is redirected back to the success URL, after completing the payment using strong customer authentication, the payment needs to be committed exactly as in the normal FormAPI payment flow. Please note, a new transaction ID is created for this payment and the original transaction ID from the CIT request is considered as failed. The merchant supplied "order", the request ID, or custom merchant parameters specified in the return URLs, can be used to connect the returning customer to the specific payment.
+
+ In addition to the return urls, the [`StrongCustomerAuthentication`](/ts/src/model/request/sca/StrongCustomerAuthentication.ts) object contains many optional fields for information about the customer and the transaction. This information is used in transaction risk analysis (TRA) and may increase the likelihood of transaction being considered as low-risk, thus avoiding the need for strong authentication.
 
 ```javascript
-let token = new paymentHighway.Token('tokenId');
-let amount = 1990;
-let currency = 'EUR';
-let returnUrls = ReturnUrls.Builder(
+const token = new paymentHighway.Token('tokenId');
+const amount = 1990;
+const currency = 'EUR';
+const returnUrls = ReturnUrls.Builder(
             "https://example.com/success", // URL the user is redirected after succesful 3D-Secure authentication if strong customer authentication is required
             "https://example.com/cancel", // URL the user is redirected after cancelled 3D-Secure authentication if strong customer authentication is required
             "https://example.com/failure" // URL the user is redirected after failed 3D-Secure authentication if strong customer authentication is required
         )
+        .setWebhookSuccessUrl("https://example.com/success/12345/?webhook=1")
+        .setWebhookCancelUrl("https://example.com/failure/12345/?webhook=1")
+        .setWebhookFailureUrl("https://example.com/webhook/failure/?webhook=1")
         .build();
-let sca = StrongCustomerAuthentication.Builder(returnUrls)
+const customerDetails = CustomerDetails.Builder()
+        .setShippingAddressMatchesBillingAddress(true)
+        .setName('Eric Example')
+        .setEmail('eric.example@example.com')
+        // ...
+        .build();        
+const sca = StrongCustomerAuthentication.Builder(returnUrls)
+        .setCustomerDetails(customerDetails)
+        // Optionally other information about the customer and purchase to help in transaction risk analysis (TRA)
         .build(); 
-// Optinally other information about the customer and purchase to help in transaction risk analysis (TRA)
 
 
 return paymentAPI.chargeCustomerInitiatedTransaction(transactionId, new ChargeCitRequest(token, amount, currency, sca));
