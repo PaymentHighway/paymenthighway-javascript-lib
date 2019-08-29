@@ -23,7 +23,30 @@ export declare namespace AddressBuilder {
          */
         setCity(city: string): this;
         /**
-         * @param country 3 digits country code, 3166-1 numeric (eg. Finland = "246")
+         * 3 digit country code, ISO 3166-1
+         * For example:
+         *  Canada: 124
+         *  China: 156
+         *  Denmark: 208
+         *  Estonia: 233
+         *  Finland: 246
+         *  France: 250
+         *  Germany: 276
+         *  Japan: 392
+         *  Netherlands: 528
+         *  Norway: 578
+         *  Poland: 616
+         *  Russia: 643
+         *  Spain: 724
+         *  Sweden: 752
+         *  Switzerland: 756
+         *  United Kingdom: 826
+         *  United States of America: 840
+         *
+         * @see <a href="https://en.wikipedia.org/wiki/ISO_3166-1_numeric">https://www.iso.org/obp/ui/#search/code/</a>
+         * @see <a href="https://en.wikipedia.org/wiki/ISO_3166-1_numeric">https://en.wikipedia.org/wiki/ISO_3166-1_numeric</a>
+         *
+         * @param country 3 digits country code, ISO 3166-1 numeric
          */
         setCountry(country: string): this;
         /**
