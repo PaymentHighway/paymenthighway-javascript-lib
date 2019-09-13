@@ -13,6 +13,14 @@ class ChargeMitRequest extends PhRequest_1.Request {
         this.commit = commit;
         this.splitting = splitting;
     }
+    /**
+     * Payment using a card token when the customer is not participating in the payment flow.
+     * A contract and understanding between the merchant and the customer must be established, allowing this kind of payments.
+     * @param amount Payment amount
+     * @param currency Payment currency
+     * @param order Merchant-provided order ID for the purchase. Alphanumeric with dashes and underscores. Max length 254.
+     * @return Builder
+     */
     static Builder(amount, currency, order) {
         return new ChargeMitBuilder.RequestBuilder(amount, currency, order);
     }
@@ -26,10 +34,16 @@ var ChargeMitBuilder;
             this.currency = currency;
             this.order = order;
         }
+        /**
+         * @param card Card to charge (Only for PCI DSS certified parties!)
+         */
         setCard(card) {
             this.card = card;
             return this;
         }
+        /**
+         * @param token Card token to charge
+         */
         setToken(token) {
             this.token = token;
             return this;

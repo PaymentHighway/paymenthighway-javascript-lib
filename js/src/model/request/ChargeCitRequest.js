@@ -14,6 +14,14 @@ class ChargeCitRequest extends PhRequest_1.Request {
         this.commit = commit;
         this.splitting = splitting;
     }
+    /**
+     * Payment using a card token when the customer is participating in the payment flow.
+     * @param amount Payment amount
+     * @param currency Payment currency
+     * @param order Merchant-provided order ID for the purchase. Alphanumeric with dashes and underscores. Max length 254.
+     * @param strongCustomerAuthentication Information provided for the SCA in case of a soft decline response from the issuer
+     * @return Builder
+     */
     static Builder(amount, currency, order, strongCustomerAuthentication) {
         return new ChargeCitBuilder.RequestBuilder(amount, currency, order, strongCustomerAuthentication);
     }
@@ -28,10 +36,16 @@ var ChargeCitBuilder;
             this.order = order;
             this.strong_customer_authentication = strongCustomerAuthentication;
         }
+        /**
+         * @param card Card to charge (Only for PCI DSS certified parties!)
+         */
         setCard(card) {
             this.card = card;
             return this;
         }
+        /**
+         * @param token Card token to charge
+         */
         setToken(token) {
             this.token = token;
             return this;

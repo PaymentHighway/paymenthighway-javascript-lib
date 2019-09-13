@@ -15,6 +15,14 @@ export declare class ChargeCitRequest extends Request {
     commit?: boolean;
     splitting?: Splitting;
     constructor(amount: number, currency: string, order: string, strong_customer_authentication: StrongCustomerAuthentication, card?: Card, token?: Token, customer?: Customer, commit?: boolean, splitting?: Splitting);
+    /**
+     * Payment using a card token when the customer is participating in the payment flow.
+     * @param amount Payment amount
+     * @param currency Payment currency
+     * @param order Merchant-provided order ID for the purchase. Alphanumeric with dashes and underscores. Max length 254.
+     * @param strongCustomerAuthentication Information provided for the SCA in case of a soft decline response from the issuer
+     * @return Builder
+     */
     static Builder(amount: number, currency: string, order: string, strongCustomerAuthentication: StrongCustomerAuthentication): ChargeCitBuilder.RequestBuilder;
 }
 export declare namespace ChargeCitBuilder {
@@ -29,7 +37,13 @@ export declare namespace ChargeCitBuilder {
         private commit;
         private splitting;
         constructor(amount: number, currency: string, order: string, strongCustomerAuthentication: StrongCustomerAuthentication);
+        /**
+         * @param card Card to charge (Only for PCI DSS certified parties!)
+         */
         setCard(card: Card): this;
+        /**
+         * @param token Card token to charge
+         */
         setToken(token: Token): this;
         setCustomer(customer: Customer): this;
         setCommit(commit: boolean): this;
