@@ -47,7 +47,7 @@ let testCard: Card;
 let scaSoftDeclineCard: Card;
 
 beforeEach(() => {
-    api = new PaymentAPI('https://v1-hub-psd2.sph-test-solinor.com/', 'testKey', 'testSecret', 'test', 'test_merchantId');
+    api = new PaymentAPI('https://v1-hub-staging.sph-test-solinor.com/', 'testKey', 'testSecret', 'test', 'test_merchantId');
     testCard = new Card('4153013999700024', '2023', '11', '024');
     validCard = {
         card: testCard,
