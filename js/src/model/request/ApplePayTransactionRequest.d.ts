@@ -1,6 +1,7 @@
 import { Customer } from './Customer';
 import { PaymentData } from './applepay/PaymentData';
-export declare class ApplePayTransactionRequest {
+import { Request } from './PhRequest';
+export declare class ApplePayTransactionRequest extends Request {
     payment_data: PaymentData;
     amount: number;
     currency: string;

@@ -1,4 +1,5 @@
-export declare class MobilePayInitRequest {
+import { Request } from './PhRequest';
+export declare class MobilePayInitRequest extends Request {
     amount: number;
     currency: string;
     order: string;

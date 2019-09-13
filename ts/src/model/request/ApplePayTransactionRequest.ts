@@ -1,13 +1,15 @@
 import {Customer} from './Customer';
 import {PaymentData} from './applepay/PaymentData';
+import { Request } from './PhRequest';
 
-export class ApplePayTransactionRequest {
+export class ApplePayTransactionRequest extends Request {
     constructor(public payment_data: PaymentData,
                 public amount: number,
                 public currency: string,
                 public commit?: boolean,
                 public order?: string,
                 public customer?: Customer) {
+                    super();
     }
 
     public static Builder(payment_data: PaymentData, amount: number, currency: string) {

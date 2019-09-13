@@ -30,6 +30,10 @@ import {PivoTransactionStatusResponse} from './model/response/PivoTransactionSta
 import {SiirtoTransactionStatusResponse} from './model/response/SiirtoTransactionStatusResponse';
 import {AfterPayCommitTransactionRequest} from './model/request/AfterPayCommitTransactionRequest';
 import {AfterPayRevertTransactionRequest} from './model/request/AfterPayRevertTransactionRequest';
+import { ChargeCitRequest } from './model/request/ChargeCitRequest';
+import { ChargeMitRequest } from './model/request/ChargeMitRequest';
+import { ChargeCitResponse } from './model/response/ChargeCitResponse';
+import { Request } from './model/request/PhRequest';
 
 /**
  * Payment Highway Payment API Service.
@@ -52,7 +56,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Init Transaction
+     * Init Transaction
      *
      * @returns {PromiseLike<TransactionResponse>}
      */
@@ -62,7 +66,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Debit Transaction
+     * Debit Transaction
      *
      * @param transactionId
      * @param request
@@ -74,7 +78,31 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Debit Masterpass Transaction
+     * Charge Customer Initiated Transaction
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<ChargeCitResponse>}
+     */
+    public chargeCustomerInitiatedTransaction(transactionId: string, request: ChargeCitRequest): PromiseLike<ChargeCitResponse> {
+        const chargeCitUri = '/transaction/' + transactionId + '/card/charge/customer_initiated';
+        return this.makeRequest('POST', chargeCitUri, request);
+    }
+
+    /**
+     * Charge Merchant Initiated Transaction
+     *
+     * @param transactionId
+     * @param request
+     * @returns {PromiseLike<DebitResponse>}
+     */
+    public chargeMerchantInitiatedTransaction(transactionId: string, request: ChargeMitRequest): PromiseLike<DebitResponse> {
+        const chargeMitUri = '/transaction/' + transactionId + '/card/charge/merchant_initiated';
+        return this.makeRequest('POST', chargeMitUri, request);
+    }
+
+    /**
+     * Debit Masterpass Transaction
      *
      * @param {string} transactionId
      * @param {MasterpassTransactionRequest} request
@@ -86,7 +114,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Debit Apple Pay Transaction
+     * Debit Apple Pay Transaction
      *
      * @param {string} transactionId
      * @param {ApplePayTransactionRequest} request
@@ -98,7 +126,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Revert Transaction
+     * Revert Transaction
      *
      * @param transactionId
      * @param request
@@ -110,7 +138,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Revert Siirto Transaction
+     * Revert Siirto Transaction
      *
      * @param transactionId
      * @param request
@@ -122,7 +150,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Revert Pivo Transaction
+     * Revert Pivo Transaction
      *
      * @param transactionId
      * @param request
@@ -134,7 +162,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Transaction Commit Request
+     * Commit Transaction Request
      * Used to commit (capture) the transaction.
      * In order to find out the result of the transaction without committing it, use Transaction Result request instead.
      *
@@ -197,7 +225,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Transaction Status Request
+     * Transaction Status Request
      *
      * @param transactionId
      * @returns {PromiseLike<TransactionStatusResponse>}
@@ -208,7 +236,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Pivo Transaction Status Request
+     * Pivo Transaction Status Request
      *
      * @param transactionId
      * @returns {PromiseLike<PivoTransactionStatusResponse>}
@@ -219,7 +247,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Siirto Transaction Status Request
+     * Siirto Transaction Status Request
      *
      * @param transactionId
      * @returns {PromiseLike<SiirtoTransactionStatusResponse>}
@@ -230,7 +258,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Order Status Request
+     * Order Status Request
      *
      * @param orderId   The ID of the order whose transactions should be searched for
      * @returns {PromiseLike<OrderSearchResponse>}
@@ -241,7 +269,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Tokenize Request
+     * Tokenize Request
      *
      * @param tokenizationId
      * @returns {PromiseLike<TokenizationResponse>}
@@ -264,7 +292,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Transaction Result Request
+     * Transaction Result Request
      * Used to find out whether or not an uncommitted transaction succeeded, without actually committing (capturing) it.
      *
      * @param transactionId
@@ -276,7 +304,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Siirto Transaction Result Request
+     * Siirto Transaction Result Request
      * Used to find out whether or not an Siirto transaction succeeded.
      *
      * @param transactionId
@@ -288,7 +316,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Pivo Transaction Result Request
+     * Pivo Transaction Result Request
      * Used to find out whether or not an Pivo transaction succeeded.
      *
      * @param transactionId
@@ -300,7 +328,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Daily Report Request
+     * Daily Report Request
      *
      * @param date
      * @returns {PromiseLike<ReportResponse>}
@@ -311,7 +339,7 @@ export class PaymentAPI {
     }
 
     /**
-     * Payment Highway Reconciliation Report Request
+     * Reconciliation Report Request
      *
      * @param date      The date to fetch the reconciliation report for.
      * @param useDateProcessed Use the acquirer processed date instead of report received date. Might cause changes to the past
@@ -344,13 +372,13 @@ export class PaymentAPI {
      *
      * @return
      */
-    private createNameValuePairs(): Pair<string, string>[] {
+    private createNameValuePairs(requestId: string): Pair<string, string>[] {
         return [
             new Pair('sph-api-version', PaymentAPI.API_VERSION),
             new Pair('sph-account', this.account),
             new Pair('sph-merchant', this.merchant),
             new Pair('sph-timestamp', PaymentHighwayUtility.getUtcTimestamp()),
-            new Pair('sph-request-id', PaymentHighwayUtility.createRequestId())
+            new Pair('sph-request-id', requestId)
         ];
     }
 
@@ -358,14 +386,28 @@ export class PaymentAPI {
      *
      * @param method
      * @param paymentUri
-     * @param requestBody
+     * @param request
      * @returns {PromiseLike<TransactionResponse>}
      */
-    private makeRequest(method: Method, paymentUri: string, requestBody?: Object): PromiseLike<any> {
-        return this.executeRequest(method, paymentUri, this.createNameValuePairs(), requestBody)
+    private makeRequest(method: Method, paymentUri: string, request?: Request): PromiseLike<any> {
+        const requestId = request && request.requestId || PaymentHighwayUtility.createRequestId();
+        const requestBody = request && this.getRequestBody(request);
+
+        return this.executeRequest(method, paymentUri, this.createNameValuePairs(requestId), requestBody)
             .then((body: TransactionResponse) => {
                 return body;
             });
+    }
+
+    /**
+     * Gets request fields to be included in the request body
+     * @param request
+     * @returns {Object} request with fields removed that should not be included in the request body
+     */
+    private getRequestBody(request: Request): Object {
+        let requestBody = Object.assign({}, request);
+        delete requestBody.requestId;
+        return requestBody;
     }
 
     /**

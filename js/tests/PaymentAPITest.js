@@ -1,4 +1,12 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const moment = require("moment");
@@ -12,11 +20,22 @@ const MasterpassTransactionRequest_1 = require("../src/model/request/MasterpassT
 const ApplePayTransactionRequest_1 = require("../src/model/request/ApplePayTransactionRequest");
 const MobilePayInitRequest_1 = require("../src/model/request/MobilePayInitRequest");
 const Splitting_1 = require("../src/model/Splitting");
+const ChargeMitRequest_1 = require("../src/model/request/ChargeMitRequest");
+const ChargeCitRequest_1 = require("../src/model/request/ChargeCitRequest");
+const StrongCustomerAuthentication_1 = require("../src/model/request/sca/StrongCustomerAuthentication");
+const ReturnUrls_1 = require("../src/model/request/sca/ReturnUrls");
+const CustomerDetails_1 = require("../src/model/request/sca/CustomerDetails");
+const PhoneNumber_1 = require("../src/model/request/sca/PhoneNumber");
+const CustomerAccount_1 = require("../src/model/request/sca/CustomerAccount");
+const Purchase_1 = require("../src/model/request/sca/Purchase");
+const Address_1 = require("../src/model/request/sca/Address");
+const CustomerAuthenticationInfo_1 = require("../src/model/request/sca/CustomerAuthenticationInfo");
 let api;
 let validCard;
 let testCard;
+let scaSoftDeclineCard;
 beforeEach(() => {
-    api = new PaymentAPI_1.PaymentAPI('https://v1-hub-staging.sph-test-solinor.com/', 'testKey', 'testSecret', 'test', 'test_merchantId');
+    api = new PaymentAPI_1.PaymentAPI('https://v1-hub-psd2.sph-test-solinor.com/', 'testKey', 'testSecret', 'test', 'test_merchantId');
     testCard = new Card_1.Card('4153013999700024', '2023', '11', '024');
     validCard = {
         card: testCard,
@@ -25,6 +44,7 @@ beforeEach(() => {
         blocking: true,
         orderId: PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId()
     };
+    scaSoftDeclineCard = new Card_1.Card('4153013999701162', '2023', '11', '162');
 });
 function createDebitTransaction(orderId, commit, splitting) {
     let initResponse;
@@ -44,6 +64,79 @@ function checkResult(response) {
 function printResult(response) {
     return ', complete result was: \n' + JSON.stringify(response);
 }
+function getFullStrongCustomerAuthenticationData() {
+    const returnUrls = ReturnUrls_1.ReturnUrls.Builder('https://example.com/success', 'https://example.com/cancel', 'https://example.com/failure').setWebhookSuccessUrl('https://example.com/webhook/success')
+        .setWebhookCancelUrl('https://example.com/webhook/cancel')
+        .setWebhookFailureUrl('https://example.com/webhook/failure')
+        .setWebhookDelay(0)
+        .build();
+    const customerDetails = CustomerDetails_1.CustomerDetails.Builder()
+        .setShippingAddressMatchesBillingAddress(true)
+        .setName('Eric Example')
+        .setEmail('eric.example@example.com')
+        .setHomePhone(new PhoneNumber_1.PhoneNumber('358', '123456789'))
+        .setMobilePhone(new PhoneNumber_1.PhoneNumber('358', '441234566'))
+        .setWorkPhone(new PhoneNumber_1.PhoneNumber('358', '441234566'))
+        .build();
+    const customerAccount = CustomerAccount_1.CustomerAccount.Builder()
+        .setAccountAgeIndicator(CustomerAccount_1.AccountAgeIndicator.MoreThan60Days)
+        .setAccountDate('2018-07-05')
+        .setChangeIndicator(CustomerAccount_1.AccountInformationChangeIndicator.MoreThan60Days)
+        .setChangeDate('2018-09-11')
+        .setPasswordChangeIndicator(CustomerAccount_1.AccountPasswordChangeIndicator.NoChange)
+        .setPasswordChangeDate('2018-07-05')
+        .setNumberOfRecentPurchases(7)
+        .setNumberOfAddCardAttemptsDay(1)
+        .setNumberOfTransactionActivityDay(3)
+        .setNumberOfTransactionActivityYear(8)
+        .setShippingAddressIndicator(CustomerAccount_1.ShippingAddressFirstUsedIndicator.Between30And60Days)
+        .setShippingAddressUsageDate('2019-07-01')
+        .setSuspiciousActivity(CustomerAccount_1.SuspiciousActivityIndicator.NoSuspiciousActivity)
+        .build();
+    const purchase = Purchase_1.Purchase.Builder()
+        .setShippingIndicator(Purchase_1.ShippingIndicator.ShipToCardholdersAddress)
+        .setDeliveryTimeFrame(Purchase_1.DeliveryTimeFrame.SameDayShipping)
+        .setDeliveryEmail('eric.example@example.com')
+        .setReorderItemsIndicator(Purchase_1.ReorderItemsIndicator.FirstTimeOrdered)
+        .setPreOrderPurchaseIndicator(Purchase_1.PreOrderPurchaseIndicator.MerchandiseAvailable)
+        .setPreOrderDate('2019-08-20')
+        .setShippingNameIndicator(Purchase_1.ShippingNameIndicator.AccountNameMatchesShippingName)
+        .setGiftCardAmount(200)
+        .setGiftCardCount(7)
+        .build();
+    const billingAddress = Address_1.Address.Builder()
+        .setCity('Helsinki')
+        .setCountry('246')
+        .setAddressLine1('Arkadiankatu 1')
+        .setAddressLine2('')
+        .setAddressLine3('')
+        .setPostCode('00101')
+        .setState('18')
+        .build();
+    const shippingAddress = Address_1.Address.Builder()
+        .setCity('Helsinki')
+        .setCountry('246')
+        .setAddressLine1('Arkadiankatu 1')
+        .setAddressLine2('')
+        .setAddressLine3('')
+        .setPostCode('00101')
+        .setState('18')
+        .build();
+    const customerAuthenticationInfo = CustomerAuthenticationInfo_1.CustomerAuthenticationInfo.Builder()
+        .setMethod(CustomerAuthenticationInfo_1.Method.OwnCredentials)
+        .build();
+    return StrongCustomerAuthentication_1.StrongCustomerAuthentication.Builder(returnUrls)
+        .setCustomerDetails(customerDetails)
+        .setCustomerAccount(customerAccount)
+        .setPurchase(purchase)
+        .setBillingAddress(billingAddress)
+        .setShippingAddress(shippingAddress)
+        .setCustomerAuthenticationInfo(customerAuthenticationInfo)
+        .setDesiredChallengeWindowSize(StrongCustomerAuthentication_1.ChallengeWindowSize.Window600x400)
+        .setExitIframeOnResult(false)
+        .setExitIframeOnThreeDSecure(false)
+        .build();
+}
 describe('PaymentAPI', () => {
     it('Should have instance of PaymentHighwayAPI', () => {
         chai_1.assert.instanceOf(api, PaymentAPI_1.PaymentAPI, 'Was not instance of PaymentAPI');
@@ -59,6 +152,51 @@ describe('PaymentAPI', () => {
             chai_1.assert.isNotNull(body.id, 'Transaction id not received');
         });
     });
+    it('Test charge merchant initiated transaction', () => __awaiter(this, void 0, void 0, function* () {
+        const initResponse = yield api.initTransaction();
+        const chargeMitRequest = ChargeMitRequest_1.ChargeMitRequest.Builder(9999, 'EUR', 'order1')
+            .setCard(testCard)
+            .build();
+        const chargeResponse = yield api.chargeMerchantInitiatedTransaction(initResponse.id, chargeMitRequest);
+        checkResult(chargeResponse);
+    }));
+    it('Test charge merchant initiated transaction should throw an exception if card or token is not defined', () => __awaiter(this, void 0, void 0, function* () {
+        chai_1.expect(() => ChargeMitRequest_1.ChargeMitRequest.Builder(9999, 'EUR', 'order1').build())
+            .to.throw('Either card or token must be defined');
+    }));
+    it('Test charge customer initiated transaction', () => __awaiter(this, void 0, void 0, function* () {
+        const initResponse = yield api.initTransaction();
+        const strongCustomerAuthentication = StrongCustomerAuthentication_1.StrongCustomerAuthentication.Builder(ReturnUrls_1.ReturnUrls.Builder('https://example.com/success', 'https://example.com/cancel', 'https://example.com/failure').build()).build();
+        const chargeCitRequest = ChargeCitRequest_1.ChargeCitRequest.Builder(9999, 'EUR', 'testorder1', strongCustomerAuthentication)
+            .setCard(testCard)
+            .build();
+        const chargeResponse = yield api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
+        checkResult(chargeResponse);
+    }));
+    it('Test charge customer initiated transaction should throw an exception if card or token is not defined', () => __awaiter(this, void 0, void 0, function* () {
+        const strongCustomerAuthentication = StrongCustomerAuthentication_1.StrongCustomerAuthentication.Builder(ReturnUrls_1.ReturnUrls.Builder('https://example.com/success', 'https://example.com/cancel', 'https://example.com/failure').build()).build();
+        chai_1.expect(() => ChargeCitRequest_1.ChargeCitRequest.Builder(9999, 'EUR', 'order1', strongCustomerAuthentication).build())
+            .to.throw('Either card or token must be defined');
+    }));
+    it('Test charge customer initiated transaction with full SCA data', () => __awaiter(this, void 0, void 0, function* () {
+        const initResponse = yield api.initTransaction();
+        const strongCustomerAuthentication = getFullStrongCustomerAuthenticationData();
+        const chargeCitRequest = ChargeCitRequest_1.ChargeCitRequest.Builder(9999, 'EUR', 'testorder1', strongCustomerAuthentication)
+            .setCard(testCard)
+            .build();
+        const chargeResponse = yield api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
+        checkResult(chargeResponse);
+    }));
+    it('Test soft-decline of customer initiated transaction', () => __awaiter(this, void 0, void 0, function* () {
+        const initResponse = yield api.initTransaction();
+        const strongCustomerAuthentication = StrongCustomerAuthentication_1.StrongCustomerAuthentication.Builder(ReturnUrls_1.ReturnUrls.Builder('https://example.com/success', 'https://example.com/cancel', 'https://example.com/failure').build()).build();
+        const chargeCitRequest = ChargeCitRequest_1.ChargeCitRequest.Builder(100, 'EUR', 'order1', strongCustomerAuthentication)
+            .setCard(scaSoftDeclineCard)
+            .build();
+        const chargeResponse = yield api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
+        chai_1.assert(chargeResponse.result.code === 400, 'Request should have been soft declined with code 400, complete response was: ' + JSON.stringify(chargeResponse));
+        chai_1.assert.isNotNull(chargeResponse.three_d_secure_url, '3D Secure url not received');
+    }));
     it('Test commit transaction', () => {
         const commitRequest = new CommitTransactionRequest_1.CommitTransactionRequest(9999, 'EUR');
         let transactionId;
@@ -219,13 +357,18 @@ describe('PaymentAPI', () => {
         let currency = 'EUR';
         let paymentToken = JSON.parse('{ "data": "ABCD", "header": { "ephemeralPublicKey": "XYZ", "publicKeyHash": "13579", "transactionId": "24680" }, "signature": "ABCDXYZ0000", "version": "EC_v1" }');
         chai_1.assert.strictEqual(paymentToken.data, 'ABCD', 'Data was not equal to ABCD');
-        let withStaticBuilder = ApplePayTransactionRequest_1.ApplePayTransactionRequest.Builder(paymentToken, amount, currency).build();
-        let withRequestBuilder = new ApplePayTransactionRequest_1.ApplePayTransaction.RequestBuilder(paymentToken, amount, currency).build();
+        let withStaticBuilder = withoutRequestId(ApplePayTransactionRequest_1.ApplePayTransactionRequest.Builder(paymentToken, amount, currency).build());
+        let withRequestBuilder = withoutRequestId(new ApplePayTransactionRequest_1.ApplePayTransaction.RequestBuilder(paymentToken, amount, currency).build());
         chai_1.assert.deepEqual(withStaticBuilder, withRequestBuilder, 'results differ from builder');
-        let requestWithCommit = ApplePayTransactionRequest_1.ApplePayTransactionRequest.Builder(paymentToken, amount, currency).setCommit(true).build();
+        let requestWithCommit = withoutRequestId(ApplePayTransactionRequest_1.ApplePayTransactionRequest.Builder(paymentToken, amount, currency).setCommit(true).build());
         chai_1.assert.notDeepEqual(withStaticBuilder, requestWithCommit, 'requests should differ if commit is added');
         chai_1.assert(withStaticBuilder.amount === 100);
     });
+    function withoutRequestId(request) {
+        let copy = Object.assign({}, request);
+        delete copy.requestId;
+        return copy;
+    }
     it('Test Apple Pay validators', () => {
         let amount = 100;
         let currency = 'EUR';

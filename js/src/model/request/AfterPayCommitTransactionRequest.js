@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class AfterPayCommitTransactionRequest {
+const PhRequest_1 = require("./PhRequest");
+class AfterPayCommitTransactionRequest extends PhRequest_1.Request {
     constructor(amount) {
+        super();
         this.amount = amount;
     }
 }

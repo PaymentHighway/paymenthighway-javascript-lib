@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Card_1 = require("./Card");
-class TransactionRequest {
+const PhRequest_1 = require("./PhRequest");
+class TransactionRequest extends PhRequest_1.Request {
     constructor(cardOrToken, amount, currency, order, customer, commit, splitting) {
+        super();
         if (cardOrToken instanceof Card_1.Card) {
             this.card = cardOrToken;
         }
