@@ -12,7 +12,8 @@ export declare class ChargeMitRequest extends Request {
     customer?: Customer;
     commit?: boolean;
     splitting?: Splitting;
-    constructor(amount: number, currency: string, order: string, card?: Card, token?: Token, customer?: Customer, commit?: boolean, splitting?: Splitting);
+    reference_number?: string;
+    constructor(amount: number, currency: string, order: string, card?: Card, token?: Token, customer?: Customer, commit?: boolean, splitting?: Splitting, reference_number?: string);
     /**
      * Payment using a card token when the customer is not participating in the payment flow.
      * A contract and understanding between the merchant and the customer must be established, allowing this kind of payments.
@@ -33,6 +34,7 @@ export declare namespace ChargeMitBuilder {
         private customer;
         private commit;
         private splitting;
+        private reference_number;
         constructor(amount: number, currency: string, order: string);
         /**
          * @param card Card to charge (Only for PCI DSS certified parties!)
@@ -45,6 +47,12 @@ export declare namespace ChargeMitBuilder {
         setCustomer(customer: Customer): this;
         setCommit(commit: boolean): this;
         setSplitting(splitting: Splitting): this;
+        /**
+         * Reference number used when settling the transaction to the merchant account.
+         * Only used if one-by-ony transaction settling is configured.
+         * @param referenceNumber In RF or Finnish reference number format.
+         */
+        setReferenceNumber(referenceNumber: string): this;
         build(): ChargeMitRequest;
     }
 }

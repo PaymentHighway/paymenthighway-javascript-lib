@@ -91,9 +91,10 @@ class FormBuilder {
      * @param webhookCancelUrl          The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay              Delay for webhook in seconds. Between 0-900
      * @param showPaymentMethodSelector Show payment method selection page
+     * @param referenceNumber           Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
      * @returns {FormContainer}
      */
-    generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay, showPaymentMethodSelector) {
+    generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay, showPaymentMethodSelector, referenceNumber) {
         const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
@@ -114,6 +115,9 @@ class FormBuilder {
         }
         if (typeof showPaymentMethodSelector !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SHOW_PAYMENT_METHOD_SELECTOR, showPaymentMethodSelector.toString()));
+        }
+        if (typeof referenceNumber !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
         }
         nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
         const payWithCardUri = '/form/view/pay_with_card';
@@ -144,9 +148,10 @@ class FormBuilder {
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay          Delay for webhook in seconds. Between 0-900
+     * @param referenceNumber       Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
      * @return {FormContainer}
      */
-    generateAddCardAndPaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay) {
+    generateAddCardAndPaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay, referenceNumber) {
         const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
@@ -164,6 +169,9 @@ class FormBuilder {
         }
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
+        }
+        if (typeof referenceNumber !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
         }
         nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
         const addCardAndPayUri = '/form/view/add_and_pay_with_card';
@@ -195,9 +203,10 @@ class FormBuilder {
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay          Delay for webhook in seconds. Between 0-900
+     * @param referenceNumber       Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
      * @returns {FormContainer}
      */
-    generatePayWithTokenAndCvcParameters(token, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay) {
+    generatePayWithTokenAndCvcParameters(token, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay, referenceNumber) {
         const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
@@ -216,6 +225,9 @@ class FormBuilder {
         }
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
+        }
+        if (typeof referenceNumber !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
         }
         nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
         const payWithTokenAndCvcUri = '/form/view/pay_with_token_and_cvc';
@@ -244,9 +256,10 @@ class FormBuilder {
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay          Delay for webhook in seconds. Between 0-900
+     * @param referenceNumber       Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
      * @return FormContainer
      */
-    generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, exitIframeOnResult, shopLogoUrl, phoneNumber, shopName, subMerchantId, subMerchantName, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay) {
+    generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, exitIframeOnResult, shopLogoUrl, phoneNumber, shopName, subMerchantId, subMerchantName, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay, referenceNumber) {
         const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
@@ -270,6 +283,9 @@ class FormBuilder {
         }
         if (typeof subMerchantName !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SUB_MERCHANT_NAME, subMerchantName));
+        }
+        if (typeof referenceNumber !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
         }
         nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
         const mobilePayUri = '/form/view/mobilepay';
@@ -297,9 +313,10 @@ class FormBuilder {
      * @param webhookCancelUrl       The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay           Delay for webhook in seconds. Between 0-900
      * @param requestShippingAddress Request shipping address from the user via Masterpass Wallet
+     * @param referenceNumber       Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
      * @return FormContainer
      */
-    generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay, requestShippingAddress) {
+    generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay, requestShippingAddress, referenceNumber) {
         const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
@@ -320,6 +337,9 @@ class FormBuilder {
         }
         if (typeof requestShippingAddress !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_REQUEST_SHIPPING_ADDRESS, requestShippingAddress.toString()));
+        }
+        if (typeof referenceNumber !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
         }
         nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
         const masterpassUri = '/form/view/masterpass';
@@ -430,9 +450,10 @@ class FormBuilder {
      * @param webhookFailureUrl      The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl       The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay           Delay for webhook in seconds. Between 0-900
+     * @param referenceNumber       Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
      * @return FormContainer
      */
-    generateAfterPayParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, orderDescription, socialSecurityNumber, emailAddress, exitIframeOnResult, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay) {
+    generateAfterPayParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, orderDescription, socialSecurityNumber, emailAddress, exitIframeOnResult, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay, referenceNumber) {
         const requestId = PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
         nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
@@ -448,6 +469,9 @@ class FormBuilder {
         }
         if (typeof emailAddress !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_EMAIL_ADDRESS, emailAddress));
+        }
+        if (typeof referenceNumber !== 'undefined') {
+            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
         }
         nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
         const uri = '/form/view/afterpay';
@@ -511,7 +535,7 @@ class FormBuilder {
         return this.secureSigner.createSignature(this.method, uri, nameValuePairs, '');
     }
 }
-FormBuilder.FORM_API_VERSION = '20180927';
+FormBuilder.FORM_API_VERSION = '20191204';
 FormBuilder.SPH_API_VERSION = 'sph-api-version';
 FormBuilder.SPH_ACCEPT_CVC_REQUIRED = 'sph-accept-cvc-required';
 FormBuilder.SPH_ACCOUNT = 'sph-account';

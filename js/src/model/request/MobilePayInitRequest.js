@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const PhRequest_1 = require("./PhRequest");
 class MobilePayInitRequest extends PhRequest_1.Request {
-    constructor(amount, currency, order, return_uri, webhook_success_url, webhook_cancel_url, webhook_failure_url, language, sub_merchant_name, sub_merchant_id, shop_name, shop_logo_url) {
+    constructor(amount, currency, order, return_uri, webhook_success_url, webhook_cancel_url, webhook_failure_url, language, sub_merchant_name, sub_merchant_id, shop_name, shop_logo_url, reference_number) {
         super();
         this.amount = amount;
         this.currency = currency;
@@ -16,6 +16,7 @@ class MobilePayInitRequest extends PhRequest_1.Request {
         this.sub_merchant_id = sub_merchant_id;
         this.shop_name = shop_name;
         this.shop_logo_url = shop_logo_url;
+        this.reference_number = reference_number;
     }
     static Builder(amount, currency) {
         return new MobilePayInit.RequestBuilder(amount, currency);
@@ -69,8 +70,17 @@ var MobilePayInit;
             this.shop_logo_url = url;
             return this;
         }
+        /**
+         * Reference number used when settling the transaction to the merchant account.
+         * Only used if one-by-ony transaction settling is configured.
+         * @param referenceNumber In RF or Finnish reference number format.
+         */
+        setReferenceNumber(referenceNumber) {
+            this.reference_number = referenceNumber;
+            return this;
+        }
         build() {
-            return new MobilePayInitRequest(this.amount, this.currency, this.order, this.return_uri, this.webhook_success_url, this.webhook_cancel_url, this.webhook_failure_url, this.language, this.sub_merchant_name, this.sub_merchant_id, this.shop_name, this.shop_logo_url);
+            return new MobilePayInitRequest(this.amount, this.currency, this.order, this.return_uri, this.webhook_success_url, this.webhook_cancel_url, this.webhook_failure_url, this.language, this.sub_merchant_name, this.sub_merchant_id, this.shop_name, this.shop_logo_url, this.reference_number);
         }
     }
     MobilePayInit.RequestBuilder = RequestBuilder;
