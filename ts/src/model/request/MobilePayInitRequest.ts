@@ -13,7 +13,9 @@ export class MobilePayInitRequest extends Request {
         public sub_merchant_name?: string,
         public sub_merchant_id?: string,
         public shop_name?: string,
-        public shop_logo_url?: string) {
+        public shop_logo_url?: string,
+        public reference_number?: string
+    ) {
             super();
     }
 
@@ -36,6 +38,7 @@ export namespace MobilePayInit {
         private sub_merchant_id: string;
         private shop_name: string;
         private shop_logo_url: string;
+        private reference_number: string;
 
         constructor(amount: number, currency: string) {
             this.amount = amount;
@@ -92,6 +95,16 @@ export namespace MobilePayInit {
             return this;
         }
 
+        /**
+         * Reference number used when settling the transaction to the merchant account.
+         * Only used if one-by-ony transaction settling is configured.
+         * @param referenceNumber In RF or Finnish reference number format.
+         */
+        public setReferenceNumber(referenceNumber: string) {
+            this.reference_number = referenceNumber;
+            return this;
+        }
+
         public build(): MobilePayInitRequest {
             return new MobilePayInitRequest(
                 this.amount,
@@ -105,7 +118,8 @@ export namespace MobilePayInit {
                 this.sub_merchant_name,
                 this.sub_merchant_id,
                 this.shop_name,
-                this.shop_logo_url
+                this.shop_logo_url,
+                this.reference_number
             );
         }
     }

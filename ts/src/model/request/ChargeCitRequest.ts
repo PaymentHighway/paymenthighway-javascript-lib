@@ -16,7 +16,8 @@ export class ChargeCitRequest extends Request {
         public token?: Token,
         public customer?: Customer,
         public commit?: boolean,
-        public splitting?: Splitting
+        public splitting?: Splitting,
+        public reference_number?: string
     ) {
         super();
     }
@@ -46,6 +47,7 @@ export namespace ChargeCitBuilder {
         private customer: Customer;
         private commit: boolean;
         private splitting: Splitting;
+        private reference_number: string;
 
         constructor(amount: number, currency: string, order: string, strongCustomerAuthentication: StrongCustomerAuthentication) {
             this.amount = amount;
@@ -85,6 +87,16 @@ export namespace ChargeCitBuilder {
             return this;
         }
 
+        /**
+         * Reference number used when settling the transaction to the merchant account.
+         * Only used if one-by-ony transaction settling is configured.
+         * @param referenceNumber In RF or Finnish reference number format.
+         */
+        public setReferenceNumber(referenceNumber: string) {
+            this.reference_number = referenceNumber;
+            return this;
+        }
+
         public build(): ChargeCitRequest {
 
             if (!(this.card || this.token)) {
@@ -100,7 +112,8 @@ export namespace ChargeCitBuilder {
                 this.token,
                 this.customer,
                 this.commit,
-                this.splitting
+                this.splitting,
+                this.reference_number
             );
         }
     }

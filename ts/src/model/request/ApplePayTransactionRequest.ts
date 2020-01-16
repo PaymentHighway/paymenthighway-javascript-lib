@@ -8,7 +8,9 @@ export class ApplePayTransactionRequest extends Request {
                 public currency: string,
                 public commit?: boolean,
                 public order?: string,
-                public customer?: Customer) {
+                public customer?: Customer,
+                public reference_number?: string
+    ) {
                     super();
     }
 
@@ -25,6 +27,7 @@ export namespace ApplePayTransaction {
         private commit?: boolean;
         private order?: string;
         private customer?: Customer;
+        private reference_number?: string;
 
         constructor(payment_data: PaymentData, amount: number, currency: string) {
             this.payment_data = payment_data;
@@ -45,6 +48,16 @@ export namespace ApplePayTransaction {
             return this;
         }
 
+        /**
+         * Reference number used when settling the transaction to the merchant account.
+         * Only used if one-by-ony transaction settling is configured.
+         * @param referenceNumber In RF or Finnish reference number format.
+         */
+        public setReferenceNumber(referenceNumber: string) {
+            this.reference_number = referenceNumber;
+            return this;
+        }
+
         public build(): ApplePayTransactionRequest {
             return new ApplePayTransactionRequest(
                 this.payment_data,
@@ -52,7 +65,8 @@ export namespace ApplePayTransaction {
                 this.currency,
                 this.commit,
                 this.order,
-                this.customer
+                this.customer,
+                this.reference_number
             );
         }
     }

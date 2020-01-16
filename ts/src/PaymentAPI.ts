@@ -40,7 +40,7 @@ import { Request } from './model/request/PhRequest';
  */
 export class PaymentAPI {
 
-    private static API_VERSION: string = '20190430';
+    private static API_VERSION: string = '20191204';
 
     // Payment API headers
     public static USER_AGENT: string = 'PaymentHighway Javascript Library';
