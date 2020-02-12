@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -152,7 +153,7 @@ describe('PaymentAPI', () => {
             chai_1.assert.isNotNull(body.id, 'Transaction id not received');
         });
     });
-    it('Test charge merchant initiated transaction', () => __awaiter(this, void 0, void 0, function* () {
+    it('Test charge merchant initiated transaction', () => __awaiter(void 0, void 0, void 0, function* () {
         const initResponse = yield api.initTransaction();
         const chargeMitRequest = ChargeMitRequest_1.ChargeMitRequest.Builder(9999, 'EUR', 'order1')
             .setCard(testCard)
@@ -160,11 +161,11 @@ describe('PaymentAPI', () => {
         const chargeResponse = yield api.chargeMerchantInitiatedTransaction(initResponse.id, chargeMitRequest);
         checkResult(chargeResponse);
     }));
-    it('Test charge merchant initiated transaction should throw an exception if card or token is not defined', () => __awaiter(this, void 0, void 0, function* () {
+    it('Test charge merchant initiated transaction should throw an exception if card or token is not defined', () => __awaiter(void 0, void 0, void 0, function* () {
         chai_1.expect(() => ChargeMitRequest_1.ChargeMitRequest.Builder(9999, 'EUR', 'order1').build())
             .to.throw('Either card or token must be defined');
     }));
-    it('Test charge customer initiated transaction', () => __awaiter(this, void 0, void 0, function* () {
+    it('Test charge customer initiated transaction', () => __awaiter(void 0, void 0, void 0, function* () {
         const initResponse = yield api.initTransaction();
         const strongCustomerAuthentication = StrongCustomerAuthentication_1.StrongCustomerAuthentication.Builder(ReturnUrls_1.ReturnUrls.Builder('https://example.com/success', 'https://example.com/cancel', 'https://example.com/failure').build()).build();
         const chargeCitRequest = ChargeCitRequest_1.ChargeCitRequest.Builder(9999, 'EUR', 'testorder1', strongCustomerAuthentication)
@@ -173,12 +174,12 @@ describe('PaymentAPI', () => {
         const chargeResponse = yield api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
         checkResult(chargeResponse);
     }));
-    it('Test charge customer initiated transaction should throw an exception if card or token is not defined', () => __awaiter(this, void 0, void 0, function* () {
+    it('Test charge customer initiated transaction should throw an exception if card or token is not defined', () => __awaiter(void 0, void 0, void 0, function* () {
         const strongCustomerAuthentication = StrongCustomerAuthentication_1.StrongCustomerAuthentication.Builder(ReturnUrls_1.ReturnUrls.Builder('https://example.com/success', 'https://example.com/cancel', 'https://example.com/failure').build()).build();
         chai_1.expect(() => ChargeCitRequest_1.ChargeCitRequest.Builder(9999, 'EUR', 'order1', strongCustomerAuthentication).build())
             .to.throw('Either card or token must be defined');
     }));
-    it('Test charge customer initiated transaction with full SCA data', () => __awaiter(this, void 0, void 0, function* () {
+    it('Test charge customer initiated transaction with full SCA data', () => __awaiter(void 0, void 0, void 0, function* () {
         const initResponse = yield api.initTransaction();
         const strongCustomerAuthentication = getFullStrongCustomerAuthenticationData();
         const chargeCitRequest = ChargeCitRequest_1.ChargeCitRequest.Builder(9999, 'EUR', 'testorder1', strongCustomerAuthentication)
@@ -187,7 +188,7 @@ describe('PaymentAPI', () => {
         const chargeResponse = yield api.chargeCustomerInitiatedTransaction(initResponse.id, chargeCitRequest);
         checkResult(chargeResponse);
     }));
-    it('Test soft-decline of customer initiated transaction', () => __awaiter(this, void 0, void 0, function* () {
+    it('Test soft-decline of customer initiated transaction', () => __awaiter(void 0, void 0, void 0, function* () {
         const initResponse = yield api.initTransaction();
         const strongCustomerAuthentication = StrongCustomerAuthentication_1.StrongCustomerAuthentication.Builder(ReturnUrls_1.ReturnUrls.Builder('https://example.com/success', 'https://example.com/cancel', 'https://example.com/failure').build()).build();
         const chargeCitRequest = ChargeCitRequest_1.ChargeCitRequest.Builder(100, 'EUR', 'order1', strongCustomerAuthentication)

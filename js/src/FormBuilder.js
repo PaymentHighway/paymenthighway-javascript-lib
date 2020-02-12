@@ -535,6 +535,7 @@ class FormBuilder {
         return this.secureSigner.createSignature(this.method, uri, nameValuePairs, '');
     }
 }
+exports.FormBuilder = FormBuilder;
 FormBuilder.FORM_API_VERSION = '20191204';
 FormBuilder.SPH_API_VERSION = 'sph-api-version';
 FormBuilder.SPH_ACCEPT_CVC_REQUIRED = 'sph-accept-cvc-required';
@@ -573,5 +574,4 @@ FormBuilder.SPH_EMAIL_ADDRESS = 'sph-email-address';
 FormBuilder.LANGUAGE = 'language';
 FormBuilder.DESCRIPTION = 'description';
 FormBuilder.SIGNATURE = 'signature';
-exports.FormBuilder = FormBuilder;
 //# sourceMappingURL=FormBuilder.js.map

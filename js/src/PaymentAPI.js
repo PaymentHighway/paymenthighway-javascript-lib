@@ -378,8 +378,8 @@ class PaymentAPI {
         return requestPromise(options);
     }
 }
+exports.PaymentAPI = PaymentAPI;
 PaymentAPI.API_VERSION = '20191204';
 // Payment API headers
 PaymentAPI.USER_AGENT = 'PaymentHighway Javascript Library';
-exports.PaymentAPI = PaymentAPI;
 //# sourceMappingURL=PaymentAPI.js.map
