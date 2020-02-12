@@ -22,4 +22,5 @@ export interface AfterPayTransactionStatus {
     afterpay_customer_number?: string;
     afterpay_capture_number?: string;
     afterpay_outcome?: string;
+    reference_number?: string;
 }

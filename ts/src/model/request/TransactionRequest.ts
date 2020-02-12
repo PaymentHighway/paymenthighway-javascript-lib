@@ -13,8 +13,9 @@ export class TransactionRequest extends Request {
     public customer: Customer;
     public commit: boolean;
     public splitting: Splitting;
+    public reference_number?: string;
 
-    constructor(cardOrToken: Card|Token, amount: number, currency: string, order?: string, customer?: Customer, commit?: boolean, splitting?: Splitting) {
+    constructor(cardOrToken: Card|Token, amount: number, currency: string, order?: string, customer?: Customer, commit?: boolean, splitting?: Splitting, referenceNumber?: string) {
         super();
 
         if (cardOrToken instanceof Card) {
@@ -28,5 +29,6 @@ export class TransactionRequest extends Request {
         this.customer = customer;
         this.commit = commit;
         this.splitting = splitting;
+        this.reference_number = referenceNumber;
     }
 }

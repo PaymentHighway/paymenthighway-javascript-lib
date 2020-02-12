@@ -262,11 +262,15 @@ describe('Form builder', () => {
         const exitIframeOn3ds = true;
         const use3ds = true;
         const showPaymentMethodSelector = true;
+        const referenceNumber = "1313";
+
         const formContainer = formBuilder.generatePaymentParameters(
             successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
-            skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, undefined, undefined, undefined, undefined, showPaymentMethodSelector);
+            skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, undefined, undefined, undefined, undefined, showPaymentMethodSelector,
+            referenceNumber
+        );
 
-        testNameValuePairs(formContainer.nameValuePairs, 19);
+        testNameValuePairs(formContainer.nameValuePairs, 20);
         return FormConnection.postForm(formContainer)
             .then((response) => {
                 testRedirectResponse(response, '/select_payment_method');
@@ -553,13 +557,15 @@ describe('Form builder', () => {
         const orderDescription = 'A walrus';
         const socialSecurityNumber = '010868-998U';
         const emailAddress = 'test@testasdff.com';
+        const referenceNumber = "1313";
 
         const formContainer = formBuilder.generateAfterPayParameters(
             successUrl, failureUrl, cancelUrl, language, amount, orderId, description, orderDescription,
-            socialSecurityNumber, emailAddress, true, successUrl, failureUrl, cancelUrl, 0
+            socialSecurityNumber, emailAddress, true, successUrl, failureUrl, cancelUrl, 0,
+            referenceNumber
         );
 
-        testNameValuePairs(formContainer.nameValuePairs, 22);
+        testNameValuePairs(formContainer.nameValuePairs, 23);
         return FormConnection.postForm(formContainer)
             .then((response) => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);

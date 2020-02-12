@@ -59,12 +59,12 @@ beforeEach(() => {
     scaSoftDeclineCard = new Card('4153013999701162', '2023', '11', '162');
 });
 
-function createDebitTransaction(orderId?: string, commit?: boolean, splitting?: Splitting): PromiseLike<TransactionResponse> {
+function createDebitTransaction(orderId?: string, commit?: boolean, splitting?: Splitting, referenceNumber?: string): PromiseLike<TransactionResponse> {
     let initResponse: TransactionResponse;
 
     return api.initTransaction().then((response) => {
         initResponse = response;
-        let transactionRequest = new TransactionRequest(testCard, 9999, 'EUR', orderId, undefined, commit, splitting);
+        let transactionRequest = new TransactionRequest(testCard, 9999, 'EUR', orderId, undefined, commit, splitting, referenceNumber);
 
         return api.debitTransaction(initResponse.id, transactionRequest);
     }).then((debitResponse) => {
@@ -330,7 +330,10 @@ describe('PaymentAPI', () => {
 
     it('Test transaction status', () => {
         let transactionId: string;
-        return createDebitTransaction()
+
+        const referenceNumber = "1313";
+
+        return createDebitTransaction(null, null, null, referenceNumber)
             .then((initResponse) => {
                 transactionId = initResponse.id;
                 return api.revertTransaction(transactionId, new RevertTransactionRequest(9950));
@@ -343,6 +346,7 @@ describe('PaymentAPI', () => {
                 assert(statusResponse.transaction.current_amount === 49, 'Current amount should be 49, it was ' + statusResponse.transaction.current_amount + printResult(statusResponse));
                 assert(statusResponse.transaction.id === transactionId, 'Transaction id should be same with init response and revert response' + printResult(statusResponse));
                 assert(statusResponse.transaction.card.cvc_required === 'not_tested', 'Test card should return cvc_required = not_tested' + printResult(statusResponse));
+                assert(statusResponse.transaction.reference_number === referenceNumber, 'Transaction reference number mismatch' + printResult(statusResponse));
             });
     });
 

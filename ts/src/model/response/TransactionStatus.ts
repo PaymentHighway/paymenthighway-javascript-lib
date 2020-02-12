@@ -26,5 +26,6 @@ export interface TransactionStatus {
     committed: boolean;
     committed_amount?: string;
     recurring: boolean;
-    splitting: Splitting;
+    splitting?: Splitting;
+    reference_number?: string;
 }

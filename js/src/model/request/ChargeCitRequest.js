@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const PhRequest_1 = require("./PhRequest");
 class ChargeCitRequest extends PhRequest_1.Request {
-    constructor(amount, currency, order, strong_customer_authentication, card, token, customer, commit, splitting) {
+    constructor(amount, currency, order, strong_customer_authentication, card, token, customer, commit, splitting, reference_number) {
         super();
         this.amount = amount;
         this.currency = currency;
@@ -13,6 +13,7 @@ class ChargeCitRequest extends PhRequest_1.Request {
         this.customer = customer;
         this.commit = commit;
         this.splitting = splitting;
+        this.reference_number = reference_number;
     }
     /**
      * Payment using a card token when the customer is participating in the payment flow.
@@ -62,11 +63,20 @@ var ChargeCitBuilder;
             this.splitting = splitting;
             return this;
         }
+        /**
+         * Reference number used when settling the transaction to the merchant account.
+         * Only used if one-by-ony transaction settling is configured.
+         * @param referenceNumber In RF or Finnish reference number format.
+         */
+        setReferenceNumber(referenceNumber) {
+            this.reference_number = referenceNumber;
+            return this;
+        }
         build() {
             if (!(this.card || this.token)) {
                 throw new Error('Either card or token must be defined');
             }
-            return new ChargeCitRequest(this.amount, this.currency, this.order, this.strong_customer_authentication, this.card, this.token, this.customer, this.commit, this.splitting);
+            return new ChargeCitRequest(this.amount, this.currency, this.order, this.strong_customer_authentication, this.card, this.token, this.customer, this.commit, this.splitting, this.reference_number);
         }
     }
     ChargeCitBuilder.RequestBuilder = RequestBuilder;
