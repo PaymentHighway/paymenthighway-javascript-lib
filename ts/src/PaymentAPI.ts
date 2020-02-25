@@ -22,12 +22,9 @@ import {ApplePayTransactionRequest} from './model/request/ApplePayTransactionReq
 import {MobilePayInitRequest} from './model/request/MobilePayInitRequest';
 import {MobilePayInitResponse} from './model/response/MobilePayInitResponse';
 import {MobilePayStatusResponse} from './model/response/MobilePayStatusResponse';
-import {RevertSiirtoTransactionRequest} from './model/request/RevertSiirtoTransactionRequest';
-import {SiirtoTransactionResultResponse} from './model/response/SiirtoTransactionResultResponse';
 import {RevertPivoTransactionRequest} from './model/request/RevertPivoTransactionRequest';
 import {PivoTransactionResultResponse} from './model/response/PivoTransactionResultResponse';
 import {PivoTransactionStatusResponse} from './model/response/PivoTransactionStatusResponse';
-import {SiirtoTransactionStatusResponse} from './model/response/SiirtoTransactionStatusResponse';
 import {AfterPayCommitTransactionRequest} from './model/request/AfterPayCommitTransactionRequest';
 import {AfterPayRevertTransactionRequest} from './model/request/AfterPayRevertTransactionRequest';
 import { ChargeCitRequest } from './model/request/ChargeCitRequest';
@@ -138,18 +135,6 @@ export class PaymentAPI {
     }
 
     /**
-     * Revert Siirto Transaction
-     *
-     * @param transactionId
-     * @param request
-     * @returns {PromiseLike<Response>}
-     */
-    public revertSiirtoTransaction(transactionId: string, request: RevertSiirtoTransactionRequest): PromiseLike<Response> {
-        const revertUri = '/transaction/' + transactionId + '/siirto/revert';
-        return this.makeRequest('POST', revertUri, request);
-    }
-
-    /**
      * Revert Pivo Transaction
      *
      * @param transactionId
@@ -247,17 +232,6 @@ export class PaymentAPI {
     }
 
     /**
-     * Siirto Transaction Status Request
-     *
-     * @param transactionId
-     * @returns {PromiseLike<SiirtoTransactionStatusResponse>}
-     */
-    public siirtoTransactionStatus(transactionId: string): PromiseLike<SiirtoTransactionStatusResponse> {
-        const statusUri = '/transaction/siirto/' + transactionId;
-        return this.makeRequest('GET', statusUri);
-    }
-
-    /**
      * Order Status Request
      *
      * @param orderId   The ID of the order whose transactions should be searched for
@@ -300,18 +274,6 @@ export class PaymentAPI {
      */
     public transactionResult(transactionId: string): PromiseLike<TransactionResultResponse> {
         const transactionResultUrl = '/transaction/' + transactionId + '/result';
-        return this.makeRequest('GET', transactionResultUrl);
-    }
-
-    /**
-     * Siirto Transaction Result Request
-     * Used to find out whether or not an Siirto transaction succeeded.
-     *
-     * @param transactionId
-     * @returns {PromiseLike<SiirtoTransactionResultResponse>}
-     */
-    public siirtoTransactionResult(transactionId: string): PromiseLike<SiirtoTransactionResultResponse> {
-        const transactionResultUrl = '/transaction/' + transactionId + '/siirto/result';
         return this.makeRequest('GET', transactionResultUrl);
     }
 
