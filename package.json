@@ -28,17 +28,17 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@types/lodash": "^4.14.138",
+    "@types/lodash": "^4.14.149",
     "@types/node": "^6.14.9",
     "@types/request": "2.47.0",
-    "@types/request-promise": "^4.1.44",
-    "@types/urijs": "^1.19.3",
-    "@types/uuid": "^3.4.5",
+    "@types/request-promise": "^4.1.45",
+    "@types/urijs": "^1.19.5",
+    "@types/uuid": "^3.4.7",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4",
-    "uuid": "^3.3.3"
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5",
+    "uuid": "^3.4.0"
   },
   "engines": {
     "node": ">=6.0.0"
@@ -47,17 +47,17 @@
     "@types/chai": "4.1.7",
     "@types/chai-string": "1.4.1",
     "@types/mocha": "^5.2.7",
-    "@types/puppeteer": "1.6.2",
+    "@types/puppeteer": "2.0.0",
     "barrelsby": "2.2.0",
     "chai": "^4.2.0",
     "chai-string": "^1.5.0",
     "husky": "^0.14.3",
     "mocha": "^5.2.0",
     "nyc": "^14.1.1",
-    "puppeteer": "1.6.2",
-    "tslint": "^5.19.0",
+    "puppeteer": "2.1.1",
+    "tslint": "^5.20.1",
     "tslint-microsoft-contrib": "^5.2.1",
-    "typescript": "^3.7.5",
-    "urijs": "^1.18.1"
+    "typescript": "^3.8.2",
+    "urijs": "^1.19.2"
   }
 }
