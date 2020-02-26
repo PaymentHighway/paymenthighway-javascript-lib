@@ -24,7 +24,6 @@ __export(require("./src/model/request/MasterpassTransactionRequest"));
 __export(require("./src/model/request/MobilePayInitRequest"));
 __export(require("./src/model/request/PhRequest"));
 __export(require("./src/model/request/RevertPivoTransactionRequest"));
-__export(require("./src/model/request/RevertSiirtoTransactionRequest"));
 __export(require("./src/model/request/RevertTransactionRequest"));
 __export(require("./src/model/request/TransactionRequest"));
 __export(require("./src/model/request/applepay/PaymentData"));

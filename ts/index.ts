@@ -20,7 +20,6 @@ export * from './src/model/request/MasterpassTransactionRequest';
 export * from './src/model/request/MobilePayInitRequest';
 export * from './src/model/request/PhRequest';
 export * from './src/model/request/RevertPivoTransactionRequest';
-export * from './src/model/request/RevertSiirtoTransactionRequest';
 export * from './src/model/request/RevertTransactionRequest';
 export * from './src/model/request/TransactionRequest';
 export * from './src/model/request/applepay/PaymentData';

@@ -92,17 +92,6 @@ class PaymentAPI {
         return this.makeRequest('POST', revertUri, request);
     }
     /**
-     * Revert Siirto Transaction
-     *
-     * @param transactionId
-     * @param request
-     * @returns {PromiseLike<Response>}
-     */
-    revertSiirtoTransaction(transactionId, request) {
-        const revertUri = '/transaction/' + transactionId + '/siirto/revert';
-        return this.makeRequest('POST', revertUri, request);
-    }
-    /**
      * Revert Pivo Transaction
      *
      * @param transactionId
@@ -192,16 +181,6 @@ class PaymentAPI {
         return this.makeRequest('GET', statusUri);
     }
     /**
-     * Siirto Transaction Status Request
-     *
-     * @param transactionId
-     * @returns {PromiseLike<SiirtoTransactionStatusResponse>}
-     */
-    siirtoTransactionStatus(transactionId) {
-        const statusUri = '/transaction/siirto/' + transactionId;
-        return this.makeRequest('GET', statusUri);
-    }
-    /**
      * Order Status Request
      *
      * @param orderId   The ID of the order whose transactions should be searched for
@@ -241,17 +220,6 @@ class PaymentAPI {
      */
     transactionResult(transactionId) {
         const transactionResultUrl = '/transaction/' + transactionId + '/result';
-        return this.makeRequest('GET', transactionResultUrl);
-    }
-    /**
-     * Siirto Transaction Result Request
-     * Used to find out whether or not an Siirto transaction succeeded.
-     *
-     * @param transactionId
-     * @returns {PromiseLike<SiirtoTransactionResultResponse>}
-     */
-    siirtoTransactionResult(transactionId) {
-        const transactionResultUrl = '/transaction/' + transactionId + '/siirto/result';
         return this.makeRequest('GET', transactionResultUrl);
     }
     /**

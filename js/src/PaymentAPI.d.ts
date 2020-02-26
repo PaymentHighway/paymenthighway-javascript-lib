@@ -16,12 +16,9 @@ import { ApplePayTransactionRequest } from './model/request/ApplePayTransactionR
 import { MobilePayInitRequest } from './model/request/MobilePayInitRequest';
 import { MobilePayInitResponse } from './model/response/MobilePayInitResponse';
 import { MobilePayStatusResponse } from './model/response/MobilePayStatusResponse';
-import { RevertSiirtoTransactionRequest } from './model/request/RevertSiirtoTransactionRequest';
-import { SiirtoTransactionResultResponse } from './model/response/SiirtoTransactionResultResponse';
 import { RevertPivoTransactionRequest } from './model/request/RevertPivoTransactionRequest';
 import { PivoTransactionResultResponse } from './model/response/PivoTransactionResultResponse';
 import { PivoTransactionStatusResponse } from './model/response/PivoTransactionStatusResponse';
-import { SiirtoTransactionStatusResponse } from './model/response/SiirtoTransactionStatusResponse';
 import { AfterPayCommitTransactionRequest } from './model/request/AfterPayCommitTransactionRequest';
 import { AfterPayRevertTransactionRequest } from './model/request/AfterPayRevertTransactionRequest';
 import { ChargeCitRequest } from './model/request/ChargeCitRequest';
@@ -95,14 +92,6 @@ export declare class PaymentAPI {
      */
     revertTransaction(transactionId: string, request: RevertTransactionRequest): PromiseLike<Response>;
     /**
-     * Revert Siirto Transaction
-     *
-     * @param transactionId
-     * @param request
-     * @returns {PromiseLike<Response>}
-     */
-    revertSiirtoTransaction(transactionId: string, request: RevertSiirtoTransactionRequest): PromiseLike<Response>;
-    /**
      * Revert Pivo Transaction
      *
      * @param transactionId
@@ -168,13 +157,6 @@ export declare class PaymentAPI {
      */
     pivoTransactionStatus(transactionId: string): PromiseLike<PivoTransactionStatusResponse>;
     /**
-     * Siirto Transaction Status Request
-     *
-     * @param transactionId
-     * @returns {PromiseLike<SiirtoTransactionStatusResponse>}
-     */
-    siirtoTransactionStatus(transactionId: string): PromiseLike<SiirtoTransactionStatusResponse>;
-    /**
      * Order Status Request
      *
      * @param orderId   The ID of the order whose transactions should be searched for
@@ -204,14 +186,6 @@ export declare class PaymentAPI {
      * @returns {PromiseLike<TransactionResultResponse>}
      */
     transactionResult(transactionId: string): PromiseLike<TransactionResultResponse>;
-    /**
-     * Siirto Transaction Result Request
-     * Used to find out whether or not an Siirto transaction succeeded.
-     *
-     * @param transactionId
-     * @returns {PromiseLike<SiirtoTransactionResultResponse>}
-     */
-    siirtoTransactionResult(transactionId: string): PromiseLike<SiirtoTransactionResultResponse>;
     /**
      * Pivo Transaction Result Request
      * Used to find out whether or not an Pivo transaction succeeded.
