@@ -270,10 +270,10 @@ describe('Form builder', () => {
             referenceNumber
         );
 
-        testNameValuePairs(formContainer.nameValuePairs, 20);
+        testNameValuePairs(formContainer.nameValuePairs, 19);
         return FormConnection.postForm(formContainer)
             .then((response) => {
-                testRedirectResponse(response, '/select_payment_method');
+                testRedirectResponse(response, '/payment');
             });
     });
 
