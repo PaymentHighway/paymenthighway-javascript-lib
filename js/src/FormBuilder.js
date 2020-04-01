@@ -90,7 +90,7 @@ class FormBuilder {
      * @param webhookFailureUrl         The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl          The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay              Delay for webhook in seconds. Between 0-900
-     * @param showPaymentMethodSelector Show payment method selection page
+     * @param showPaymentMethodSelector Deprecated
      * @param referenceNumber           Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
      * @returns {FormContainer}
      */
@@ -112,9 +112,6 @@ class FormBuilder {
         }
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
-        }
-        if (typeof showPaymentMethodSelector !== 'undefined') {
-            nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_SHOW_PAYMENT_METHOD_SELECTOR, showPaymentMethodSelector.toString()));
         }
         if (typeof referenceNumber !== 'undefined') {
             nameValuePairs.push(new Pair_1.Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
@@ -523,7 +520,6 @@ FormBuilder.SPH_WEBHOOK_SUCCESS_URL = 'sph-webhook-success-url';
 FormBuilder.SPH_WEBHOOK_FAILURE_URL = 'sph-webhook-failure-url';
 FormBuilder.SPH_WEBHOOK_CANCEL_URL = 'sph-webhook-cancel-url';
 FormBuilder.SPH_WEBHOOK_DELAY = 'sph-webhook-delay';
-FormBuilder.SPH_SHOW_PAYMENT_METHOD_SELECTOR = 'sph-show-payment-method-selector';
 FormBuilder.SPH_REQUEST_SHIPPING_ADDRESS = 'sph-request-shipping-address';
 FormBuilder.SPH_PHONE_NUMBER = 'sph-phone-number';
 FormBuilder.SPH_REFERENCE_NUMBER = 'sph-reference-number';

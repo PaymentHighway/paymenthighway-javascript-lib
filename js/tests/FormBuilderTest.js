@@ -225,10 +225,10 @@ describe('Form builder', () => {
         const showPaymentMethodSelector = true;
         const referenceNumber = '1313';
         const formContainer = formBuilder.generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, undefined, undefined, undefined, undefined, showPaymentMethodSelector, referenceNumber);
-        testNameValuePairs(formContainer.nameValuePairs, 20);
+        testNameValuePairs(formContainer.nameValuePairs, 19);
         return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
-            testRedirectResponse(response, '/select_payment_method');
+            testRedirectResponse(response, '/payment');
         });
     });
     it('Test mandatory PayWithTokenAndCvc parameters', () => {

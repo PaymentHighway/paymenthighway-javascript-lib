@@ -40,7 +40,6 @@ export declare class FormBuilder {
     private static SPH_WEBHOOK_FAILURE_URL;
     private static SPH_WEBHOOK_CANCEL_URL;
     private static SPH_WEBHOOK_DELAY;
-    private static SPH_SHOW_PAYMENT_METHOD_SELECTOR;
     private static SPH_REQUEST_SHIPPING_ADDRESS;
     private static SPH_PHONE_NUMBER;
     private static SPH_REFERENCE_NUMBER;
@@ -100,7 +99,7 @@ export declare class FormBuilder {
      * @param webhookFailureUrl         The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl          The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay              Delay for webhook in seconds. Between 0-900
-     * @param showPaymentMethodSelector Show payment method selection page
+     * @param showPaymentMethodSelector Deprecated
      * @param referenceNumber           Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
      * @returns {FormContainer}
      */
