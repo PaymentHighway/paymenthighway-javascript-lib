@@ -1,1 +1,0 @@
-{"version":3,"file":"RevertSiirtoTransactionRequest.js","sourceRoot":"","sources":["../../../../ts/src/model/request/RevertSiirtoTransactionRequest.ts"],"names":[],"mappings":";;AAAA,2CAAsC;AAEtC;;;GAGG;AACH,MAAa,8BAA+B,SAAQ,mBAAO;IACvD,YAAmB,gBAAwB,EAAS,MAAe;QAC/D,KAAK,EAAE,CAAC;QADO,qBAAgB,GAAhB,gBAAgB,CAAQ;QAAS,WAAM,GAAN,MAAM,CAAS;IAEnE,CAAC;CACJ;AAJD,wEAIC"}
