@@ -331,7 +331,7 @@ describe('PaymentAPI', () => {
     it('Test transaction status', () => {
         let transactionId: string;
 
-        const referenceNumber = "1313";
+        const referenceNumber = '1313';
 
         return createDebitTransaction(null, null, null, referenceNumber)
             .then((initResponse) => {
@@ -407,6 +407,8 @@ describe('PaymentAPI', () => {
             .then((debitResponse) => {
                 assert(debitResponse.result.code === 200, 'Authorization should fail (code 200), got ' + debitResponse.result.code);
                 assert(debitResponse.result.message === 'Authorization failed', 'Authorization should fail');
+                assert(debitResponse.acquirer.id === 'nets', 'Should find nets as acquirer id. Found: ' + debitResponse.acquirer.name);
+                assert(debitResponse.acquirer.name === 'Nets', 'Should find Nets as acquirer name. Found: ' + debitResponse.acquirer.name);
                 return api.transactionResult(transactionResponse.id);
             })
             .then((resultResponse) => {
