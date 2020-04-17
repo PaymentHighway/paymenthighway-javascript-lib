@@ -36,7 +36,7 @@ let validCard;
 let testCard;
 let scaSoftDeclineCard;
 beforeEach(() => {
-    api = new PaymentAPI_1.PaymentAPI('https://v1-hub-staging.sph-test-solinor.com/', 'testKey', 'testSecret', 'test', 'test_merchantId');
+    api = new PaymentAPI_1.PaymentAPI('http://localhost:9001/', 'testKey', 'testSecret', 'test', 'test_merchantId');
     testCard = new Card_1.Card('4153013999700024', '2023', '11', '024');
     validCard = {
         card: testCard,
@@ -323,6 +323,7 @@ describe('PaymentAPI', () => {
             .then((debitResponse) => {
             chai_1.assert(debitResponse.result.code === 200, 'Authorization should fail (code 200), got ' + debitResponse.result.code);
             chai_1.assert(debitResponse.result.message === 'Authorization failed', 'Authorization should fail');
+            console.log(debitResponse);
             return api.transactionResult(transactionResponse.id);
         })
             .then((resultResponse) => {
