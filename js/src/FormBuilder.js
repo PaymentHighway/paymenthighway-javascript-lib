@@ -493,7 +493,7 @@ class FormBuilder {
     }
 }
 exports.FormBuilder = FormBuilder;
-FormBuilder.FORM_API_VERSION = '20191204';
+FormBuilder.FORM_API_VERSION = '20200401';
 FormBuilder.SPH_API_VERSION = 'sph-api-version';
 FormBuilder.SPH_ACCEPT_CVC_REQUIRED = 'sph-accept-cvc-required';
 FormBuilder.SPH_ACCOUNT = 'sph-account';

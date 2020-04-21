@@ -1,5 +1,6 @@
 import { Result } from './Result';
-export interface DebitResponse {
+import { AcquirerInfoResponse } from './AcquirerInfoResponse';
+export interface DebitResponse extends AcquirerInfoResponse {
     result: Result;
     filing_code?: string;
 }

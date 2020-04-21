@@ -1,12 +1,11 @@
 import { CardResponse } from './CardResponse';
 import { Status } from './Status';
-import { Acquirer } from './Acquirer';
 import { Revert } from './Revert';
 import { Customer } from './Customer';
 import { Splitting } from '../Splitting';
-export interface TransactionStatus {
+import { AcquirerInfoResponse } from './AcquirerInfoResponse';
+export interface TransactionStatus extends AcquirerInfoResponse {
     id: string;
-    acquirer: Acquirer;
     type: string;
     amount: number;
     current_amount: number;

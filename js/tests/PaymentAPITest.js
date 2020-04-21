@@ -255,7 +255,7 @@ describe('PaymentAPI', () => {
     });
     it('Test transaction status', () => {
         let transactionId;
-        const referenceNumber = "1313";
+        const referenceNumber = '1313';
         return createDebitTransaction(null, null, null, referenceNumber)
             .then((initResponse) => {
             transactionId = initResponse.id;
@@ -323,6 +323,10 @@ describe('PaymentAPI', () => {
             .then((debitResponse) => {
             chai_1.assert(debitResponse.result.code === 200, 'Authorization should fail (code 200), got ' + debitResponse.result.code);
             chai_1.assert(debitResponse.result.message === 'Authorization failed', 'Authorization should fail');
+            chai_1.assert(debitResponse.acquirer.id === 'nets', 'Should find nets as acquirer id. Found: ' + debitResponse.acquirer.id);
+            chai_1.assert(debitResponse.acquirer.name === 'Nets', 'Should find Nets as acquirer name. Found: ' + debitResponse.acquirer.name);
+            chai_1.assert(debitResponse.acquirer_response_code === '116', 'Acquirer response code should be "116". Found: ' + debitResponse.acquirer_response_code);
+            chai_1.assert(debitResponse.authorizer === '666', 'Authorizer should be "666". Found: ' + debitResponse.authorizer);
             return api.transactionResult(transactionResponse.id);
         })
             .then((resultResponse) => {
