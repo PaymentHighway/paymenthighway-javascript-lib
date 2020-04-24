@@ -59,17 +59,6 @@ class PaymentAPI {
         return this.makeRequest('POST', chargeMitUri, request);
     }
     /**
-     * Debit Masterpass Transaction
-     *
-     * @param {string} transactionId
-     * @param {MasterpassTransactionRequest} request
-     * @returns {PromiseLike<DebitResponse>}
-     */
-    debitMasterpassTransaction(transactionId, request) {
-        const debitUri = '/transaction/' + transactionId + '/debit_masterpass';
-        return this.makeRequest('POST', debitUri, request);
-    }
-    /**
      * Debit Apple Pay Transaction
      *
      * @param {string} transactionId
@@ -199,17 +188,6 @@ class PaymentAPI {
     tokenization(tokenizationId) {
         const tokenUri = '/tokenization/' + tokenizationId;
         return this.makeRequest('GET', tokenUri);
-    }
-    /**
-     * This api is available only for Masterpass transactions. It is is mainly intended for fetching shipping
-     * address before calculating shipping cost.
-     *
-     * After fetching user profile for the transaction, [Masterpass debit transaction]{@link #debitMasterpassTransaction}
-     * can be performed.
-     */
-    userProfile(transactionId) {
-        const userProfileUrl = '/transaction/' + transactionId + '/user_profile';
-        return this.makeRequest('GET', userProfileUrl);
     }
     /**
      * Transaction Result Request

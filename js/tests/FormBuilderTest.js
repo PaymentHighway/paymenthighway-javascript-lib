@@ -327,24 +327,6 @@ describe('Form builder', () => {
             chai_1.assert(debitResponse.result.message === 'OK', 'Request should succeed with message "OK", complete response was: ' + JSON.stringify(debitResponse));
         });
     });
-    it('Test masterpass form with mandatory parameters', () => {
-        const formContainer = formBuilder.generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
-        testNameValuePairs(formContainer.nameValuePairs, 14);
-        return FormConnection_1.FormConnection.postForm(formContainer)
-            .then((response) => {
-            chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            chai_1.assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/masterpass/, 'redirect location doesn\'t match ' + response.header);
-        });
-    });
-    it('Test masterpass form with optional parameters', () => {
-        const formContainer = formBuilder.generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, true, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true);
-        testNameValuePairs(formContainer.nameValuePairs, 16);
-        return FormConnection_1.FormConnection.postForm(formContainer)
-            .then((response) => {
-            chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            chai_1.assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/masterpass/, 'redirect location doesn\'t match ' + response.header);
-        });
-    });
     it('Test add card webhook parameters', () => {
         const formContainer = formBuilder.generateAddCardParameters(successUrl, failureUrl, cancelUrl, language, undefined, undefined, undefined, undefined, undefined, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay);
         testNameValuePairs(formContainer.nameValuePairs, 14);
@@ -368,11 +350,6 @@ describe('Form builder', () => {
     });
     it('Test mobilepay webhook parameters', () => {
         const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, undefined, undefined, undefined, undefined, undefined, undefined, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay);
-        testNameValuePairs(formContainer.nameValuePairs, 18);
-        testWebhookNameValuePairs(formContainer.nameValuePairs);
-    });
-    it('Test masterpass webhook parameters', () => {
-        const formContainer = formBuilder.generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, undefined, undefined, undefined, undefined, webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay);
         testNameValuePairs(formContainer.nameValuePairs, 18);
         testWebhookNameValuePairs(formContainer.nameValuePairs);
     });
