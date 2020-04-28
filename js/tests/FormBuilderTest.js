@@ -223,21 +223,8 @@ describe('Form builder', () => {
         const exitIframeOn3ds = true;
         const use3ds = true;
         const referenceNumber = '1313';
-        const formContainer = formBuilder.generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, undefined, undefined, undefined, undefined, undefined, referenceNumber);
+        const formContainer = formBuilder.generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, undefined, undefined, undefined, undefined, referenceNumber);
         testNameValuePairs(formContainer.nameValuePairs, 19);
-        return FormConnection_1.FormConnection.postForm(formContainer)
-            .then((response) => {
-            testRedirectResponse(response, '/payment');
-        });
-    });
-    it('Test that optional deprecated sph-show-payment-method-selector is missing', () => {
-        const showPaymentMethodSelector = true;
-        const formContainer = formBuilder.generatePaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, showPaymentMethodSelector);
-        testNameValuePairs(formContainer.nameValuePairs, 14);
-        const accountPair = formContainer.nameValuePairs.find(pair => pair.first === 'sph-account');
-        chai_1.assert(accountPair !== undefined, 'Account parameter was not found');
-        chai_1.assert(accountPair.second === account, 'Account name didn\'t match expected value');
-        chai_1.assert(formContainer.nameValuePairs.find(pair => pair.first === 'sph-show-payment-method-selector') === undefined, 'Did find unexpected deprecated parameter sph-show-payment-method-selector');
         return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             testRedirectResponse(response, '/payment');
