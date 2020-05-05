@@ -174,29 +174,6 @@ var formContainer = formBuilder.generatePayWithMobilePayParameters(
 * Once a ShopLogoURL has been sent to MPOnline the .png-file on that URL must never be changed. If the shop wants a new (or more than one) logo, a new ShopLogoURL must be used. 
 * The logo must be hosted on a HTTPS (secure) server.
 
-#### Masterpass form payment
-```javascript
-var amount = 1990;
-var currency = 'EUR';
-var orderId = '1000123A';
-var description = 'A Box of Dreams. 19,90€';
-
-var formContainer = formBuilder.generateMasterPassParameters(
-        successUrl, 
-        failureUrl, 
-        cancelUrl, 
-        language, 
-        amount, 
-        currency, 
-        orderId, 
-        description
-    );
-```
-
----
-
-In addition, after the user is redirected to one of your provided success, failure or cancel URLs, you should validate the request parameters and the signature.
-
 #### Example validateFormRedirect
 ```javascript
 // Initialize secure signer

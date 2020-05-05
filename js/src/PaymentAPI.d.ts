@@ -10,8 +10,6 @@ import { RevertTransactionRequest } from './model/request/RevertTransactionReque
 import { CommitTransactionRequest } from './model/request/CommitTransactionRequest';
 import { DebitResponse } from './model/response/DebitResponse';
 import { Response } from './model/response/Response';
-import { UserProfileResponse } from './model/response/UserProfileResponse';
-import { MasterpassTransactionRequest } from './model/request/MasterpassTransactionRequest';
 import { ApplePayTransactionRequest } from './model/request/ApplePayTransactionRequest';
 import { MobilePayInitRequest } from './model/request/MobilePayInitRequest';
 import { MobilePayInitResponse } from './model/response/MobilePayInitResponse';
@@ -67,14 +65,6 @@ export declare class PaymentAPI {
      * @returns {PromiseLike<DebitResponse>}
      */
     chargeMerchantInitiatedTransaction(transactionId: string, request: ChargeMitRequest): PromiseLike<DebitResponse>;
-    /**
-     * Debit Masterpass Transaction
-     *
-     * @param {string} transactionId
-     * @param {MasterpassTransactionRequest} request
-     * @returns {PromiseLike<DebitResponse>}
-     */
-    debitMasterpassTransaction(transactionId: string, request: MasterpassTransactionRequest): PromiseLike<DebitResponse>;
     /**
      * Debit Apple Pay Transaction
      *
@@ -170,14 +160,6 @@ export declare class PaymentAPI {
      * @returns {PromiseLike<TokenizationResponse>}
      */
     tokenization(tokenizationId: string): PromiseLike<TokenizationResponse>;
-    /**
-     * This api is available only for Masterpass transactions. It is is mainly intended for fetching shipping
-     * address before calculating shipping cost.
-     *
-     * After fetching user profile for the transaction, [Masterpass debit transaction]{@link #debitMasterpassTransaction}
-     * can be performed.
-     */
-    userProfile(transactionId: string): PromiseLike<UserProfileResponse>;
     /**
      * Transaction Result Request
      * Used to find out whether or not an uncommitted transaction succeeded, without actually committing (capturing) it.
