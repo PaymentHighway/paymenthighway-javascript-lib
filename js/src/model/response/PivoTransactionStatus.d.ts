@@ -1,6 +1,7 @@
 import { Status } from './Status';
 import { Customer } from './Customer';
 import { PivoRefund } from './PivoRefund';
+import { Splitting } from '../Splitting';
 export interface PivoTransactionStatus {
     id: string;
     type: string;
@@ -18,4 +19,5 @@ export interface PivoTransactionStatus {
     archive_id: string;
     modified: string;
     refunds: PivoRefund[];
+    splitting?: Splitting;
 }

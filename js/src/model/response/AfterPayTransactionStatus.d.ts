@@ -1,6 +1,7 @@
 import { Status } from './Status';
 import { Customer } from './Customer';
 import { AfterPayRevert } from './AfterPayRevert';
+import { Splitting } from '../Splitting';
 export interface AfterPayTransactionStatus {
     id: string;
     type: string;
@@ -22,4 +23,5 @@ export interface AfterPayTransactionStatus {
     afterpay_capture_number?: string;
     afterpay_outcome?: string;
     reference_number?: string;
+    splitting?: Splitting;
 }
