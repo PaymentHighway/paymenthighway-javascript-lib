@@ -445,6 +445,19 @@ describe('PaymentAPI', () => {
         return copy;
     }
 
+    it('Test Apple Pay request builder with splitting', () => {
+        const paymentData: PaymentData = JSON.parse('{ "data": "ABCD", "header": { "ephemeralPublicKey": "XYZ", "publicKeyHash": "13579", "transactionId": "24680" }, "signature": "ABCDXYZ0000", "version": "EC_v1" }');
+        const amount = 100;
+        const currency = 'EUR';
+        const splittingMerchantId = '123';
+        const splittingAmount = 10;
+        const splitting = new Splitting(splittingMerchantId, splittingAmount);
+
+        let request = ApplePayTransactionRequest.Builder(paymentData, amount, currency).setSplitting(splitting).build();
+        assert(request.splitting.merchant_id === splittingMerchantId);
+        assert(request.splitting.amount === splittingAmount);
+    });
+
     it('Test Apple Pay validators', () => {
         let amount = 100;
         let currency = 'EUR';
@@ -496,5 +509,15 @@ describe('PaymentAPI', () => {
                 assert.isUndefined(response.transaction_id); // transaction id is available only when session is finished
             });
         });
+    });
+
+    it('Test MobilePay request builder with splitting', () => {
+        const splittingMerchantId = '123';
+        const splittingAmount = 10;
+        const splitting = new Splitting(splittingMerchantId, splittingAmount);
+
+        let request = MobilePayInitRequest.Builder(100, 'EUR').setSplitting(splitting).build();
+        assert(request.splitting.merchant_id === splittingMerchantId);
+        assert(request.splitting.amount === splittingAmount);
     });
 });
