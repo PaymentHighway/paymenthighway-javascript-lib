@@ -11,7 +11,7 @@ import {FormContainer} from './FormContainer';
  * Creates a request id, timestamp and signature based on request parameters.
  */
 export class FormBuilder {
-    private static FORM_API_VERSION: string = '20180927';
+    private static FORM_API_VERSION: string = '20200401';
 
     private static SPH_API_VERSION: string = 'sph-api-version';
     private static SPH_ACCEPT_CVC_REQUIRED: string = 'sph-accept-cvc-required';
@@ -39,11 +39,15 @@ export class FormBuilder {
     private static SPH_WEBHOOK_FAILURE_URL: string = 'sph-webhook-failure-url';
     private static SPH_WEBHOOK_CANCEL_URL: string = 'sph-webhook-cancel-url';
     private static SPH_WEBHOOK_DELAY: string = 'sph-webhook-delay';
-    private static SPH_SHOW_PAYMENT_METHOD_SELECTOR: string = 'sph-show-payment-method-selector';
     private static SPH_REQUEST_SHIPPING_ADDRESS: string = 'sph-request-shipping-address';
     private static SPH_PHONE_NUMBER: string = 'sph-phone-number';
     private static SPH_REFERENCE_NUMBER: string = 'sph-reference-number';
     private static SPH_APP_URL: string = 'sph-app-url';
+    private static SPH_ORDER_DESCRIPTION: string = 'sph-order-description';
+    private static SPH_SOCIAL_SECURITY_NUMBER: string = 'sph-social-security-number';
+    private static SPH_EMAIL_ADDRESS: string = 'sph-email-address';
+    private static SPH_SPLITTING_MERCHANT_ID: string = 'sph-splitting-merchant-id';
+    private static SPH_SPLITTING_AMOUNT: string = 'sph-splitting-amount';
     private static LANGUAGE: string = 'language';
     private static DESCRIPTION: string = 'description';
     private static SIGNATURE: string = 'signature';
@@ -137,14 +141,17 @@ export class FormBuilder {
      * @param webhookFailureUrl         The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl          The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay              Delay for webhook in seconds. Between 0-900
-     * @param showPaymentMethodSelector Show payment method selection page
+     * @param referenceNumber           Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
+     * @param splittingMerchantId       Sub-merchant ID from the settlements provider. Not to be confused with the sph-merchant value.
+     * @param splittingAmount           The amount settled to the sub-merchant's account. The rest will be considered as the main merchant's commission. In the smallest currency unit. E.g. 99.99 € = 9999.
      * @returns {FormContainer}
      */
     public generatePaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
                                      amount: number, currency: string, orderId: string, description: string,
                                      skipFormNotifications?: boolean, exitIframeOnResult?: boolean,
                                      exitIframeOn3ds?: boolean, use3ds?: boolean, webhookSuccessUrl?: string,
-                                     webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number, showPaymentMethodSelector?: boolean): FormContainer {
+                                     webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number,
+                                     referenceNumber?: string, splittingMerchantId?: number, splittingAmount?: number): FormContainer {
 
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
@@ -153,6 +160,7 @@ export class FormBuilder {
         nameValuePairs.push(new Pair(FormBuilder.SPH_CURRENCY, currency));
         nameValuePairs.push(new Pair(FormBuilder.SPH_ORDER, orderId));
         nameValuePairs.push(new Pair(FormBuilder.DESCRIPTION, description));
+        FormBuilder.addSplittingParameters(nameValuePairs, splittingMerchantId, splittingAmount);
 
         if (typeof skipFormNotifications !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_SKIP_FORM_NOTIFICATIONS, skipFormNotifications.toString()));
@@ -166,8 +174,8 @@ export class FormBuilder {
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
         }
-        if (typeof showPaymentMethodSelector !== 'undefined') {
-            nameValuePairs.push(new Pair(FormBuilder.SPH_SHOW_PAYMENT_METHOD_SELECTOR, showPaymentMethodSelector.toString()));
+        if (typeof referenceNumber !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
         }
 
         nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
@@ -202,6 +210,9 @@ export class FormBuilder {
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay          Delay for webhook in seconds. Between 0-900
+     * @param referenceNumber       Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
+     * @param splittingMerchantId       Sub-merchant ID from the settlements provider. Not to be confused with the sph-merchant value.
+     * @param splittingAmount           The amount settled to the sub-merchant's account. The rest will be considered as the main merchant's commission. In the smallest currency unit. E.g. 99.99 € = 9999.
      * @return {FormContainer}
      */
     public generateAddCardAndPaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string,
@@ -209,7 +220,8 @@ export class FormBuilder {
                                                description: string, skipFormNotifications?: boolean,
                                                exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean,
                                                use3ds?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string,
-                                               webhookCancelUrl?: string, webhookDelay?: number): FormContainer {
+                                               webhookCancelUrl?: string, webhookDelay?: number,
+                                               referenceNumber?: string, splittingMerchantId?: number, splittingAmount?: number): FormContainer {
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
 
@@ -217,6 +229,8 @@ export class FormBuilder {
         nameValuePairs.push(new Pair(FormBuilder.SPH_CURRENCY, currency));
         nameValuePairs.push(new Pair(FormBuilder.SPH_ORDER, orderId));
         nameValuePairs.push(new Pair(FormBuilder.DESCRIPTION, description));
+        FormBuilder.addSplittingParameters(nameValuePairs, splittingMerchantId, splittingAmount);
+
         if (typeof skipFormNotifications !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_SKIP_FORM_NOTIFICATIONS, skipFormNotifications.toString()));
         }
@@ -228,6 +242,9 @@ export class FormBuilder {
         }
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
+        }
+        if (typeof referenceNumber !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
         }
 
         nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
@@ -265,6 +282,9 @@ export class FormBuilder {
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay          Delay for webhook in seconds. Between 0-900
+     * @param referenceNumber       Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
+     * @param splittingMerchantId       Sub-merchant ID from the settlements provider. Not to be confused with the sph-merchant value.
+     * @param splittingAmount           The amount settled to the sub-merchant's account. The rest will be considered as the main merchant's commission. In the smallest currency unit. E.g. 99.99 € = 9999.
      * @returns {FormContainer}
      */
     public generatePayWithTokenAndCvcParameters(token: string, successUrl: string, failureUrl: string,
@@ -272,7 +292,8 @@ export class FormBuilder {
                                                 orderId: string, description: string, skipFormNotifications?: boolean,
                                                 exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean,
                                                 use3ds?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string,
-                                                webhookCancelUrl?: string, webhookDelay?: number): FormContainer {
+                                                webhookCancelUrl?: string, webhookDelay?: number,
+                                                referenceNumber?: string, splittingMerchantId?: number, splittingAmount?: number): FormContainer {
 
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
@@ -282,6 +303,8 @@ export class FormBuilder {
         nameValuePairs.push(new Pair(FormBuilder.SPH_ORDER, orderId));
         nameValuePairs.push(new Pair(FormBuilder.SPH_TOKEN, token));
         nameValuePairs.push(new Pair(FormBuilder.DESCRIPTION, description));
+        FormBuilder.addSplittingParameters(nameValuePairs, splittingMerchantId, splittingAmount);
+
         if (typeof skipFormNotifications !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_SKIP_FORM_NOTIFICATIONS, skipFormNotifications.toString()));
         }
@@ -293,6 +316,9 @@ export class FormBuilder {
         }
         if (typeof use3ds !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
+        }
+        if (typeof referenceNumber !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
         }
 
         nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
@@ -325,6 +351,9 @@ export class FormBuilder {
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay          Delay for webhook in seconds. Between 0-900
+     * @param referenceNumber       Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
+     * @param splittingMerchantId       Sub-merchant ID from the settlements provider. Not to be confused with the sph-merchant value.
+     * @param splittingAmount           The amount settled to the sub-merchant's account. The rest will be considered as the main merchant's commission. In the smallest currency unit. E.g. 99.99 € = 9999.
      * @return FormContainer
      */
     public generatePayWithMobilePayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
@@ -332,7 +361,7 @@ export class FormBuilder {
                                               exitIframeOnResult?: boolean, shopLogoUrl?: string, phoneNumber?: string,
                                               shopName?: string, subMerchantId?: string, subMerchantName?: string,
                                               webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string,
-                                              webhookDelay?: number): FormContainer {
+                                              webhookDelay?: number, referenceNumber?: string, splittingMerchantId?: number, splittingAmount?: number): FormContainer {
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
 
@@ -340,6 +369,7 @@ export class FormBuilder {
         nameValuePairs.push(new Pair(FormBuilder.SPH_CURRENCY, currency));
         nameValuePairs.push(new Pair(FormBuilder.SPH_ORDER, orderId));
         nameValuePairs.push(new Pair(FormBuilder.DESCRIPTION, description));
+        FormBuilder.addSplittingParameters(nameValuePairs, splittingMerchantId, splittingAmount);
 
         if (typeof exitIframeOnResult !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
@@ -359,6 +389,9 @@ export class FormBuilder {
         if (typeof subMerchantName !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_SUB_MERCHANT_NAME, subMerchantName));
         }
+        if (typeof referenceNumber !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
+        }
 
         nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
 
@@ -368,119 +401,6 @@ export class FormBuilder {
         nameValuePairs.push(new Pair(FormBuilder.SIGNATURE, signature));
 
         return new FormContainer(this.method, this.baseUrl, mobilePayUri, nameValuePairs, requestId);
-    }
-
-    /**
-     * Get parameters for Masterpass request.
-     *
-     * @param successUrl             The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
-     * @param failureUrl             The URL the user is redirected after a failure such as an authentication or connectivity error.
-     * @param cancelUrl              The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
-     * @param language               The language the form is displayed in.
-     * @param amount                 The amount to pay.
-     * @param currency               In which currency is the amount, e.g. "EUR"
-     * @param orderId                A generated order ID, may for example be always unique or used multiple times for recurring transactions.
-     * @param description            Description of the payment shown in the form.
-     * @param skipFormNotifications  Skip notifications displayed on the Payment Highway form. May be null.
-     * @param exitIframeOnResult     Exit from iframe after a result. May be null.
-     * @param exitIframeOn3ds        Exit from iframe when redirecting the user to 3DS. May be null.
-     * @param use3ds                 Force enable/disable 3ds. Null to use default configured parameter.
-     * @param webhookSuccessUrl      The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
-     * @param webhookFailureUrl      The URL the PH server makes request after a failure such as an authentication or connectivity error.
-     * @param webhookCancelUrl       The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
-     * @param webhookDelay           Delay for webhook in seconds. Between 0-900
-     * @param requestShippingAddress Request shipping address from the user via Masterpass Wallet
-     * @return FormContainer
-     */
-    public generateMasterPassParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
-                                        amount: number, currency: string, orderId: string, description: string,
-                                        skipFormNotifications?: boolean, exitIframeOnResult?: boolean,
-                                        exitIframeOn3ds?: boolean, use3ds?: boolean, webhookSuccessUrl?: string,
-                                        webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number,
-                                        requestShippingAddress?: boolean): FormContainer {
-        const requestId = PaymentHighwayUtility.createRequestId();
-        let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
-
-        nameValuePairs.push(new Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
-        nameValuePairs.push(new Pair(FormBuilder.SPH_CURRENCY, currency));
-        nameValuePairs.push(new Pair(FormBuilder.SPH_ORDER, orderId));
-        nameValuePairs.push(new Pair(FormBuilder.DESCRIPTION, description));
-
-        if (typeof skipFormNotifications !== 'undefined') {
-            nameValuePairs.push(new Pair(FormBuilder.SPH_SKIP_FORM_NOTIFICATIONS, skipFormNotifications.toString()));
-        }
-        if (typeof exitIframeOnResult !== 'undefined') {
-            nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
-        }
-        if (typeof exitIframeOn3ds !== 'undefined') {
-            nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_THREE_D_SECURE, exitIframeOn3ds.toString()));
-        }
-        if (typeof use3ds !== 'undefined') {
-            nameValuePairs.push(new Pair(FormBuilder.SPH_USE_THREE_D_SECURE, use3ds.toString()));
-        }
-        if (typeof requestShippingAddress !== 'undefined') {
-            nameValuePairs.push(new Pair(FormBuilder.SPH_REQUEST_SHIPPING_ADDRESS, requestShippingAddress.toString()));
-        }
-
-        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
-
-        const masterpassUri = '/form/view/masterpass';
-        const signature = this.createSignature(masterpassUri, nameValuePairs);
-
-        nameValuePairs.push(new Pair(FormBuilder.SIGNATURE, signature));
-
-        return new FormContainer(this.method, this.baseUrl, masterpassUri, nameValuePairs, requestId);
-    }
-
-    /**
-     * Get parameters for Siirto request.
-     *
-     * @param successUrl            The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
-     * @param failureUrl            The URL the user is redirected after a failure such as an authentication or connectivity error.
-     * @param cancelUrl             The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
-     * @param language              The language the form is displayed in.
-     * @param amount                The amount to pay in euro cents. Siirto supports only euros.
-     * @param orderId               A generated order ID, may for example be always unique or used multiple times for recurring transactions.
-     * @param description           Description of the payment shown in the form.
-     * @param referenceNumber       Reference number
-     * @param phoneNumber           User phone number with country code. Max AN 15. Optional
-     * @param exitIframeOnResult     Exit from iframe after a result. May be null.
-     * @param webhookSuccessUrl     The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
-     * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
-     * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
-     * @param webhookDelay          Delay for webhook in seconds. Between 0-900
-     * @return FormContainer
-     */
-    public generateSiirtoParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
-                                    amount: number, orderId: string, description: string, referenceNumber: string,
-                                    phoneNumber?: string, exitIframeOnResult?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string,
-                                    webhookCancelUrl?: string, webhookDelay?: number): FormContainer {
-        const requestId = PaymentHighwayUtility.createRequestId();
-        let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
-
-        nameValuePairs.push(new Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
-        // Siirto supports only euros
-        nameValuePairs.push(new Pair(FormBuilder.SPH_CURRENCY, 'EUR'));
-        nameValuePairs.push(new Pair(FormBuilder.SPH_ORDER, orderId));
-        nameValuePairs.push(new Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
-        nameValuePairs.push(new Pair(FormBuilder.DESCRIPTION, description));
-
-        if (typeof exitIframeOnResult !== 'undefined') {
-            nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
-        }
-        if (typeof phoneNumber !== 'undefined') {
-            nameValuePairs.push(new Pair(FormBuilder.SPH_PHONE_NUMBER, phoneNumber));
-        }
-
-        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
-
-        const siirtoUri = '/form/view/siirto';
-        const signature = this.createSignature(siirtoUri, nameValuePairs);
-
-        nameValuePairs.push(new Pair(FormBuilder.SIGNATURE, signature));
-
-        return new FormContainer(this.method, this.baseUrl, siirtoUri, nameValuePairs, requestId);
-
     }
 
     /**
@@ -500,6 +420,8 @@ export class FormBuilder {
      * @param webhookSuccessUrl      The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
      * @param webhookFailureUrl      The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl       The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param splittingMerchantId       Sub-merchant ID from the settlements provider. Not to be confused with the sph-merchant value.
+     * @param splittingAmount           The amount settled to the sub-merchant's account. The rest will be considered as the main merchant's commission. In the smallest currency unit. E.g. 99.99 € = 9999.
      * @param webhookDelay           Delay for webhook in seconds. Between 0-900
      * @return FormContainer
      */
@@ -507,7 +429,7 @@ export class FormBuilder {
                                   amount: number, orderId: string, description: string, referenceNumber?: string,
                                   phoneNumber?: string, appUrl?: string, exitIframeOnResult?: boolean,
                                   webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string,
-                                  webhookDelay?: number): FormContainer {
+                                  webhookDelay?: number, splittingMerchantId?: number, splittingAmount?: number): FormContainer {
         const requestId = PaymentHighwayUtility.createRequestId();
         let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
 
@@ -515,6 +437,7 @@ export class FormBuilder {
         nameValuePairs.push(new Pair(FormBuilder.SPH_CURRENCY, 'EUR'));
         nameValuePairs.push(new Pair(FormBuilder.SPH_ORDER, orderId));
         nameValuePairs.push(new Pair(FormBuilder.DESCRIPTION, description));
+        FormBuilder.addSplittingParameters(nameValuePairs, splittingMerchantId, splittingAmount);
 
         if (typeof exitIframeOnResult !== 'undefined') {
             nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
@@ -538,6 +461,68 @@ export class FormBuilder {
         nameValuePairs.push(new Pair(FormBuilder.SIGNATURE, signature));
 
         return new FormContainer(this.method, this.baseUrl, pivoUri, nameValuePairs, requestId);
+    }
+
+    /**
+     * Get parameters for AfterPay form request.
+     *
+     * @param successUrl             The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
+     * @param failureUrl             The URL the user is redirected after a failure such as an authentication or connectivity error.
+     * @param cancelUrl              The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
+     * @param language               The language the form is displayed in.
+     * @param amount                 The amount to pay in euro cents.
+     * @param orderId                A generated order ID, may for example be always unique or used multiple times for recurring transactions.
+     * @param description            Description of the payment shown in the form.
+     * @param orderDescription       Description of the purchase. Will be shown on the customer's invoice. Max length 255.
+     * @param socialSecurityNumber   The customer's social security number. If set, the value will be pre-filled on the form.
+     * @param emailAddress           The customer's email address. If set, the value will be pre-filled on the form.
+     * @param exitIframeOnResult     Exit from iframe after a result. May be null.
+     * @param webhookSuccessUrl      The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
+     * @param webhookFailureUrl      The URL the PH server makes request after a failure such as an authentication or connectivity error.
+     * @param webhookCancelUrl       The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param webhookDelay           Delay for webhook in seconds. Between 0-900
+     * @param referenceNumber       Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
+     * @param splittingMerchantId       Sub-merchant ID from the settlements provider. Not to be confused with the sph-merchant value.
+     * @param splittingAmount           The amount settled to the sub-merchant's account. The rest will be considered as the main merchant's commission. In the smallest currency unit. E.g. 99.99 € = 9999.
+     * @return FormContainer
+     */
+    public generateAfterPayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string,
+                                  amount: number, orderId: string, description: string, orderDescription: string,
+                                  socialSecurityNumber?: string, emailAddress?: string, exitIframeOnResult?: boolean,
+                                  webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string,
+                                  webhookDelay?: number, referenceNumber?: string, splittingMerchantId?: number, splittingAmount?: number): FormContainer {
+        const requestId = PaymentHighwayUtility.createRequestId();
+        let nameValuePairs = this.createCommonNameValuePairs(successUrl, failureUrl, cancelUrl, language, requestId);
+
+        nameValuePairs.push(new Pair(FormBuilder.SPH_AMOUNT, amount.toString()));
+        nameValuePairs.push(new Pair(FormBuilder.SPH_CURRENCY, 'EUR'));
+        nameValuePairs.push(new Pair(FormBuilder.SPH_ORDER, orderId));
+        nameValuePairs.push(new Pair(FormBuilder.DESCRIPTION, description));
+        nameValuePairs.push(new Pair(FormBuilder.SPH_ORDER_DESCRIPTION, orderDescription));
+        FormBuilder.addSplittingParameters(nameValuePairs, splittingMerchantId, splittingAmount);
+
+        if (typeof exitIframeOnResult !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_EXIT_IFRAME_ON_RESULT, exitIframeOnResult.toString()));
+        }
+        if (typeof socialSecurityNumber !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_SOCIAL_SECURITY_NUMBER, socialSecurityNumber));
+        }
+        if (typeof emailAddress !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_EMAIL_ADDRESS, emailAddress));
+        }
+        if (typeof referenceNumber !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_REFERENCE_NUMBER, referenceNumber));
+        }
+
+        nameValuePairs = nameValuePairs.concat(FormBuilder.createWebhookNameValuePairs(webhookSuccessUrl, webhookFailureUrl, webhookCancelUrl, webhookDelay));
+
+        const uri = '/form/view/afterpay';
+
+        const signature = this.createSignature(uri, nameValuePairs);
+
+        nameValuePairs.push(new Pair(FormBuilder.SIGNATURE, signature));
+
+        return new FormContainer(this.method, this.baseUrl, uri, nameValuePairs, requestId);
     }
 
     /**
@@ -588,6 +573,22 @@ export class FormBuilder {
             new Pair(FormBuilder.SPH_REQUEST_ID, requestId),
             new Pair(FormBuilder.LANGUAGE, language)
         ];
+    }
+
+    /**
+     *
+     * @param nameValuePairs
+     * @param splittingMerchantId
+     * @param splittingAmount
+     */
+    private static addSplittingParameters(nameValuePairs: Pair<string, string>[], splittingMerchantId?: number,
+                                   splittingAmount?: number): void {
+        if (typeof splittingMerchantId !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_SPLITTING_MERCHANT_ID, splittingMerchantId.toString()));
+        }
+        if (typeof splittingAmount !== 'undefined') {
+            nameValuePairs.push(new Pair(FormBuilder.SPH_SPLITTING_AMOUNT, splittingAmount.toString()));
+        }
     }
 
     /**

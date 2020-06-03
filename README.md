@@ -174,29 +174,6 @@ var formContainer = formBuilder.generatePayWithMobilePayParameters(
 * Once a ShopLogoURL has been sent to MPOnline the .png-file on that URL must never be changed. If the shop wants a new (or more than one) logo, a new ShopLogoURL must be used. 
 * The logo must be hosted on a HTTPS (secure) server.
 
-#### Masterpass form payment
-```javascript
-var amount = 1990;
-var currency = 'EUR';
-var orderId = '1000123A';
-var description = 'A Box of Dreams. 19,90€';
-
-var formContainer = formBuilder.generateMasterPassParameters(
-        successUrl, 
-        failureUrl, 
-        cancelUrl, 
-        language, 
-        amount, 
-        currency, 
-        orderId, 
-        description
-    );
-```
-
----
-
-In addition, after the user is redirected to one of your provided success, failure or cancel URLs, you should validate the request parameters and the signature.
-
 #### Example validateFormRedirect
 ```javascript
 // Initialize secure signer
@@ -257,6 +234,9 @@ return paymentAPI.tokenization(tokenizationId);
 * returns PromiseLike<[TokenizationResponse](/ts/src/model/response/TokenizationResponse.ts)>
 
 #### Example Debit with Token
+
+NOTE: The `debitTransaction` method will be deprecated starting from Sep 14th 2019 in favor of the new `chargeCustomerInitiatedTransaction` and `chargeMerchantInitiatedTransaction` in order to comply with the EU's PSD2 directive.
+
 ```javascript
 var token = new paymentHighway.Token('tokenId');
 var amount = 1990;
@@ -269,6 +249,67 @@ return paymentAPI.initTransaction()
         });
 ```
 * returns PromiseLike<[TransactionResultResponse](/ts/src/model/response/TransactionResultResponse.ts)>
+
+### <a name="charging_a_card_token"></a>Charging a card token
+
+ After the introduction of the European PSD2 directive, the electronic payment transactions are categorised in so called customer initiated transactions (CIT) and merchant initiated transactions (MIT). 
+
+ Customer initiated transactions are scenarios, where the customer actively takes part in the payment process. This also includes token, or "one-click" purchases, where the transaction uses a previously saved payment method.
+
+ Merchant initiated transactions are payments triggered without the customer's participation. This kind of transactions can be used for example in scenarios where the final price is not known at the time of the purchase or the customer is not present when the charge is made. A prior agreement, or "mandate" between the customer and the merchant is required.
+ 
+#### Charging a customer initiated transaction (CIT)
+
+ When charging a token using customer initiated transaction, applicable exemptions are attempted in order to avoid the need for strong customer authentication, 3D Secure. These exemptions may include but are not limited to: low-value (under 30 EUR) or transaction risk analysis.
+  
+ Regardless, there is always a possibility the card issuer requires strong customer authentication by requesting a step-up. In this case, the response will contain "soft decline" result code 400 and an URL, where the customer needs to be redirected to, in order to perform the authentication. The merchant's URLs where the customer will be redirected back to - after completing the authentication - need to be defined in the `returnUrls` ([`ReturnUrls`](/ts/src/model/request/sca/ReturnUrls.ts)) parameter in [`StrongCustomerAuthentication`](/ts/src/model/request/sca/StrongCustomerAuthentication.ts).
+
+When the customer is redirected back to the success URL, after completing the payment using strong customer authentication, the payment needs to be committed exactly as in the normal FormAPI payment flow. Please note, a new transaction ID is created for this payment and the original transaction ID from the CIT request is considered as failed. The merchant supplied "order", the request ID, or custom merchant parameters specified in the return URLs, can be used to connect the returning customer to the specific payment.
+
+ In addition to the return urls, the [`StrongCustomerAuthentication`](/ts/src/model/request/sca/StrongCustomerAuthentication.ts) object contains many optional fields for information about the customer and the transaction. This information is used in transaction risk analysis (TRA) and may increase the likelihood of transaction being considered as low-risk, thus avoiding the need for strong authentication.
+
+```javascript
+const token = new paymentHighway.Token('tokenId');
+const amount = 1990;
+const currency = 'EUR';
+const returnUrls = ReturnUrls.Builder(
+            "https://example.com/success", // URL the user is redirected after succesful 3D-Secure authentication if strong customer authentication is required
+            "https://example.com/cancel", // URL the user is redirected after cancelled 3D-Secure authentication if strong customer authentication is required
+            "https://example.com/failure" // URL the user is redirected after failed 3D-Secure authentication if strong customer authentication is required
+        )
+        .setWebhookSuccessUrl("https://example.com/success/12345/?webhook=1")
+        .setWebhookCancelUrl("https://example.com/failure/12345/?webhook=1")
+        .setWebhookFailureUrl("https://example.com/webhook/failure/?webhook=1")
+        .build();
+const customerDetails = CustomerDetails.Builder()
+        .setShippingAddressMatchesBillingAddress(true)
+        .setName('Eric Example')
+        .setEmail('eric.example@example.com')
+        // ...
+        .build();        
+const sca = StrongCustomerAuthentication.Builder(returnUrls)
+        .setCustomerDetails(customerDetails)
+        // Optionally other information about the customer and purchase to help in transaction risk analysis (TRA)
+        .build(); 
+
+
+return paymentAPI.chargeCustomerInitiatedTransaction(transactionId, new ChargeCitRequest(token, amount, currency, sca));
+```
+* retruns PromiseLike<[ChargeCitResponse](/ts/src/model/response/ChargeCitResponse.ts)>
+
+#### Charging a merchant initiated transaction (MIT)
+
+When charging the customer's card in context where the customer is not actively participating in the transaction you should use the `chargeMerchantInitiatedTransaction` method. The MIT transactions are exempt from the strong customer authentication requirements of PSD2 so the request cannot be answered with "soft-decline" response (code 400) unlike customer initated transactions.
+
+```javascript
+var token = new paymentHighway.Token('tokenId');
+var amount = 1990;
+var currency = 'EUR';
+
+return paymentAPI.chargeMerchantInitiatedTransaction(transactionId, new ChargeMitRequest(token, amount, currency));
+```
+* retruns PromiseLike<[DebitResponse](/ts/src/model/response/DebitResponse.ts)>
+
 
 #### Partial Revert 
 ```javascript

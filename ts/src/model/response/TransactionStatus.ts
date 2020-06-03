@@ -1,13 +1,12 @@
 import {CardResponse} from './CardResponse';
 import {Status} from './Status';
-import {Acquirer} from './Acquirer';
 import {Revert} from './Revert';
 import {Customer} from './Customer';
 import {Splitting} from '../Splitting';
+import {AcquirerInfoResponse} from './AcquirerInfoResponse';
 
-export interface TransactionStatus {
+export interface TransactionStatus extends AcquirerInfoResponse {
     id: string;
-    acquirer: Acquirer;
     type: string;
     amount: number;
     current_amount: number;
@@ -26,5 +25,6 @@ export interface TransactionStatus {
     committed: boolean;
     committed_amount?: string;
     recurring: boolean;
-    splitting: Splitting;
+    splitting?: Splitting;
+    reference_number?: string;
 }

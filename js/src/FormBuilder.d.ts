@@ -40,11 +40,15 @@ export declare class FormBuilder {
     private static SPH_WEBHOOK_FAILURE_URL;
     private static SPH_WEBHOOK_CANCEL_URL;
     private static SPH_WEBHOOK_DELAY;
-    private static SPH_SHOW_PAYMENT_METHOD_SELECTOR;
     private static SPH_REQUEST_SHIPPING_ADDRESS;
     private static SPH_PHONE_NUMBER;
     private static SPH_REFERENCE_NUMBER;
     private static SPH_APP_URL;
+    private static SPH_ORDER_DESCRIPTION;
+    private static SPH_SOCIAL_SECURITY_NUMBER;
+    private static SPH_EMAIL_ADDRESS;
+    private static SPH_SPLITTING_MERCHANT_ID;
+    private static SPH_SPLITTING_AMOUNT;
     private static LANGUAGE;
     private static DESCRIPTION;
     private static SIGNATURE;
@@ -97,10 +101,12 @@ export declare class FormBuilder {
      * @param webhookFailureUrl         The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl          The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay              Delay for webhook in seconds. Between 0-900
-     * @param showPaymentMethodSelector Show payment method selection page
+     * @param referenceNumber           Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
+     * @param splittingMerchantId       Sub-merchant ID from the settlements provider. Not to be confused with the sph-merchant value.
+     * @param splittingAmount           The amount settled to the sub-merchant's account. The rest will be considered as the main merchant's commission. In the smallest currency unit. E.g. 99.99 € = 9999.
      * @returns {FormContainer}
      */
-    generatePaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number, showPaymentMethodSelector?: boolean): FormContainer;
+    generatePaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number, referenceNumber?: string, splittingMerchantId?: number, splittingAmount?: number): FormContainer;
     /**
      * Get parameters for Add Card and Pay request with the possibility to
      * <li>skip notifications displayed on the Payment Highway form</li>
@@ -124,9 +130,12 @@ export declare class FormBuilder {
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay          Delay for webhook in seconds. Between 0-900
+     * @param referenceNumber       Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
+     * @param splittingMerchantId       Sub-merchant ID from the settlements provider. Not to be confused with the sph-merchant value.
+     * @param splittingAmount           The amount settled to the sub-merchant's account. The rest will be considered as the main merchant's commission. In the smallest currency unit. E.g. 99.99 € = 9999.
      * @return {FormContainer}
      */
-    generateAddCardAndPaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number): FormContainer;
+    generateAddCardAndPaymentParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number, referenceNumber?: string, splittingMerchantId?: number, splittingAmount?: number): FormContainer;
     /**
      * Get parameters for Pay with Token and CVC request with the possibility to
      * <li>skip notifications displayed on the Payment Highway form</li>
@@ -151,9 +160,12 @@ export declare class FormBuilder {
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay          Delay for webhook in seconds. Between 0-900
+     * @param referenceNumber       Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
+     * @param splittingMerchantId       Sub-merchant ID from the settlements provider. Not to be confused with the sph-merchant value.
+     * @param splittingAmount           The amount settled to the sub-merchant's account. The rest will be considered as the main merchant's commission. In the smallest currency unit. E.g. 99.99 € = 9999.
      * @returns {FormContainer}
      */
-    generatePayWithTokenAndCvcParameters(token: string, successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number): FormContainer;
+    generatePayWithTokenAndCvcParameters(token: string, successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number, referenceNumber?: string, splittingMerchantId?: number, splittingAmount?: number): FormContainer;
     /**
      * Get parameters for MobilePay request.
      *
@@ -175,52 +187,12 @@ export declare class FormBuilder {
      * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
      * @param webhookDelay          Delay for webhook in seconds. Between 0-900
+     * @param referenceNumber       Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
+     * @param splittingMerchantId       Sub-merchant ID from the settlements provider. Not to be confused with the sph-merchant value.
+     * @param splittingAmount           The amount settled to the sub-merchant's account. The rest will be considered as the main merchant's commission. In the smallest currency unit. E.g. 99.99 € = 9999.
      * @return FormContainer
      */
-    generatePayWithMobilePayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, exitIframeOnResult?: boolean, shopLogoUrl?: string, phoneNumber?: string, shopName?: string, subMerchantId?: string, subMerchantName?: string, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number): FormContainer;
-    /**
-     * Get parameters for Masterpass request.
-     *
-     * @param successUrl             The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
-     * @param failureUrl             The URL the user is redirected after a failure such as an authentication or connectivity error.
-     * @param cancelUrl              The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
-     * @param language               The language the form is displayed in.
-     * @param amount                 The amount to pay.
-     * @param currency               In which currency is the amount, e.g. "EUR"
-     * @param orderId                A generated order ID, may for example be always unique or used multiple times for recurring transactions.
-     * @param description            Description of the payment shown in the form.
-     * @param skipFormNotifications  Skip notifications displayed on the Payment Highway form. May be null.
-     * @param exitIframeOnResult     Exit from iframe after a result. May be null.
-     * @param exitIframeOn3ds        Exit from iframe when redirecting the user to 3DS. May be null.
-     * @param use3ds                 Force enable/disable 3ds. Null to use default configured parameter.
-     * @param webhookSuccessUrl      The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
-     * @param webhookFailureUrl      The URL the PH server makes request after a failure such as an authentication or connectivity error.
-     * @param webhookCancelUrl       The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
-     * @param webhookDelay           Delay for webhook in seconds. Between 0-900
-     * @param requestShippingAddress Request shipping address from the user via Masterpass Wallet
-     * @return FormContainer
-     */
-    generateMasterPassParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, skipFormNotifications?: boolean, exitIframeOnResult?: boolean, exitIframeOn3ds?: boolean, use3ds?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number, requestShippingAddress?: boolean): FormContainer;
-    /**
-     * Get parameters for Siirto request.
-     *
-     * @param successUrl            The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
-     * @param failureUrl            The URL the user is redirected after a failure such as an authentication or connectivity error.
-     * @param cancelUrl             The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
-     * @param language              The language the form is displayed in.
-     * @param amount                The amount to pay in euro cents. Siirto supports only euros.
-     * @param orderId               A generated order ID, may for example be always unique or used multiple times for recurring transactions.
-     * @param description           Description of the payment shown in the form.
-     * @param referenceNumber       Reference number
-     * @param phoneNumber           User phone number with country code. Max AN 15. Optional
-     * @param exitIframeOnResult     Exit from iframe after a result. May be null.
-     * @param webhookSuccessUrl     The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
-     * @param webhookFailureUrl     The URL the PH server makes request after a failure such as an authentication or connectivity error.
-     * @param webhookCancelUrl      The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
-     * @param webhookDelay          Delay for webhook in seconds. Between 0-900
-     * @return FormContainer
-     */
-    generateSiirtoParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, orderId: string, description: string, referenceNumber: string, phoneNumber?: string, exitIframeOnResult?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number): FormContainer;
+    generatePayWithMobilePayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, currency: string, orderId: string, description: string, exitIframeOnResult?: boolean, shopLogoUrl?: string, phoneNumber?: string, shopName?: string, subMerchantId?: string, subMerchantName?: string, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number, referenceNumber?: string, splittingMerchantId?: number, splittingAmount?: number): FormContainer;
     /**
      * Get parameters for Pivo request.
      *
@@ -238,10 +210,36 @@ export declare class FormBuilder {
      * @param webhookSuccessUrl      The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
      * @param webhookFailureUrl      The URL the PH server makes request after a failure such as an authentication or connectivity error.
      * @param webhookCancelUrl       The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param splittingMerchantId       Sub-merchant ID from the settlements provider. Not to be confused with the sph-merchant value.
+     * @param splittingAmount           The amount settled to the sub-merchant's account. The rest will be considered as the main merchant's commission. In the smallest currency unit. E.g. 99.99 € = 9999.
      * @param webhookDelay           Delay for webhook in seconds. Between 0-900
      * @return FormContainer
      */
-    generatePivoParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, orderId: string, description: string, referenceNumber?: string, phoneNumber?: string, appUrl?: string, exitIframeOnResult?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number): FormContainer;
+    generatePivoParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, orderId: string, description: string, referenceNumber?: string, phoneNumber?: string, appUrl?: string, exitIframeOnResult?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number, splittingMerchantId?: number, splittingAmount?: number): FormContainer;
+    /**
+     * Get parameters for AfterPay form request.
+     *
+     * @param successUrl             The URL the user is redirected after the transaction is handled. The payment itself may still be rejected.
+     * @param failureUrl             The URL the user is redirected after a failure such as an authentication or connectivity error.
+     * @param cancelUrl              The URL the user is redirected after cancelling the transaction (clicking on the cancel button).
+     * @param language               The language the form is displayed in.
+     * @param amount                 The amount to pay in euro cents.
+     * @param orderId                A generated order ID, may for example be always unique or used multiple times for recurring transactions.
+     * @param description            Description of the payment shown in the form.
+     * @param orderDescription       Description of the purchase. Will be shown on the customer's invoice. Max length 255.
+     * @param socialSecurityNumber   The customer's social security number. If set, the value will be pre-filled on the form.
+     * @param emailAddress           The customer's email address. If set, the value will be pre-filled on the form.
+     * @param exitIframeOnResult     Exit from iframe after a result. May be null.
+     * @param webhookSuccessUrl      The URL the PH server makes request after the transaction is handled. The payment itself may still be rejected.
+     * @param webhookFailureUrl      The URL the PH server makes request after a failure such as an authentication or connectivity error.
+     * @param webhookCancelUrl       The URL the PH server makes request after cancelling the transaction (clicking on the cancel button).
+     * @param webhookDelay           Delay for webhook in seconds. Between 0-900
+     * @param referenceNumber       Reference number in RF or Finnish reference format, used when settling the transaction to the merchant account. Only used if one-by-ony transaction settling is configured.
+     * @param splittingMerchantId       Sub-merchant ID from the settlements provider. Not to be confused with the sph-merchant value.
+     * @param splittingAmount           The amount settled to the sub-merchant's account. The rest will be considered as the main merchant's commission. In the smallest currency unit. E.g. 99.99 € = 9999.
+     * @return FormContainer
+     */
+    generateAfterPayParameters(successUrl: string, failureUrl: string, cancelUrl: string, language: string, amount: number, orderId: string, description: string, orderDescription: string, socialSecurityNumber?: string, emailAddress?: string, exitIframeOnResult?: boolean, webhookSuccessUrl?: string, webhookFailureUrl?: string, webhookCancelUrl?: string, webhookDelay?: number, referenceNumber?: string, splittingMerchantId?: number, splittingAmount?: number): FormContainer;
     /**
      *
      * @param webhookSuccessUrl
@@ -261,6 +259,13 @@ export declare class FormBuilder {
      * @returns {Pair[]}
      */
     private createCommonNameValuePairs;
+    /**
+     *
+     * @param nameValuePairs
+     * @param splittingMerchantId
+     * @param splittingAmount
+     */
+    private static addSplittingParameters;
     /**
      *
      * @param uri

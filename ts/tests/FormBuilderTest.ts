@@ -109,7 +109,7 @@ describe('Form builder', () => {
             return request.respond({
                 status: 200,
                 contentType: 'text/plain',
-                body: ''
+                body: 'OK (empty body does not work!)'
             });
         }
     };
@@ -139,7 +139,7 @@ describe('Form builder', () => {
                                         .then(() => page.type('input[name=expiry]', '11 / 23'))
                                         .then( () => page.type('input[name=cvv]', '024')),
                                     // Waiting card logo!!!
-                                    page.waitForResponse('https://d1kc0e613bxbjg.cloudfront.net/images/form/visa_pos_fc.png')
+                                    page.waitForResponse(response => response.url().includes('visa_pos_fc.png') && response.status() === 200)
                                 ]))
                                 .then(() => page.screenshot({path: 'example.png'}))
                                 .then(() =>
@@ -261,16 +261,30 @@ describe('Form builder', () => {
         const exitIframeOnResult = true;
         const exitIframeOn3ds = true;
         const use3ds = true;
-        const showPaymentMethodSelector = true;
+        const referenceNumber = '1313';
+
         const formContainer = formBuilder.generatePaymentParameters(
             successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
-            skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, undefined, undefined, undefined, undefined, showPaymentMethodSelector);
+            skipFormNotifications, exitIframeOnResult, exitIframeOn3ds, use3ds, undefined, undefined, undefined, undefined, referenceNumber
+        );
 
         testNameValuePairs(formContainer.nameValuePairs, 19);
         return FormConnection.postForm(formContainer)
             .then((response) => {
-                testRedirectResponse(response, '/select_payment_method');
+                testRedirectResponse(response, '/payment');
             });
+    });
+
+    it( 'Test splitting parameters for pay single', () => {
+        const splittingMerchant = 123;
+        const splittingAmount = 20;
+        const formContainer = formBuilder.generatePaymentParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            undefined, undefined, undefined, undefined,
+            undefined, undefined, undefined, undefined,
+            undefined, splittingMerchant, splittingAmount
+        );
+        testNameValuePairs(formContainer.nameValuePairs, 16);
     });
 
     it('Test mandatory PayWithTokenAndCvc parameters', () => {
@@ -302,6 +316,18 @@ describe('Form builder', () => {
             });
     });
 
+    it( 'Test splitting parameters for PayWithTokenAndCvc', () => {
+        const splittingMerchant = 123;
+        const splittingAmount = 20;
+        const formContainer = formBuilder.generatePayWithTokenAndCvcParameters(
+            cardToken, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            undefined, undefined, undefined, undefined,
+            undefined, undefined, undefined, undefined,
+            undefined, splittingMerchant, splittingAmount
+        );
+        testNameValuePairs(formContainer.nameValuePairs, 17);
+    });
+
     it('Test add card and payment parameters with mandatory parameters', () => {
         const formContainer = formBuilder.generateAddCardAndPaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
         testNameValuePairs(formContainer.nameValuePairs, 14);
@@ -326,6 +352,18 @@ describe('Form builder', () => {
             });
     });
 
+    it( 'Test splitting parameters for add card and payment', () => {
+        const splittingMerchant = 123;
+        const splittingAmount = 20;
+        const formContainer = formBuilder.generateAddCardAndPaymentParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            undefined, undefined, undefined, undefined,
+            undefined, undefined, undefined, undefined,
+            undefined, splittingMerchant, splittingAmount
+        );
+        testNameValuePairs(formContainer.nameValuePairs, 16);
+    });
+
     it('Test mobilepay form with mandatory parameters', () => {
         const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
         testNameValuePairs(formContainer.nameValuePairs, 14);
@@ -335,13 +373,25 @@ describe('Form builder', () => {
             });
     });
 
-    it('Test mobilepay form with optional parameters', () => {
+    it('Test MobilePay form with optional parameters', () => {
         const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language,
             amount, currency, orderId, description, true, 'https://foo.bar', '+35844123465', 'Jaskan kello', '12345678', 'submerchantName');
         testNameValuePairs(formContainer.nameValuePairs, 20);
         return FormConnection.postForm(formContainer).then((response) => {
             assert(response.statusCode === 200, 'Response status code should be 200, got ' + response.statusCode);
         });
+    });
+
+    it( 'Test splitting parameters for MobilePay', () => {
+        const splittingMerchant = 123;
+        const splittingAmount = 20;
+        const formContainer = formBuilder.generatePayWithMobilePayParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            undefined, undefined, undefined, undefined,
+            undefined, undefined, undefined, undefined,
+            undefined, undefined, undefined, splittingMerchant, splittingAmount
+        );
+        testNameValuePairs(formContainer.nameValuePairs, 16);
     });
 
     it('Test 3ds PayWithTokenAndCvc parameters', () => {
@@ -375,52 +425,6 @@ describe('Form builder', () => {
             assert(debitResponse.result.code === 100, 'Request should succeed with code 100, complete response was: ' + JSON.stringify(debitResponse));
             assert(debitResponse.result.message === 'OK', 'Request should succeed with message "OK", complete response was: ' + JSON.stringify(debitResponse));
         });
-    });
-
-    it('Test masterpass form with mandatory parameters', () => {
-        const formContainer = formBuilder.generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
-        testNameValuePairs(formContainer.nameValuePairs, 14);
-        return FormConnection.postForm(formContainer)
-            .then((response) => {
-                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/masterpass/, 'redirect location doesn\'t match ' + response.header);
-            });
-    });
-
-    it('Test masterpass form with optional parameters', () => {
-        const formContainer = formBuilder.generateMasterPassParameters(successUrl, failureUrl, cancelUrl, language,
-            amount, currency, orderId, description, true,
-            undefined, undefined, undefined, undefined,
-            undefined, undefined, undefined, true);
-        testNameValuePairs(formContainer.nameValuePairs, 16);
-        return FormConnection.postForm(formContainer)
-            .then((response) => {
-                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/masterpass/, 'redirect location doesn\'t match ' + response.header);
-            });
-    });
-
-    it('Test siirto form with mandatory parameters', () => {
-        const referenceNumber = '1313';
-        const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber);
-        testNameValuePairs(formContainer.nameValuePairs, 15);
-        return FormConnection.postForm(formContainer)
-            .then((response) => {
-                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/siirto/, 'redirect location doesn\'t match ' + response.header);
-            });
-    });
-
-    it('Test siirto form with optional parameters', () => {
-        const phoneNumber = '+358441234567';
-        const referenceNumber = '1313';
-        const formContainer = formBuilder.generateSiirtoParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, referenceNumber, phoneNumber);
-        testNameValuePairs(formContainer.nameValuePairs, 16);
-        return FormConnection.postForm(formContainer)
-            .then((response) => {
-                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                assert.match(response.headers.location, /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/siirto/, 'redirect location doesn\'t match ' + response.header);
-            });
     });
 
     it('Test add card webhook parameters', () => {
@@ -472,16 +476,6 @@ describe('Form builder', () => {
         testWebhookNameValuePairs(formContainer.nameValuePairs);
     });
 
-    it('Test masterpass webhook parameters', () => {
-        const formContainer = formBuilder.generateMasterPassParameters(
-            successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
-            undefined, undefined, undefined, undefined, webhookSuccessUrl, webhookFailureUrl,
-            webhookCancelUrl, webhookDelay);
-
-        testNameValuePairs(formContainer.nameValuePairs, 18);
-        testWebhookNameValuePairs(formContainer.nameValuePairs);
-    });
-
     it('Test webhook parameters without delay', () => {
         const formContainer = formBuilder.generatePaymentParameters(
             successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
@@ -524,6 +518,18 @@ describe('Form builder', () => {
             });
     });
 
+    it( 'Test splitting parameters for Pivo', () => {
+        const splittingMerchant = 123;
+        const splittingAmount = 20;
+        const formContainer = formBuilder.generatePivoParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, orderId, description,
+            undefined, undefined, undefined, undefined,
+            undefined, undefined, undefined, undefined,
+            splittingMerchant, splittingAmount
+        );
+        testNameValuePairs(formContainer.nameValuePairs, 16);
+    });
+
     it('Test pivo app url', () => {
         const formContainer = formBuilder.generatePivoParameters(
             successUrl, failureUrl, cancelUrl, language, amount, orderId, description, '+358444160589', undefined, 'myapp://url');
@@ -532,4 +538,53 @@ describe('Form builder', () => {
         const actionUrl = '/form/view/pivo';
         assert(formContainer.actionUrl === actionUrl, 'action url should be ' + actionUrl + 'got ' + formContainer.actionUrl);
     });
+
+    it('Test AfterPay mandatory parameters', () => {
+
+        const orderDescription = 'A walrus';
+
+        const formContainer = formBuilder.generateAfterPayParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, orderId, description, orderDescription);
+
+        testNameValuePairs(formContainer.nameValuePairs, 15);
+        return FormConnection.postForm(formContainer)
+            .then((response) => {
+                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+                assert.match(response.headers.location, /\/form\/[-a-f0-9]{36}\/afterpay/, 'redirect location doesn\'t match ' + response.header);
+            });
+    });
+
+    it('Test AfterPay with optional parameters', () => {
+
+        const orderDescription = 'A walrus';
+        const socialSecurityNumber = '010868-998U';
+        const emailAddress = 'test@testasdff.com';
+        const referenceNumber = '1313';
+
+        const formContainer = formBuilder.generateAfterPayParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, orderId, description, orderDescription,
+            socialSecurityNumber, emailAddress, true, successUrl, failureUrl, cancelUrl, 0,
+            referenceNumber
+        );
+
+        testNameValuePairs(formContainer.nameValuePairs, 23);
+        return FormConnection.postForm(formContainer)
+            .then((response) => {
+                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+                assert.match(response.headers.location, /\/form\/[-a-f0-9]{36}\/afterpay/, 'redirect location doesn\'t match ' + response.header);
+            });
+    });
+
+    it( 'Test splitting parameters for AfterPay', () => {
+        const orderDescription = 'A walrus';
+        const splittingMerchant = 123;
+        const splittingAmount = 20;
+        const formContainer = formBuilder.generateAfterPayParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, orderId, description, orderDescription,
+            undefined, undefined, undefined, undefined,
+            undefined, undefined, undefined, undefined, splittingMerchant, splittingAmount
+        );
+        testNameValuePairs(formContainer.nameValuePairs, 17);
+    });
+
 });
