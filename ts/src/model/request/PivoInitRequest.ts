@@ -1,4 +1,7 @@
-export class PivoInitRequest {
+import {Splitting} from '../Splitting';
+import {Request} from './PhRequest';
+
+export class PivoInitRequest extends Request {
     constructor(
         public amount: number,
         public currency: string,
@@ -10,8 +13,10 @@ export class PivoInitRequest {
         public webhook_cancel_url?: string,
         public webhook_failure_url?: string,
         public language?: string,
-        public phone_number?: string
+        public phone_number?: string,
+        public splitting?: Splitting
     ) {
+        super();
     }
 
     public static Builder(amount: number, currency: string = 'EUR') {
@@ -32,6 +37,7 @@ export namespace PivoInit {
         private webhook_cancel_url: string;
         private webhook_failure_url: string;
         private phone_number: string;
+        private splitting: Splitting;
 
         constructor(amount: number, currency: string) {
             this.amount = amount;
@@ -83,6 +89,11 @@ export namespace PivoInit {
             return this;
         }
 
+        public setSplitting(splitting: Splitting) {
+            this.splitting = splitting;
+            return this;
+        }
+
         public build(): PivoInitRequest {
             return new PivoInitRequest(
                 this.amount,
@@ -95,7 +106,8 @@ export namespace PivoInit {
                 this.webhook_cancel_url,
                 this.webhook_failure_url,
                 this.language,
-                this.phone_number
+                this.phone_number,
+                this.splitting
             );
         }
     }
