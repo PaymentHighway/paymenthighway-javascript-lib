@@ -1,0 +1,1 @@
+{"version":3,"file":"AfterPayRevertTransactionRequest.js","sourceRoot":"","sources":["../../../../ts/src/model/request/AfterPayRevertTransactionRequest.ts"],"names":[],"mappings":";;AAAA,2CAAsC;AAEtC;;;GAGG;AACH,MAAa,gCAAiC,SAAQ,mBAAO;IACzD,YAAmB,MAAe;QAC9B,KAAK,EAAE,CAAC;QADO,WAAM,GAAN,MAAM,CAAS;IAElC,CAAC;CACJ;AAJD,4EAIC"}
