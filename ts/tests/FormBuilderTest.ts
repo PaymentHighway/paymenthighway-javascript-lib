@@ -275,6 +275,18 @@ describe('Form builder', () => {
             });
     });
 
+    it( 'Test splitting parameters for pay single', () => {
+        const splittingMerchant = 123;
+        const splittingAmount = 20;
+        const formContainer = formBuilder.generatePaymentParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            undefined, undefined, undefined, undefined,
+            undefined, undefined, undefined, undefined,
+            undefined, splittingMerchant, splittingAmount
+        );
+        testNameValuePairs(formContainer.nameValuePairs, 16);
+    });
+
     it('Test mandatory PayWithTokenAndCvc parameters', () => {
         assert(cardToken !== undefined, 'Token isn\'t resolved yet');
 
@@ -304,6 +316,18 @@ describe('Form builder', () => {
             });
     });
 
+    it( 'Test splitting parameters for PayWithTokenAndCvc', () => {
+        const splittingMerchant = 123;
+        const splittingAmount = 20;
+        const formContainer = formBuilder.generatePayWithTokenAndCvcParameters(
+            cardToken, successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            undefined, undefined, undefined, undefined,
+            undefined, undefined, undefined, undefined,
+            undefined, splittingMerchant, splittingAmount
+        );
+        testNameValuePairs(formContainer.nameValuePairs, 17);
+    });
+
     it('Test add card and payment parameters with mandatory parameters', () => {
         const formContainer = formBuilder.generateAddCardAndPaymentParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
         testNameValuePairs(formContainer.nameValuePairs, 14);
@@ -328,6 +352,18 @@ describe('Form builder', () => {
             });
     });
 
+    it( 'Test splitting parameters for add card and payment', () => {
+        const splittingMerchant = 123;
+        const splittingAmount = 20;
+        const formContainer = formBuilder.generateAddCardAndPaymentParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            undefined, undefined, undefined, undefined,
+            undefined, undefined, undefined, undefined,
+            undefined, splittingMerchant, splittingAmount
+        );
+        testNameValuePairs(formContainer.nameValuePairs, 16);
+    });
+
     it('Test mobilepay form with mandatory parameters', () => {
         const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description);
         testNameValuePairs(formContainer.nameValuePairs, 14);
@@ -337,13 +373,25 @@ describe('Form builder', () => {
             });
     });
 
-    it('Test mobilepay form with optional parameters', () => {
+    it('Test MobilePay form with optional parameters', () => {
         const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language,
             amount, currency, orderId, description, true, 'https://foo.bar', '+35844123465', 'Jaskan kello', '12345678', 'submerchantName');
         testNameValuePairs(formContainer.nameValuePairs, 20);
         return FormConnection.postForm(formContainer).then((response) => {
             assert(response.statusCode === 200, 'Response status code should be 200, got ' + response.statusCode);
         });
+    });
+
+    it( 'Test splitting parameters for MobilePay', () => {
+        const splittingMerchant = 123;
+        const splittingAmount = 20;
+        const formContainer = formBuilder.generatePayWithMobilePayParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description,
+            undefined, undefined, undefined, undefined,
+            undefined, undefined, undefined, undefined,
+            undefined, undefined, undefined, splittingMerchant, splittingAmount
+        );
+        testNameValuePairs(formContainer.nameValuePairs, 16);
     });
 
     it('Test 3ds PayWithTokenAndCvc parameters', () => {
@@ -378,7 +426,6 @@ describe('Form builder', () => {
             assert(debitResponse.result.message === 'OK', 'Request should succeed with message "OK", complete response was: ' + JSON.stringify(debitResponse));
         });
     });
-
 
     it('Test add card webhook parameters', () => {
         const formContainer = formBuilder.generateAddCardParameters(
@@ -471,6 +518,18 @@ describe('Form builder', () => {
             });
     });
 
+    it( 'Test splitting parameters for Pivo', () => {
+        const splittingMerchant = 123;
+        const splittingAmount = 20;
+        const formContainer = formBuilder.generatePivoParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, orderId, description,
+            undefined, undefined, undefined, undefined,
+            undefined, undefined, undefined, undefined,
+            splittingMerchant, splittingAmount
+        );
+        testNameValuePairs(formContainer.nameValuePairs, 16);
+    });
+
     it('Test pivo app url', () => {
         const formContainer = formBuilder.generatePivoParameters(
             successUrl, failureUrl, cancelUrl, language, amount, orderId, description, '+358444160589', undefined, 'myapp://url');
@@ -514,6 +573,18 @@ describe('Form builder', () => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
                 assert.match(response.headers.location, /\/form\/[-a-f0-9]{36}\/afterpay/, 'redirect location doesn\'t match ' + response.header);
             });
+    });
+
+    it( 'Test splitting parameters for AfterPay', () => {
+        const orderDescription = 'A walrus';
+        const splittingMerchant = 123;
+        const splittingAmount = 20;
+        const formContainer = formBuilder.generateAfterPayParameters(
+            successUrl, failureUrl, cancelUrl, language, amount, orderId, description, orderDescription,
+            undefined, undefined, undefined, undefined,
+            undefined, undefined, undefined, undefined, splittingMerchant, splittingAmount
+        );
+        testNameValuePairs(formContainer.nameValuePairs, 17);
     });
 
 });

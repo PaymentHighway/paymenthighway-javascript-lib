@@ -1,6 +1,7 @@
 import {Customer} from './Customer';
 import {PaymentData} from './applepay/PaymentData';
 import { Request } from './PhRequest';
+import {Splitting} from '../Splitting';
 
 export class ApplePayTransactionRequest extends Request {
     constructor(public payment_data: PaymentData,
@@ -9,7 +10,8 @@ export class ApplePayTransactionRequest extends Request {
                 public commit?: boolean,
                 public order?: string,
                 public customer?: Customer,
-                public reference_number?: string
+                public reference_number?: string,
+                public splitting?: Splitting
     ) {
                     super();
     }
@@ -28,6 +30,7 @@ export namespace ApplePayTransaction {
         private order?: string;
         private customer?: Customer;
         private reference_number?: string;
+        private splitting?: Splitting;
 
         constructor(payment_data: PaymentData, amount: number, currency: string) {
             this.payment_data = payment_data;
@@ -45,6 +48,10 @@ export namespace ApplePayTransaction {
         }
         public setCustomer(customer: Customer): RequestBuilder {
             this.customer = customer;
+            return this;
+        }
+        public setSplitting(splitting: Splitting) {
+            this.splitting = splitting;
             return this;
         }
 
@@ -66,7 +73,8 @@ export namespace ApplePayTransaction {
                 this.commit,
                 this.order,
                 this.customer,
-                this.reference_number
+                this.reference_number,
+                this.splitting
             );
         }
     }
