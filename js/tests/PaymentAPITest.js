@@ -30,6 +30,7 @@ const CustomerAccount_1 = require("../src/model/request/sca/CustomerAccount");
 const Purchase_1 = require("../src/model/request/sca/Purchase");
 const Address_1 = require("../src/model/request/sca/Address");
 const CustomerAuthenticationInfo_1 = require("../src/model/request/sca/CustomerAuthenticationInfo");
+const PivoInitRequest_1 = require("../src/model/request/PivoInitRequest");
 let api;
 let validCard;
 let testCard;
@@ -417,6 +418,29 @@ describe('PaymentAPI', () => {
         let request = MobilePayInitRequest_1.MobilePayInitRequest.Builder(100, 'EUR').setSplitting(splitting).build();
         chai_1.assert(request.splitting.merchant_id === splittingMerchantId);
         chai_1.assert(request.splitting.amount === splittingAmount);
+    });
+    it('Test Pivo app switch init', () => {
+        const request = PivoInitRequest_1.PivoInitRequest.Builder(100)
+            .setOrder('Test_order')
+            .setDescription('desc')
+            .setAppUrl('app://url')
+            .setReferenceNumber('1313')
+            .setWebhookSuccessUrl('https://www.exaple.com/success')
+            .setWebhookCancelUrl('https://www.example.com/cancel')
+            .setWebhookFailureUrl('https://www.example.com/failure')
+            .setLanguage('FI')
+            .build();
+        return api.initPivoTransaction(request).then((response) => {
+            chai_1.assert.startsWith(response.uri, 'pivo://api/', 'Pivo app uri should start with "pivo://api/"');
+        });
+    });
+    it('Test Pivo app switch init with splitting', () => {
+        const splitting = new Splitting_1.Splitting('12345', 10);
+        const request = PivoInitRequest_1.PivoInitRequest.Builder(100)
+            .setSplitting(splitting)
+            .build();
+        chai_1.assert(request.splitting.merchant_id === splitting.merchant_id);
+        chai_1.assert(request.splitting.amount === splitting.amount);
     });
 });
 //# sourceMappingURL=PaymentAPITest.js.map

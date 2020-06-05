@@ -29,6 +29,8 @@ import { ChargeCitRequest } from './model/request/ChargeCitRequest';
 import { ChargeMitRequest } from './model/request/ChargeMitRequest';
 import { ChargeCitResponse } from './model/response/ChargeCitResponse';
 import { Request } from './model/request/PhRequest';
+import {PivoInitRequest} from './model/request/PivoInitRequest';
+import {PivoInitResponse} from './model/response/PivoInitResponse';
 
 /**
  * Payment Highway Payment API Service.
@@ -301,6 +303,16 @@ export class PaymentAPI {
 
     public mobilePaySessionStatus(sessionToken: string): PromiseLike<MobilePayStatusResponse> {
         return this.makeRequest('GET', '/app/mobilepay/' + sessionToken);
+    }
+
+    /**
+     * Init Pivo transaction for app payment flow.
+     *
+     * @param {PivoInitRequest} request
+     * @returns {PromiseLike<PivoInitResponse>}
+     */
+    public initPivoTransaction(request: PivoInitRequest): PromiseLike<PivoInitResponse> {
+        return this.makeRequest('POST', '/app/pivo', request);
     }
 
     /**

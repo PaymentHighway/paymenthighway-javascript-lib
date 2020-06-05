@@ -22,6 +22,8 @@ import { AfterPayRevertTransactionRequest } from './model/request/AfterPayRevert
 import { ChargeCitRequest } from './model/request/ChargeCitRequest';
 import { ChargeMitRequest } from './model/request/ChargeMitRequest';
 import { ChargeCitResponse } from './model/response/ChargeCitResponse';
+import { PivoInitRequest } from './model/request/PivoInitRequest';
+import { PivoInitResponse } from './model/response/PivoInitResponse';
 /**
  * Payment Highway Payment API Service.
  */
@@ -199,6 +201,13 @@ export declare class PaymentAPI {
      */
     initMobilePaySession(request: MobilePayInitRequest): PromiseLike<MobilePayInitResponse>;
     mobilePaySessionStatus(sessionToken: string): PromiseLike<MobilePayStatusResponse>;
+    /**
+     * Init Pivo transaction for app payment flow.
+     *
+     * @param {PivoInitRequest} request
+     * @returns {PromiseLike<PivoInitResponse>}
+     */
+    initPivoTransaction(request: PivoInitRequest): PromiseLike<PivoInitResponse>;
     /**
      * Create name value pairs
      *

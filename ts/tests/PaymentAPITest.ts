@@ -39,6 +39,7 @@ import {
 import {Address} from '../src/model/request/sca/Address';
 import {Request} from '../src/model/request/PhRequest';
 import {CustomerAuthenticationInfo, Method} from '../src/model/request/sca/CustomerAuthenticationInfo';
+import {PivoInitRequest} from '../src/model/request/PivoInitRequest';
 
 let api: PaymentAPI;
 let validCard: any;
@@ -519,5 +520,31 @@ describe('PaymentAPI', () => {
         let request = MobilePayInitRequest.Builder(100, 'EUR').setSplitting(splitting).build();
         assert(request.splitting.merchant_id === splittingMerchantId);
         assert(request.splitting.amount === splittingAmount);
+    });
+
+    it('Test Pivo app switch init', () => {
+        const request = PivoInitRequest.Builder(100)
+            .setOrder('Test_order')
+            .setDescription('desc')
+            .setAppUrl('app://url')
+            .setReferenceNumber('1313')
+            .setWebhookSuccessUrl('https://www.exaple.com/success')
+            .setWebhookCancelUrl('https://www.example.com/cancel')
+            .setWebhookFailureUrl('https://www.example.com/failure')
+            .setLanguage('FI')
+            .build();
+
+        return api.initPivoTransaction(request).then( (response) => {
+            assert.startsWith(response.uri, 'pivo://api/', 'Pivo app uri should start with "pivo://api/"');
+        });
+    });
+
+    it('Test Pivo app switch init with splitting', () => {
+        const splitting = new Splitting('12345', 10);
+        const request = PivoInitRequest.Builder(100)
+            .setSplitting(splitting)
+            .build();
+        assert(request.splitting.merchant_id === splitting.merchant_id);
+        assert(request.splitting.amount === splitting.amount);
     });
 });
