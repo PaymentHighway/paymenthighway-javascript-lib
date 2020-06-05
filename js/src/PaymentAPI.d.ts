@@ -201,6 +201,12 @@ export declare class PaymentAPI {
      */
     initMobilePaySession(request: MobilePayInitRequest): PromiseLike<MobilePayInitResponse>;
     mobilePaySessionStatus(sessionToken: string): PromiseLike<MobilePayStatusResponse>;
+    /**
+     * Init Pivo transaction for app payment flow.
+     *
+     * @param {PivoInitRequest} request
+     * @returns {PromiseLike<PivoInitResponse>}
+     */
     initPivoTransaction(request: PivoInitRequest): PromiseLike<PivoInitResponse>;
     /**
      * Create name value pairs
