@@ -305,6 +305,12 @@ export class PaymentAPI {
         return this.makeRequest('GET', '/app/mobilepay/' + sessionToken);
     }
 
+    /**
+     * Init Pivo transaction for app payment flow.
+     *
+     * @param {PivoInitRequest} request
+     * @returns {PromiseLike<PivoInitResponse>}
+     */
     public initPivoTransaction(request: PivoInitRequest): PromiseLike<PivoInitResponse> {
         return this.makeRequest('POST', '/app/pivo', request);
     }
