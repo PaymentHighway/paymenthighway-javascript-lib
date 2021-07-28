@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FormConnection = void 0;
 const requestPromise = require("request-promise");
 const PaymentAPI_1 = require("../../src/PaymentAPI");
 class FormConnection {

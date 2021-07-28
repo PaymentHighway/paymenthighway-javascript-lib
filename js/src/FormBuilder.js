@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FormBuilder = void 0;
 const PaymentHighwayUtility_1 = require("./PaymentHighwayUtility");
 const Pair_1 = require("./util/Pair");
 const SecureSigner_1 = require("./security/SecureSigner");

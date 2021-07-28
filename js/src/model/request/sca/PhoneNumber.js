@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PhoneNumber = void 0;
 class PhoneNumber {
     /**
      * @param country_code 1-3 digits country code (ITU-E.164)

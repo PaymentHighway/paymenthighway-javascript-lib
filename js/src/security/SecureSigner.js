@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SecureSigner = void 0;
 const Crypto = require("crypto");
 const Pair_1 = require("../util/Pair");
 const _ = require("lodash");

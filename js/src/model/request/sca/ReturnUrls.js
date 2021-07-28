@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ReturnUrlsBuilder = exports.ReturnUrls = void 0;
 class ReturnUrls {
     constructor(success_url, cancel_url, failure_url, webhook_success_url, webhook_cancel_url, webhook_failure_url, webhook_delay) {
         this.success_url = success_url;

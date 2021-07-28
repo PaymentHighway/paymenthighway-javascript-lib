@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PivoInit = exports.PivoInitRequest = void 0;
 const PhRequest_1 = require("./PhRequest");
 class PivoInitRequest extends PhRequest_1.Request {
     constructor(amount, currency, order, description, app_url, reference_number, webhook_success_url, webhook_cancel_url, webhook_failure_url, language, phone_number, splitting) {

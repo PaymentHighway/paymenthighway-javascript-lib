@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PaymentDataHeader = void 0;
 class PaymentDataHeader {
     constructor(ephemeralPublicKey, publicKeyHash, transactionId, applicationData) {
         this.ephemeralPublicKey = ephemeralPublicKey;

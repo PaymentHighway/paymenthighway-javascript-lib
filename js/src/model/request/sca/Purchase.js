@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ShippingNameIndicator = exports.PreOrderPurchaseIndicator = exports.ReorderItemsIndicator = exports.DeliveryTimeFrame = exports.ShippingIndicator = exports.PurchaseBuilder = exports.Purchase = void 0;
 class Purchase {
     constructor(shipping_indicator, delivery_time_frame, delivery_email, reorder_items_indicator, pre_order_purchase_indicator, pre_order_date, shipping_name_indicator, gift_card_amount, gift_card_count) {
         this.shipping_indicator = shipping_indicator;

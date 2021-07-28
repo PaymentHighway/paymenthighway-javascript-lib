@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Splitting = void 0;
 /**
  * Class Splitting
  * Splits the payment into sub-merchant settlement and the main merchant commission. Requires separate activation.
