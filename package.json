@@ -30,14 +30,11 @@
   "dependencies": {
     "@types/lodash": "^4.14.171",
     "@types/node": "^16.4.5",
-    "@types/request": "2.47.0",
-    "@types/request-promise": "^4.1.46",
     "@types/urijs": "^1.19.16",
     "@types/uuid": "^8.3.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "request": "^2.88.2",
-    "request-promise": "^4.2.5",
+    "got": "^11.8.2",
     "uuid": "^8.3.2"
   },
   "engines": {

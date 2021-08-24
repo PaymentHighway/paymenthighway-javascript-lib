@@ -1,8 +1,7 @@
-import * as requestPromise from 'request-promise';
 import {PaymentHighwayUtility} from './PaymentHighwayUtility';
 import {SecureSigner} from './security/SecureSigner';
 import {Pair} from './util/Pair';
-import {RequestPromise} from 'request-promise';
+import got, {CancelableRequest, Response as GotResponse} from 'got';
 import {TransactionResponse} from './model/response/TransactionResponse';
 import {TransactionStatusResponse} from './model/response/TransactionStatusResponse';
 import {OrderSearchResponse} from './model/response/OrderSearchResponse';
@@ -25,10 +24,10 @@ import {PivoTransactionResultResponse} from './model/response/PivoTransactionRes
 import {PivoTransactionStatusResponse} from './model/response/PivoTransactionStatusResponse';
 import {AfterPayCommitTransactionRequest} from './model/request/AfterPayCommitTransactionRequest';
 import {AfterPayRevertTransactionRequest} from './model/request/AfterPayRevertTransactionRequest';
-import { ChargeCitRequest } from './model/request/ChargeCitRequest';
-import { ChargeMitRequest } from './model/request/ChargeMitRequest';
-import { ChargeCitResponse } from './model/response/ChargeCitResponse';
-import { Request } from './model/request/PhRequest';
+import {ChargeCitRequest} from './model/request/ChargeCitRequest';
+import {ChargeMitRequest} from './model/request/ChargeMitRequest';
+import {ChargeCitResponse} from './model/response/ChargeCitResponse';
+import {Request} from './model/request/PhRequest';
 import {PivoInitRequest} from './model/request/PivoInitRequest';
 import {PivoInitResponse} from './model/response/PivoInitResponse';
 
@@ -59,7 +58,7 @@ export class PaymentAPI {
      */
     public initTransaction(): PromiseLike<TransactionResponse> {
         const paymentUri = '/transaction';
-        return this.makeRequest('POST', paymentUri);
+        return this.makeRequest<TransactionResponse>('POST', paymentUri);
     }
 
     /**
@@ -71,7 +70,7 @@ export class PaymentAPI {
      */
     public debitTransaction(transactionId: string, request: TransactionRequest): PromiseLike<DebitResponse> {
         const debitUri = '/transaction/' + transactionId + '/debit';
-        return this.makeRequest('POST', debitUri, request);
+        return this.makeRequest<DebitResponse>('POST', debitUri, request);
     }
 
     /**
@@ -83,7 +82,7 @@ export class PaymentAPI {
      */
     public chargeCustomerInitiatedTransaction(transactionId: string, request: ChargeCitRequest): PromiseLike<ChargeCitResponse> {
         const chargeCitUri = '/transaction/' + transactionId + '/card/charge/customer_initiated';
-        return this.makeRequest('POST', chargeCitUri, request);
+        return this.makeRequest<ChargeCitResponse>('POST', chargeCitUri, request);
     }
 
     /**
@@ -95,7 +94,7 @@ export class PaymentAPI {
      */
     public chargeMerchantInitiatedTransaction(transactionId: string, request: ChargeMitRequest): PromiseLike<DebitResponse> {
         const chargeMitUri = '/transaction/' + transactionId + '/card/charge/merchant_initiated';
-        return this.makeRequest('POST', chargeMitUri, request);
+        return this.makeRequest<DebitResponse>('POST', chargeMitUri, request);
     }
 
     /**
@@ -107,7 +106,7 @@ export class PaymentAPI {
      */
     public debitApplePayTransaction(transactionId: string, request: ApplePayTransactionRequest): PromiseLike<DebitResponse> {
         const debitUri = '/transaction/' + transactionId + '/debit_applepay';
-        return this.makeRequest('POST', debitUri, request);
+        return this.makeRequest<DebitResponse>('POST', debitUri, request);
     }
 
     /**
@@ -119,7 +118,7 @@ export class PaymentAPI {
      */
     public revertTransaction(transactionId: string, request: RevertTransactionRequest): PromiseLike<Response> {
         const revertUri = '/transaction/' + transactionId + '/revert';
-        return this.makeRequest('POST', revertUri, request);
+        return this.makeRequest<Response>('POST', revertUri, request);
     }
 
     /**
@@ -131,7 +130,7 @@ export class PaymentAPI {
      */
     public revertPivoTransaction(transactionId: string, request: RevertPivoTransactionRequest): PromiseLike<Response> {
         const revertUri = '/transaction/' + transactionId + '/pivo/revert';
-        return this.makeRequest('POST', revertUri, request);
+        return this.makeRequest<Response>('POST', revertUri, request);
     }
 
     /**
@@ -145,7 +144,7 @@ export class PaymentAPI {
      */
     public commitTransaction(transactionId: string, request: CommitTransactionRequest): PromiseLike<TransactionResultResponse> {
         const commitUri = '/transaction/' + transactionId + '/commit';
-        return this.makeRequest('POST', commitUri, request);
+        return this.makeRequest<TransactionResultResponse>('POST', commitUri, request);
     }
 
     /**
@@ -159,7 +158,7 @@ export class PaymentAPI {
      */
     public commitAfterPayTransaction(transactionId: string, request: AfterPayCommitTransactionRequest): PromiseLike<Response> {
         const uri = '/transaction/' + transactionId + '/afterpay/commit';
-        return this.makeRequest('POST', uri, request);
+        return this.makeRequest<Response>('POST', uri, request);
     }
 
     /**
@@ -171,7 +170,7 @@ export class PaymentAPI {
      */
     public afterPayTransactionResult(transactionId: string): PromiseLike<Response> {
         const uri = '/transaction/' + transactionId + '/afterpay/result';
-        return this.makeRequest('GET', uri);
+        return this.makeRequest<Response>('GET', uri);
     }
 
     /**
@@ -183,7 +182,7 @@ export class PaymentAPI {
      */
     public revertAfterPayTransaction(transactionId: string, request: AfterPayRevertTransactionRequest): PromiseLike<Response> {
         const uri = '/transaction/' + transactionId + '/afterpay/revert';
-        return this.makeRequest('POST', uri, request);
+        return this.makeRequest<Response>('POST', uri, request);
     }
 
     /**
@@ -194,7 +193,7 @@ export class PaymentAPI {
      */
     public afterPayTransactionStatus(transactionId: string): PromiseLike<TransactionStatusResponse> {
         const statusUri = '/transaction/' + transactionId + '/afterpay';
-        return this.makeRequest('GET', statusUri);
+        return this.makeRequest<TransactionStatusResponse>('GET', statusUri);
     }
 
     /**
@@ -205,7 +204,7 @@ export class PaymentAPI {
      */
     public transactionStatus(transactionId: string): PromiseLike<TransactionStatusResponse> {
         const statusUri = '/transaction/' + transactionId;
-        return this.makeRequest('GET', statusUri);
+        return this.makeRequest<TransactionStatusResponse>('GET', statusUri);
     }
 
     /**
@@ -216,7 +215,7 @@ export class PaymentAPI {
      */
     public pivoTransactionStatus(transactionId: string): PromiseLike<PivoTransactionStatusResponse> {
         const statusUri = '/transaction/pivo/' + transactionId;
-        return this.makeRequest('GET', statusUri);
+        return this.makeRequest<PivoTransactionStatusResponse>('GET', statusUri);
     }
 
     /**
@@ -227,7 +226,7 @@ export class PaymentAPI {
      */
     public searchOrders(orderId: string): PromiseLike<OrderSearchResponse> {
         const searchUri = '/transactions/?order=' + orderId;
-        return this.makeRequest('GET', searchUri);
+        return this.makeRequest<OrderSearchResponse>('GET', searchUri);
     }
 
     /**
@@ -238,7 +237,7 @@ export class PaymentAPI {
      */
     public tokenization(tokenizationId: string): PromiseLike<TokenizationResponse> {
         const tokenUri = '/tokenization/' + tokenizationId;
-        return this.makeRequest('GET', tokenUri);
+        return this.makeRequest<TokenizationResponse>('GET', tokenUri);
     }
 
     /**
@@ -250,7 +249,7 @@ export class PaymentAPI {
      */
     public transactionResult(transactionId: string): PromiseLike<TransactionResultResponse> {
         const transactionResultUrl = '/transaction/' + transactionId + '/result';
-        return this.makeRequest('GET', transactionResultUrl);
+        return this.makeRequest<TransactionResultResponse>('GET', transactionResultUrl);
     }
 
     /**
@@ -262,7 +261,7 @@ export class PaymentAPI {
      */
     public pivoTransactionResult(transactionId: string): PromiseLike<PivoTransactionResultResponse> {
         const transactionResultUrl = '/transaction/' + transactionId + '/pivo/result';
-        return this.makeRequest('GET', transactionResultUrl);
+        return this.makeRequest<PivoTransactionResultResponse>('GET', transactionResultUrl);
     }
 
     /**
@@ -273,7 +272,7 @@ export class PaymentAPI {
      */
     public fetchDailyReport(date: string): PromiseLike<ReportResponse> {
         const reportUri = '/report/batch/' + date;
-        return this.makeRequest('GET', reportUri);
+        return this.makeRequest<ReportResponse>('GET', reportUri);
     }
 
     /**
@@ -288,7 +287,7 @@ export class PaymentAPI {
             useDateProcessed = false;
         }
         const reportUri = '/report/reconciliation/' + date + '?use-date-processed=' + useDateProcessed;
-        return this.makeRequest('GET', reportUri);
+        return this.makeRequest<ReconciliationReportResponse>('GET', reportUri);
     }
 
     /**
@@ -298,11 +297,11 @@ export class PaymentAPI {
      * @returns {PromiseLike<MobilePayInitResponse>}
      */
     public initMobilePaySession(request: MobilePayInitRequest): PromiseLike<MobilePayInitResponse> {
-        return this.makeRequest('POST', '/app/mobilepay', request);
+        return this.makeRequest<MobilePayInitResponse>('POST', '/app/mobilepay', request);
     }
 
     public mobilePaySessionStatus(sessionToken: string): PromiseLike<MobilePayStatusResponse> {
-        return this.makeRequest('GET', '/app/mobilepay/' + sessionToken);
+        return this.makeRequest<MobilePayStatusResponse>('GET', '/app/mobilepay/' + sessionToken);
     }
 
     /**
@@ -312,7 +311,7 @@ export class PaymentAPI {
      * @returns {PromiseLike<PivoInitResponse>}
      */
     public initPivoTransaction(request: PivoInitRequest): PromiseLike<PivoInitResponse> {
-        return this.makeRequest('POST', '/app/pivo', request);
+        return this.makeRequest<PivoInitResponse>('POST', '/app/pivo', request);
     }
 
     /**
@@ -335,16 +334,14 @@ export class PaymentAPI {
      * @param method
      * @param paymentUri
      * @param request
-     * @returns {PromiseLike<TransactionResponse>}
+     * @returns {PromiseLike<ReturnType>}
      */
-    private makeRequest(method: Method, paymentUri: string, request?: Request): PromiseLike<any> {
+    private makeRequest<ReturnType>(method: Method, paymentUri: string, request?: Request): PromiseLike<ReturnType> {
         const requestId = request && request.requestId || PaymentHighwayUtility.createRequestId();
         const requestBody = request && this.getRequestBody(request);
 
         return this.executeRequest(method, paymentUri, this.createNameValuePairs(requestId), requestBody)
-            .then((body: TransactionResponse) => {
-                return body;
-            });
+            .json<ReturnType>();
     }
 
     /**
@@ -364,9 +361,9 @@ export class PaymentAPI {
      * @param path
      * @param nameValuePairs
      * @param requestBody
-     * @returns {requestPromise.RequestPromise}
+     * @returns cancelable request with response
      */
-    private executeRequest(method: Method, path: string, nameValuePairs: Pair<string, string>[], requestBody?: Object): RequestPromise {
+    private executeRequest(method: Method, path: string, nameValuePairs: Pair<string, string>[], requestBody?: Object): CancelableRequest<GotResponse<string>> {
         let bodyString = '';
         if (requestBody) {
             bodyString = JSON.stringify(requestBody);
@@ -380,21 +377,28 @@ export class PaymentAPI {
         nameValuePairs.forEach((pair) => {
             headers[pair.first] = pair.second;
         });
+
         let options = {
-            baseUrl: this.serviceUrl,
-            uri: path,
             method: method,
             headers: headers,
-            json: true
+            retry: {
+                limit: 0
+            },
+            timeout: {
+                request: 30000
+            }
         };
+
+        const url = this.serviceUrl + '/' + path
 
         if (requestBody) {
             headers['Content-Length'] = Buffer.byteLength(bodyString, 'utf-8');
+
             options = Object.assign(options, {
-                body: requestBody
+                body: bodyString
             });
         }
-        return requestPromise(options);
 
+        return got(url, options);
     }
 }
