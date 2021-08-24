@@ -234,7 +234,7 @@ export declare class PaymentAPI {
      * @param path
      * @param nameValuePairs
      * @param requestBody
-     * @returns {requestPromise.RequestPromise}
+     * @returns
      */
     private executeRequest;
 }

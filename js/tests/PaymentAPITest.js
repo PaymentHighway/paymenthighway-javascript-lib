@@ -31,6 +31,7 @@ const Purchase_1 = require("../src/model/request/sca/Purchase");
 const Address_1 = require("../src/model/request/sca/Address");
 const CustomerAuthenticationInfo_1 = require("../src/model/request/sca/CustomerAuthenticationInfo");
 const PivoInitRequest_1 = require("../src/model/request/PivoInitRequest");
+chai_1.use(require('chai-string'));
 let api;
 let validCard;
 let testCard;
