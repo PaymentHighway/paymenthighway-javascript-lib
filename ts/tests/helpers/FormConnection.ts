@@ -1,4 +1,4 @@
-import got from 'got';
+import got, {CancelableRequest, Response as GotResponse} from 'got';
 import {Method} from '../../src/util/Method';
 import {PaymentAPI} from '../../src/PaymentAPI';
 import {FormContainer} from '../../src/FormContainer';
@@ -6,8 +6,8 @@ import {Pair} from '../../src/util/Pair';
 
 export class FormConnection {
 
-    public static async postForm(container: FormContainer): Promise<any> {
-        let method: Method = 'POST'
+    public static postForm(container: FormContainer): CancelableRequest<GotResponse<string>> {
+        let method: Method = 'POST';
 
         const options = {
             method: method,
@@ -24,7 +24,7 @@ export class FormConnection {
                 request: 30000
             }
         };
-        return got(options)
-    }
 
+        return got(options);
+    }
 }

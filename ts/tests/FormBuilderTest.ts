@@ -371,7 +371,7 @@ describe('Form builder', () => {
         return FormConnection.postForm(formContainer)
             .then((response) => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                assert.match(response.headers.location, /https:\/\/sandprod-products.mobilepay.dk.*/, 'redirect location doesn\'t match ' + response.header);
+                assert.match(response.headers.location, /https:\/\/sandprod-products.mobilepay.dk.*/, 'unexpected redirect location ' + response.headers.location);
             });
     });
 
@@ -381,7 +381,7 @@ describe('Form builder', () => {
         testNameValuePairs(formContainer.nameValuePairs, 20);
         return FormConnection.postForm(formContainer).then((response) => {
             assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            assert.match(response.headers.location, /https:\/\/sandprod-products.mobilepay.dk.*/, 'redirect location doesn\'t match ' + response.header);
+            assert.match(response.headers.location, /https:\/\/sandprod-products.mobilepay.dk.*/, 'unexpected redirect location ' + response.headers.location);
 
         });
     });
@@ -498,7 +498,7 @@ describe('Form builder', () => {
         return FormConnection.postForm(formContainer)
             .then((response) => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'redirect location doesn\'t match ' + response.header);
+                assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'unexpected redirect location ' + response.headers.location);
             });
     });
 
@@ -518,7 +518,7 @@ describe('Form builder', () => {
         return FormConnection.postForm(formContainer)
             .then((response) => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'redirect location doesn\'t match ' + response.header);
+                assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'unexpected redirect location: ' + response.headers.location);
             });
     });
 
@@ -554,7 +554,7 @@ describe('Form builder', () => {
         return FormConnection.postForm(formContainer)
             .then((response) => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                assert.match(response.headers.location, /\.*failure.*API_IS_GONE.*/, 'redirect location doesn\'t match ' + response.header);
+                assert.match(response.headers.location, /\.*failure.*API_IS_GONE.*/, 'unexpected redirect location ' + response.headers.location);
             });
     });
 
@@ -575,7 +575,7 @@ describe('Form builder', () => {
         return FormConnection.postForm(formContainer)
             .then((response) => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                assert.match(response.headers.location, /\.*failure.*API_IS_GONE.*/, 'redirect location doesn\'t match ' + response.header);
+                assert.match(response.headers.location, /\.*failure.*API_IS_GONE.*/, 'unexpected redirect location ' + response.headers.location);
             });
     });
 
