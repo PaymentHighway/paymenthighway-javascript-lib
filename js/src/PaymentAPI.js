@@ -276,7 +276,7 @@ class PaymentAPI {
      * @param method
      * @param paymentUri
      * @param request
-     * @returns {PromiseLike<TransactionResponse>}
+     * @returns {PromiseLike<ReturnType>}
      */
     makeRequest(method, paymentUri, request) {
         const requestId = request && request.requestId || PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
@@ -300,7 +300,7 @@ class PaymentAPI {
      * @param path
      * @param nameValuePairs
      * @param requestBody
-     * @returns
+     * @returns cancelable request with response
      */
     executeRequest(method, path, nameValuePairs, requestBody) {
         let bodyString = '';

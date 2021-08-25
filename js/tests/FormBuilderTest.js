@@ -296,7 +296,7 @@ describe('Form builder', () => {
         return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            chai_1.assert.match(response.headers.location, /https:\/\/sandprod-products.mobilepay.dk.*/, 'redirect location doesn\'t match ' + response.header);
+            chai_1.assert.match(response.headers.location, /https:\/\/sandprod-products.mobilepay.dk.*/, 'unexpected redirect location ' + response.headers.location);
         });
     });
     it('Test MobilePay form with optional parameters', () => {
@@ -304,7 +304,7 @@ describe('Form builder', () => {
         testNameValuePairs(formContainer.nameValuePairs, 20);
         return FormConnection_1.FormConnection.postForm(formContainer).then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            chai_1.assert.match(response.headers.location, /https:\/\/sandprod-products.mobilepay.dk.*/, 'redirect location doesn\'t match ' + response.header);
+            chai_1.assert.match(response.headers.location, /https:\/\/sandprod-products.mobilepay.dk.*/, 'unexpected redirect location ' + response.headers.location);
         });
     });
     it('Test splitting parameters for MobilePay', () => {
@@ -377,7 +377,7 @@ describe('Form builder', () => {
         return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            chai_1.assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'redirect location doesn\'t match ' + response.header);
+            chai_1.assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'unexpected redirect location ' + response.headers.location);
         });
     });
     it('Test pivo optional parameters', () => {
@@ -392,7 +392,7 @@ describe('Form builder', () => {
         return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            chai_1.assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'redirect location doesn\'t match ' + response.header);
+            chai_1.assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'unexpected redirect location: ' + response.headers.location);
         });
     });
     it('Test splitting parameters for Pivo', () => {
@@ -414,7 +414,7 @@ describe('Form builder', () => {
         return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            chai_1.assert.match(response.headers.location, /\.*failure.*API_IS_GONE.*/, 'redirect location doesn\'t match ' + response.header);
+            chai_1.assert.match(response.headers.location, /\.*failure.*API_IS_GONE.*/, 'unexpected redirect location ' + response.headers.location);
         });
     });
     it('Test AfterPay with optional parameters (API GONE)', () => {
@@ -427,7 +427,7 @@ describe('Form builder', () => {
         return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            chai_1.assert.match(response.headers.location, /\.*failure.*API_IS_GONE.*/, 'redirect location doesn\'t match ' + response.header);
+            chai_1.assert.match(response.headers.location, /\.*failure.*API_IS_GONE.*/, 'unexpected redirect location ' + response.headers.location);
         });
     });
     it('Test splitting parameters for AfterPay', () => {
