@@ -295,14 +295,16 @@ describe('Form builder', () => {
         testNameValuePairs(formContainer.nameValuePairs, 14);
         return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
-            chai_1.assert(response.statusCode === 200, 'Response status code should be 200, got ' + response.statusCode);
+            chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+            chai_1.assert.match(response.headers.location, /https:\/\/sandprod-products.mobilepay.dk.*/, 'unexpected redirect location ' + response.headers.location);
         });
     });
     it('Test MobilePay form with optional parameters', () => {
         const formContainer = formBuilder.generatePayWithMobilePayParameters(successUrl, failureUrl, cancelUrl, language, amount, currency, orderId, description, true, 'https://foo.bar', '+35844123465', 'Jaskan kello', '12345678', 'submerchantName');
         testNameValuePairs(formContainer.nameValuePairs, 20);
         return FormConnection_1.FormConnection.postForm(formContainer).then((response) => {
-            chai_1.assert(response.statusCode === 200, 'Response status code should be 200, got ' + response.statusCode);
+            chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+            chai_1.assert.match(response.headers.location, /https:\/\/sandprod-products.mobilepay.dk.*/, 'unexpected redirect location ' + response.headers.location);
         });
     });
     it('Test splitting parameters for MobilePay', () => {
@@ -375,7 +377,7 @@ describe('Form builder', () => {
         return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            chai_1.assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'redirect location doesn\'t match ' + response.header);
+            chai_1.assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'unexpected redirect location ' + response.headers.location);
         });
     });
     it('Test pivo optional parameters', () => {
@@ -390,7 +392,7 @@ describe('Form builder', () => {
         return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            chai_1.assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'redirect location doesn\'t match ' + response.header);
+            chai_1.assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'unexpected redirect location: ' + response.headers.location);
         });
     });
     it('Test splitting parameters for Pivo', () => {
@@ -405,17 +407,17 @@ describe('Form builder', () => {
         const actionUrl = '/form/view/pivo';
         chai_1.assert(formContainer.actionUrl === actionUrl, 'action url should be ' + actionUrl + 'got ' + formContainer.actionUrl);
     });
-    it('Test AfterPay mandatory parameters', () => {
+    it('Test AfterPay mandatory parameters (API GONE)', () => {
         const orderDescription = 'A walrus';
         const formContainer = formBuilder.generateAfterPayParameters(successUrl, failureUrl, cancelUrl, language, amount, orderId, description, orderDescription);
         testNameValuePairs(formContainer.nameValuePairs, 15);
         return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            chai_1.assert.match(response.headers.location, /\/form\/[-a-f0-9]{36}\/afterpay/, 'redirect location doesn\'t match ' + response.header);
+            chai_1.assert.match(response.headers.location, /\.*failure.*API_IS_GONE.*/, 'unexpected redirect location ' + response.headers.location);
         });
     });
-    it('Test AfterPay with optional parameters', () => {
+    it('Test AfterPay with optional parameters (API GONE)', () => {
         const orderDescription = 'A walrus';
         const socialSecurityNumber = '010868-998U';
         const emailAddress = 'test@testasdff.com';
@@ -425,7 +427,7 @@ describe('Form builder', () => {
         return FormConnection_1.FormConnection.postForm(formContainer)
             .then((response) => {
             chai_1.assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-            chai_1.assert.match(response.headers.location, /\/form\/[-a-f0-9]{36}\/afterpay/, 'redirect location doesn\'t match ' + response.header);
+            chai_1.assert.match(response.headers.location, /\.*failure.*API_IS_GONE.*/, 'unexpected redirect location ' + response.headers.location);
         });
     });
     it('Test splitting parameters for AfterPay', () => {

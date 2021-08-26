@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MobilePayInit = exports.MobilePayInitRequest = void 0;
 const PhRequest_1 = require("./PhRequest");
 class MobilePayInitRequest extends PhRequest_1.Request {
     constructor(amount, currency, order, return_uri, webhook_success_url, webhook_cancel_url, webhook_failure_url, language, sub_merchant_name, sub_merchant_id, shop_name, shop_logo_url, reference_number, splitting) {

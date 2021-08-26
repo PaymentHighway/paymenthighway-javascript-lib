@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PaymentData = void 0;
 class PaymentData {
     constructor(data, header, signature, version) {
         this.data = data;

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AddressBuilder = exports.Address = void 0;
 class Address {
     constructor(city, country, address_line_1, address_line_2, address_line_3, post_code, state) {
         this.city = city;

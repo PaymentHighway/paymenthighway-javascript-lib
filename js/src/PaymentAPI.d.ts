@@ -219,7 +219,7 @@ export declare class PaymentAPI {
      * @param method
      * @param paymentUri
      * @param request
-     * @returns {PromiseLike<TransactionResponse>}
+     * @returns {PromiseLike<ReturnType>}
      */
     private makeRequest;
     /**
@@ -234,7 +234,7 @@ export declare class PaymentAPI {
      * @param path
      * @param nameValuePairs
      * @param requestBody
-     * @returns {requestPromise.RequestPromise}
+     * @returns {CancelableRequest<got.Response<string>>}
      */
     private executeRequest;
 }

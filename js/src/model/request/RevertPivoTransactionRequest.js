@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.RevertPivoTransactionRequest = void 0;
 const PhRequest_1 = require("./PhRequest");
 /**
  * When reverting without amount,

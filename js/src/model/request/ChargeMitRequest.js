@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ChargeMitBuilder = exports.ChargeMitRequest = void 0;
 const PhRequest_1 = require("./PhRequest");
 class ChargeMitRequest extends PhRequest_1.Request {
     constructor(amount, currency, order, card, token, customer, commit, splitting, reference_number) {

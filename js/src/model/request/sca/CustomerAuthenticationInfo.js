@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Method = exports.CustomerAuthenticationInfoBuilder = exports.CustomerAuthenticationInfo = void 0;
 class CustomerAuthenticationInfo {
     /**
      * @param method Information about how the cardholder is authenticated before or during the transaction.

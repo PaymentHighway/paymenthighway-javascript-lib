@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SuspiciousActivityIndicator = exports.ShippingAddressFirstUsedIndicator = exports.AccountPasswordChangeIndicator = exports.AccountInformationChangeIndicator = exports.AccountAgeIndicator = exports.CustomerAccountBuilder = exports.CustomerAccount = void 0;
 class CustomerAccount {
     constructor(account_age_indicator, account_date, change_indicator, change_date, password_change_indicator, password_change_date, number_of_recent_purchases, number_of_add_card_attempts_day, number_of_transaction_activity_day, number_of_transaction_activity_year, shipping_address_indicator, shipping_address_usage_date, suspicious_activity) {
         this.account_age_indicator = account_age_indicator;

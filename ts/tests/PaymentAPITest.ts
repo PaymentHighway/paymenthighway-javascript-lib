@@ -1,4 +1,4 @@
-import {assert, expect} from 'chai';
+import {assert, expect, use} from 'chai';
 import * as moment from 'moment';
 import {PaymentAPI} from '../src/PaymentAPI';
 import {PaymentHighwayUtility} from '../src/PaymentHighwayUtility';
@@ -40,6 +40,8 @@ import {Address} from '../src/model/request/sca/Address';
 import {Request} from '../src/model/request/PhRequest';
 import {CustomerAuthenticationInfo, Method} from '../src/model/request/sca/CustomerAuthenticationInfo';
 import {PivoInitRequest} from '../src/model/request/PivoInitRequest';
+
+use(require('chai-string'));
 
 let api: PaymentAPI;
 let validCard: any;

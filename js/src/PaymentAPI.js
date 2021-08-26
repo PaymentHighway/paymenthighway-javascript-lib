@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const requestPromise = require("request-promise");
+exports.PaymentAPI = void 0;
 const PaymentHighwayUtility_1 = require("./PaymentHighwayUtility");
 const SecureSigner_1 = require("./security/SecureSigner");
 const Pair_1 = require("./util/Pair");
+const got_1 = require("got");
 /**
  * Payment Highway Payment API Service.
  */
@@ -275,15 +276,13 @@ class PaymentAPI {
      * @param method
      * @param paymentUri
      * @param request
-     * @returns {PromiseLike<TransactionResponse>}
+     * @returns {PromiseLike<ReturnType>}
      */
     makeRequest(method, paymentUri, request) {
         const requestId = request && request.requestId || PaymentHighwayUtility_1.PaymentHighwayUtility.createRequestId();
         const requestBody = request && this.getRequestBody(request);
         return this.executeRequest(method, paymentUri, this.createNameValuePairs(requestId), requestBody)
-            .then((body) => {
-            return body;
-        });
+            .json();
     }
     /**
      * Gets request fields to be included in the request body
@@ -301,7 +300,7 @@ class PaymentAPI {
      * @param path
      * @param nameValuePairs
      * @param requestBody
-     * @returns {requestPromise.RequestPromise}
+     * @returns {CancelableRequest<got.Response<string>>}
      */
     executeRequest(method, path, nameValuePairs, requestBody) {
         let bodyString = '';
@@ -318,19 +317,23 @@ class PaymentAPI {
             headers[pair.first] = pair.second;
         });
         let options = {
-            baseUrl: this.serviceUrl,
-            uri: path,
             method: method,
             headers: headers,
-            json: true
+            retry: {
+                limit: 0
+            },
+            timeout: {
+                request: 30000
+            }
         };
+        const url = this.serviceUrl + '/' + path;
         if (requestBody) {
             headers['Content-Length'] = Buffer.byteLength(bodyString, 'utf-8');
             options = Object.assign(options, {
-                body: requestBody
+                body: bodyString
             });
         }
-        return requestPromise(options);
+        return got_1.default(url, options);
     }
 }
 exports.PaymentAPI = PaymentAPI;

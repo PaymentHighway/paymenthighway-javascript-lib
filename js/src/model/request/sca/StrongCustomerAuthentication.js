@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ChallengeWindowSize = exports.StrongCustomerAuthenticationBuilder = exports.StrongCustomerAuthentication = void 0;
 class StrongCustomerAuthentication {
     constructor(return_urls, customer_details, customer_account, purchase, billing_address, shipping_address, customer_authentication_info, desired_challenge_window_size, exit_iframe_on_result, exit_iframe_on_three_d_secure) {
         this.return_urls = return_urls;

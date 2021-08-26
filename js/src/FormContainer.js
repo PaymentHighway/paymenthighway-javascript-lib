@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FormContainer = void 0;
 class FormContainer {
     constructor(method, baseUrl, actionUrl, nameValuePairs, requestId) {
         this.method = method;

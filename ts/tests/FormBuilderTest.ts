@@ -1,3 +1,4 @@
+
 import {use, assert} from 'chai';
 import {FormBuilder} from '..';
 import {Method} from '../src/util/Method';
@@ -369,7 +370,8 @@ describe('Form builder', () => {
         testNameValuePairs(formContainer.nameValuePairs, 14);
         return FormConnection.postForm(formContainer)
             .then((response) => {
-                assert(response.statusCode === 200, 'Response status code should be 200, got ' + response.statusCode);
+                assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+                assert.match(response.headers.location, /https:\/\/sandprod-products.mobilepay.dk.*/, 'unexpected redirect location ' + response.headers.location);
             });
     });
 
@@ -378,7 +380,9 @@ describe('Form builder', () => {
             amount, currency, orderId, description, true, 'https://foo.bar', '+35844123465', 'Jaskan kello', '12345678', 'submerchantName');
         testNameValuePairs(formContainer.nameValuePairs, 20);
         return FormConnection.postForm(formContainer).then((response) => {
-            assert(response.statusCode === 200, 'Response status code should be 200, got ' + response.statusCode);
+            assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
+            assert.match(response.headers.location, /https:\/\/sandprod-products.mobilepay.dk.*/, 'unexpected redirect location ' + response.headers.location);
+
         });
     });
 
@@ -494,7 +498,7 @@ describe('Form builder', () => {
         return FormConnection.postForm(formContainer)
             .then((response) => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'redirect location doesn\'t match ' + response.header);
+                assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'unexpected redirect location ' + response.headers.location);
             });
     });
 
@@ -514,7 +518,7 @@ describe('Form builder', () => {
         return FormConnection.postForm(formContainer)
             .then((response) => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'redirect location doesn\'t match ' + response.header);
+                assert.match(response.headers.location, /https:\/\/qa-maksu.pivo.fi\/api\/payments\//, 'unexpected redirect location: ' + response.headers.location);
             });
     });
 
@@ -539,7 +543,7 @@ describe('Form builder', () => {
         assert(formContainer.actionUrl === actionUrl, 'action url should be ' + actionUrl + 'got ' + formContainer.actionUrl);
     });
 
-    it('Test AfterPay mandatory parameters', () => {
+    it('Test AfterPay mandatory parameters (API GONE)', () => {
 
         const orderDescription = 'A walrus';
 
@@ -550,11 +554,11 @@ describe('Form builder', () => {
         return FormConnection.postForm(formContainer)
             .then((response) => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                assert.match(response.headers.location, /\/form\/[-a-f0-9]{36}\/afterpay/, 'redirect location doesn\'t match ' + response.header);
+                assert.match(response.headers.location, /\.*failure.*API_IS_GONE.*/, 'unexpected redirect location ' + response.headers.location);
             });
     });
 
-    it('Test AfterPay with optional parameters', () => {
+    it('Test AfterPay with optional parameters (API GONE)', () => {
 
         const orderDescription = 'A walrus';
         const socialSecurityNumber = '010868-998U';
@@ -571,7 +575,7 @@ describe('Form builder', () => {
         return FormConnection.postForm(formContainer)
             .then((response) => {
                 assert(response.statusCode === 303, 'Response status code should be 303, got ' + response.statusCode);
-                assert.match(response.headers.location, /\/form\/[-a-f0-9]{36}\/afterpay/, 'redirect location doesn\'t match ' + response.header);
+                assert.match(response.headers.location, /\.*failure.*API_IS_GONE.*/, 'unexpected redirect location ' + response.headers.location);
             });
     });
 

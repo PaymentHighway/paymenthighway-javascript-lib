@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CustomerDetailsBuilder = exports.CustomerDetails = void 0;
 class CustomerDetails {
     constructor(shipping_address_matches_billing_address, name, email, home_phone, mobile_phone, work_phone) {
         this.shipping_address_matches_billing_address = shipping_address_matches_billing_address;
