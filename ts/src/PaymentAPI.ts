@@ -361,7 +361,7 @@ export class PaymentAPI {
      * @param path
      * @param nameValuePairs
      * @param requestBody
-     * @returns cancelable request with response
+     * @returns {CancelableRequest<got.Response<string>>}
      */
     private executeRequest(method: Method, path: string, nameValuePairs: Pair<string, string>[], requestBody?: Object): CancelableRequest<GotResponse<string>> {
         let bodyString = '';

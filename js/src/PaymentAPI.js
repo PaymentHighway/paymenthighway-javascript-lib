@@ -300,7 +300,7 @@ class PaymentAPI {
      * @param path
      * @param nameValuePairs
      * @param requestBody
-     * @returns cancelable request with response
+     * @returns {CancelableRequest<got.Response<string>>}
      */
     executeRequest(method, path, nameValuePairs, requestBody) {
         let bodyString = '';

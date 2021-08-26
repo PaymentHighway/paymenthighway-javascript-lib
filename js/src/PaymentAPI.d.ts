@@ -234,7 +234,7 @@ export declare class PaymentAPI {
      * @param path
      * @param nameValuePairs
      * @param requestBody
-     * @returns cancelable request with response
+     * @returns {CancelableRequest<got.Response<string>>}
      */
     private executeRequest;
 }
