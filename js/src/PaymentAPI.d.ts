@@ -24,6 +24,7 @@ import { ChargeMitRequest } from './model/request/ChargeMitRequest';
 import { ChargeCitResponse } from './model/response/ChargeCitResponse';
 import { PivoInitRequest } from './model/request/PivoInitRequest';
 import { PivoInitResponse } from './model/response/PivoInitResponse';
+import { FormSessionStatusResponse } from './model/response/FormSessionStatusResponse';
 /**
  * Payment Highway Payment API Service.
  */
@@ -141,6 +142,13 @@ export declare class PaymentAPI {
      * @returns {PromiseLike<TransactionStatusResponse>}
      */
     transactionStatus(transactionId: string): PromiseLike<TransactionStatusResponse>;
+    /**
+     * Form Status Request
+     *
+     * @param sessionId
+     * @returns {PromiseLike<FormSessionStatusResponse>}
+     */
+    formSessionStatus(sessionId: string): PromiseLike<FormSessionStatusResponse>;
     /**
      * Pivo Transaction Status Request
      *

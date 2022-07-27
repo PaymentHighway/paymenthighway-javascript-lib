@@ -341,6 +341,12 @@ return paymentAPI.fetchDailyReport("yyyyMMdd");
 ```
 * returns PromiseLike<[ReportResponse](/ts/src/model/response/ReportResponse.ts)>
 
+#### Form status
+```javascript
+return paymentAPI.formSessionStatus("sessionId");
+```
+* returns PromiseLike<[FormSessionStatusResponse](/ts/src/model/response/FormSessionStatusResponse.ts)>
+
 
 # Errors
 Payment Highway authenticates each request and if there is invalid parameters or a signature mismatch, it returns an error.

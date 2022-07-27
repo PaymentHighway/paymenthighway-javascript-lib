@@ -30,6 +30,7 @@ import {ChargeCitResponse} from './model/response/ChargeCitResponse';
 import {Request} from './model/request/PhRequest';
 import {PivoInitRequest} from './model/request/PivoInitRequest';
 import {PivoInitResponse} from './model/response/PivoInitResponse';
+import {FormSessionStatusResponse} from './model/response/FormSessionStatusResponse';
 
 /**
  * Payment Highway Payment API Service.
@@ -205,6 +206,17 @@ export class PaymentAPI {
     public transactionStatus(transactionId: string): PromiseLike<TransactionStatusResponse> {
         const statusUri = '/transaction/' + transactionId;
         return this.makeRequest<TransactionStatusResponse>('GET', statusUri);
+    }
+
+    /**
+     * Form Status Request
+     *
+     * @param sessionId
+     * @returns {PromiseLike<FormSessionStatusResponse>}
+     */
+    public formSessionStatus(sessionId: string): PromiseLike<FormSessionStatusResponse> {
+        const statusUri = '/form/' + sessionId + '/status';
+        return this.makeRequest<FormSessionStatusResponse>('GET', statusUri);
     }
 
     /**
