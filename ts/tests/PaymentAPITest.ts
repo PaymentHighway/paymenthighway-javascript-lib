@@ -569,7 +569,7 @@ describe('PaymentAPI', () => {
 
         return api.formSessionStatus(formSessionId)
             .then((sessionStatusResponse) => {
-                assert(sessionStatusResponse.status.state === 'pending');
+                assert(sessionStatusResponse.status.state === 'ok_pending');
                 assert(sessionStatusResponse.result.message === 'OK');
                 assert(sessionStatusResponse.transactionId === undefined);
                 assert(sessionStatusResponse.operation === 'tokenize');
