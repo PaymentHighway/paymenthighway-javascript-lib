@@ -571,7 +571,7 @@ describe('PaymentAPI', () => {
             .then((sessionStatusResponse) => {
                 assert(sessionStatusResponse.status.state === 'ok_pending');
                 assert(sessionStatusResponse.result.message === 'OK');
-                assert(sessionStatusResponse.transactionId === undefined);
+                expect(sessionStatusResponse.transaction_id).to.not.exist;
                 assert(sessionStatusResponse.operation === 'tokenize');
                 expect(sessionStatusResponse.created).to.exist;
                 expect(sessionStatusResponse.valid_until).to.exist;

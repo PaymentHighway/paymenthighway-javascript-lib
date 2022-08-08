@@ -461,7 +461,7 @@ describe('PaymentAPI', () => {
             .then((sessionStatusResponse) => {
             chai_1.assert(sessionStatusResponse.status.state === 'ok_pending');
             chai_1.assert(sessionStatusResponse.result.message === 'OK');
-            chai_1.assert(sessionStatusResponse.transactionId === undefined);
+            chai_1.expect(sessionStatusResponse.transaction_id).to.not.exist;
             chai_1.assert(sessionStatusResponse.operation === 'tokenize');
             chai_1.expect(sessionStatusResponse.created).to.exist;
             chai_1.expect(sessionStatusResponse.valid_until).to.exist;
