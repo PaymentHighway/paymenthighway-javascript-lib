@@ -31,13 +31,20 @@ const Purchase_1 = require("../src/model/request/sca/Purchase");
 const Address_1 = require("../src/model/request/sca/Address");
 const CustomerAuthenticationInfo_1 = require("../src/model/request/sca/CustomerAuthenticationInfo");
 const PivoInitRequest_1 = require("../src/model/request/PivoInitRequest");
+const FormBuilder_1 = require("../src/FormBuilder");
+const FormConnection_1 = require("./helpers/FormConnection");
 chai_1.use(require('chai-string'));
 let api;
 let validCard;
 let testCard;
 let scaSoftDeclineCard;
+const baseUrl = 'https://v1-hub-staging.sph-test-solinor.com/';
+const signatureKeyId = 'testKey';
+const signatureSecret = 'testSecret';
+const account = 'test';
+const merchant = 'test_merchantId';
 beforeEach(() => {
-    api = new PaymentAPI_1.PaymentAPI('https://v1-hub-staging.sph-test-solinor.com/', 'testKey', 'testSecret', 'test', 'test_merchantId');
+    api = new PaymentAPI_1.PaymentAPI(baseUrl, signatureKeyId, signatureSecret, account, merchant);
     testCard = new Card_1.Card('4153013999700024', '2023', '11', '024');
     validCard = {
         card: testCard,
@@ -443,5 +450,22 @@ describe('PaymentAPI', () => {
         chai_1.assert(request.splitting.merchant_id === splitting.merchant_id);
         chai_1.assert(request.splitting.amount === splitting.amount);
     });
+    it('Test Form Session Status', () => __awaiter(void 0, void 0, void 0, function* () {
+        let exampleUrl = 'https://example.com/';
+        let formBuilder = new FormBuilder_1.FormBuilder('POST', signatureKeyId, signatureSecret, account, merchant, baseUrl);
+        const formContainer = formBuilder.generateAddCardParameters(exampleUrl, exampleUrl, exampleUrl, 'EN');
+        let formSessionId;
+        yield FormConnection_1.FormConnection.postForm(formContainer)
+            .then((response) => formSessionId = response.headers.location.split('/')[2]);
+        return api.formSessionStatus(formSessionId)
+            .then((sessionStatusResponse) => {
+            chai_1.assert(sessionStatusResponse.status.state === 'ok_pending');
+            chai_1.assert(sessionStatusResponse.result.message === 'OK');
+            chai_1.expect(sessionStatusResponse.transaction_id).to.not.exist;
+            chai_1.assert(sessionStatusResponse.operation === 'tokenize');
+            chai_1.expect(sessionStatusResponse.created).to.exist;
+            chai_1.expect(sessionStatusResponse.valid_until).to.exist;
+        });
+    }));
 });
 //# sourceMappingURL=PaymentAPITest.js.map

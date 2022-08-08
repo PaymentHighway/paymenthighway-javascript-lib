@@ -40,6 +40,8 @@ import {Address} from '../src/model/request/sca/Address';
 import {Request} from '../src/model/request/PhRequest';
 import {CustomerAuthenticationInfo, Method} from '../src/model/request/sca/CustomerAuthenticationInfo';
 import {PivoInitRequest} from '../src/model/request/PivoInitRequest';
+import {FormBuilder} from '../src/FormBuilder'
+import { FormConnection } from './helpers/FormConnection';
 
 use(require('chai-string'));
 
@@ -48,8 +50,14 @@ let validCard: any;
 let testCard: Card;
 let scaSoftDeclineCard: Card;
 
+const baseUrl = 'https://v1-hub-staging.sph-test-solinor.com/';
+const signatureKeyId = 'testKey';
+const signatureSecret = 'testSecret';
+const account = 'test';
+const merchant = 'test_merchantId';
+
 beforeEach(() => {
-    api = new PaymentAPI('https://v1-hub-staging.sph-test-solinor.com/', 'testKey', 'testSecret', 'test', 'test_merchantId');
+    api = new PaymentAPI(baseUrl, signatureKeyId, signatureSecret, account, merchant);
     testCard = new Card('4153013999700024', '2023', '11', '024');
     validCard = {
         card: testCard,
@@ -548,5 +556,25 @@ describe('PaymentAPI', () => {
             .build();
         assert(request.splitting.merchant_id === splitting.merchant_id);
         assert(request.splitting.amount === splitting.amount);
+    });
+
+    it('Test Form Session Status', async () => {
+        let exampleUrl = 'https://example.com/'
+        let formBuilder = new FormBuilder('POST', signatureKeyId, signatureSecret, account, merchant, baseUrl);
+        const formContainer = formBuilder.generateAddCardParameters(exampleUrl, exampleUrl, exampleUrl, 'EN');
+
+        let formSessionId;
+        await FormConnection.postForm(formContainer)
+            .then((response) => formSessionId = response.headers.location.split('/')[2]);
+
+        return api.formSessionStatus(formSessionId)
+            .then((sessionStatusResponse) => {
+                assert(sessionStatusResponse.status.state === 'ok_pending');
+                assert(sessionStatusResponse.result.message === 'OK');
+                expect(sessionStatusResponse.transaction_id).to.not.exist;
+                assert(sessionStatusResponse.operation === 'tokenize');
+                expect(sessionStatusResponse.created).to.exist;
+                expect(sessionStatusResponse.valid_until).to.exist;
+            })
     });
 });

@@ -161,6 +161,16 @@ class PaymentAPI {
         return this.makeRequest('GET', statusUri);
     }
     /**
+     * Form Status Request
+     *
+     * @param sessionId
+     * @returns {PromiseLike<FormSessionStatusResponse>}
+     */
+    formSessionStatus(sessionId) {
+        const statusUri = '/form/' + sessionId + '/status';
+        return this.makeRequest('GET', statusUri);
+    }
+    /**
      * Pivo Transaction Status Request
      *
      * @param transactionId
