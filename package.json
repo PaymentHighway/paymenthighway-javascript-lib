@@ -6,13 +6,14 @@
   "main": "./js/index.js",
   "types": "./js/index.d.ts",
   "scripts": {
-    "preversion": "npm run generate-barrels && npm run compile && npm test",
-    "precompile": "npm run clean",
     "compile": "tsc",
-    "test": "set NODE_ENV=test && mocha -t 20000 -R spec js/tests --grep @external --invert",
-    "test-all": "set NODE_ENV=test && mocha -t 20000 -R spec js/tests",
-    "coverage": "nyc mocha -t 20000 -R spec js/tests",
+    "test": "set NODE_ENV=test && mocha -t 20000 -R spec -r ts-node/register ts/tests/**/*Test.ts --grep @external --invert",
+    "test-all": "set NODE_ENV=test && mocha -t 20000 -R spec -r ts-node/register ts/tests/**/*Test.ts",
+    "coverage": "nyc mocha -t 20000 -R spec -r ts-node/register ts/tests/**/*Test.ts",
     "clean": "rm -rf js/",
+    "prebuild": "npm run clean",
+    "build": "tsc",
+    "prepublish": "npm run generate-barrels && npm run build && npm test",
     "lint": "tslint ts/**/*.ts",
     "pre-commit": "npm run lint",
     "generate-barrels": "barrelsby --delete -d ts -q -e response/* -e tests/* -e util/*"
@@ -32,9 +33,9 @@
     "@types/node": "^16.4.5",
     "@types/urijs": "^1.19.16",
     "@types/uuid": "^8.3.1",
+    "got": "^11.8.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "got": "^11.8.2",
     "uuid": "^8.3.2"
   },
   "engines": {
@@ -52,6 +53,7 @@
     "mocha": "^9.0.3",
     "nyc": "^15.1.0",
     "puppeteer": "5.5.0",
+    "ts-node": "^10.9.1",
     "tslint": "^5.20.1",
     "tslint-microsoft-contrib": "^5.2.1",
     "typescript": "^3.8.3",

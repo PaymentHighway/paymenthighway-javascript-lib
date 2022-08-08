@@ -31,6 +31,7 @@ import {Request} from './model/request/PhRequest';
 import {PivoInitRequest} from './model/request/PivoInitRequest';
 import {PivoInitResponse} from './model/response/PivoInitResponse';
 import {FormSessionStatusResponse} from './model/response/FormSessionStatusResponse';
+import {Header} from './util/Header';
 
 /**
  * Payment Highway Payment API Service.
