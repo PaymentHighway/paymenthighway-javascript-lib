@@ -62,5 +62,6 @@ typings/
 .DS_Store
 .idea
 ts/**/*.js
+js/
 
 example.png
